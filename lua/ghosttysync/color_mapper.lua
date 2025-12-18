@@ -59,15 +59,15 @@ function M.create_highlight_map(colors, mode)
   -- Default mode to dark if not provided
   mode = mode or "dark"
   
-  -- Apply contrast adjustments for readability
-  local adjusted_colors = M.adjust_contrast(validated_colors, mode)
+  -- Use EXACT colors from theme without any modifications
+  local exact_colors = validated_colors
   
   -- Extract essential colors with fallbacks
-  local bg = adjusted_colors.background or "#000000"
-  local fg = adjusted_colors.foreground or "#FFFFFF"
-  local selection_bg = adjusted_colors.selection_background or "#404040"
-  local selection_fg = adjusted_colors.selection_foreground or fg
-  local palette = adjusted_colors.palette or {}
+  local bg = exact_colors.background or "#000000"
+  local fg = exact_colors.foreground or "#FFFFFF"
+  local selection_bg = exact_colors.selection_background or "#404040"
+  local selection_fg = exact_colors.selection_foreground or fg
+  local palette = exact_colors.palette or {}
   
   -- Create base highlight map
   local highlight_map = {}
@@ -137,22 +137,18 @@ function M.create_highlight_map(colors, mode)
     fg = palette[12] or "#8080FF"  -- Bright blue for info
   }
   
-  -- Legacy diagnostic names for compatibility
+  -- Legacy diagnostic names for compatibility (no background colors)
   highlight_map.Error = { 
-    fg = palette[9] or "#FF8080",
-    bg = "#2D1B1B"                 -- Dark red background
+    fg = palette[9] or "#FF8080"   -- Bright red for errors
   }
   highlight_map.Warning = { 
-    fg = palette[11] or "#FFFF80",
-    bg = "#2D2A1B"                 -- Dark yellow background
+    fg = palette[11] or "#FFFF80"  -- Bright yellow for warnings
   }
   highlight_map.Hint = { 
-    fg = palette[14] or "#80FFFF",
-    bg = "#1B2D2A"                 -- Dark cyan background
+    fg = palette[14] or "#80FFFF"  -- Bright cyan for hints
   }
   highlight_map.Note = { 
-    fg = palette[12] or "#8080FF",
-    bg = "#1B252D"                 -- Dark blue background
+    fg = palette[12] or "#8080FF"  -- Bright blue for info
   }
   
   -- UI elements
@@ -172,8 +168,7 @@ function M.create_highlight_map(colors, mode)
     bg = palette[3] or "#FFFF00"   -- Yellow background for search
   }
   
-  -- Apply mode-specific adjustments (placeholder for future enhancement)
-  highlight_map = M.apply_mode_adjustments(highlight_map, mode)
+  -- No color adjustments - use exact theme colors
   
   return highlight_map, nil
 end
@@ -255,196 +250,6 @@ function M._normalize_color(color)
   return nil
 end
 
--- Adjust colors for better contrast and readability
-function M.adjust_contrast(colors, mode)
-  if not colors or type(colors) ~= "table" then
-    return colors
-  end
-  
-  mode = mode or "dark"
-  local adjusted_colors = {}
-  
-  -- Copy all colors first
-  for key, value in pairs(colors) do
-    if key == "palette" and type(value) == "table" then
-      adjusted_colors.palette = {}
-      for i, color in pairs(value) do
-        adjusted_colors.palette[i] = color
-      end
-    else
-      adjusted_colors[key] = value
-    end
-  end
-  
-  -- Apply contrast adjustments based on mode
-  if mode == "light" then
-    -- For light mode, ensure text is dark enough for readability
-    adjusted_colors.foreground = M._ensure_min_contrast(adjusted_colors.foreground, adjusted_colors.background, 4.5)
-    
-    -- Adjust palette colors for light backgrounds
-    if adjusted_colors.palette then
-      for i, color in pairs(adjusted_colors.palette) do
-        if i >= 0 and i <= 7 then -- Standard colors
-          adjusted_colors.palette[i] = M._darken_color(color, 0.3)
-        elseif i >= 8 and i <= 15 then -- Bright colors
-          adjusted_colors.palette[i] = M._darken_color(color, 0.2)
-        end
-      end
-    end
-  else
-    -- For dark mode, ensure text is light enough for readability
-    adjusted_colors.foreground = M._ensure_min_contrast(adjusted_colors.foreground, adjusted_colors.background, 4.5)
-    
-    -- Adjust palette colors for dark backgrounds
-    if adjusted_colors.palette then
-      for i, color in pairs(adjusted_colors.palette) do
-        if i >= 0 and i <= 7 then -- Standard colors
-          adjusted_colors.palette[i] = M._lighten_color(color, 0.2)
-        elseif i >= 8 and i <= 15 then -- Bright colors
-          adjusted_colors.palette[i] = M._lighten_color(color, 0.1)
-        end
-      end
-    end
-  end
-  
-  return adjusted_colors
-end
-
--- Internal function to ensure minimum contrast ratio between two colors
-function M._ensure_min_contrast(fg_color, bg_color, min_ratio)
-  if not fg_color or not bg_color then
-    return fg_color
-  end
-  
-  local fg_luminance = M._get_luminance(fg_color)
-  local bg_luminance = M._get_luminance(bg_color)
-  
-  if not fg_luminance or not bg_luminance then
-    return fg_color
-  end
-  
-  local contrast = M._calculate_contrast_ratio(fg_luminance, bg_luminance)
-  
-  if contrast >= min_ratio then
-    return fg_color -- Already has sufficient contrast
-  end
-  
-  -- Adjust foreground color to meet minimum contrast
-  if bg_luminance > 0.5 then
-    -- Light background, darken foreground
-    return M._darken_color(fg_color, 0.5)
-  else
-    -- Dark background, lighten foreground
-    return M._lighten_color(fg_color, 0.5)
-  end
-end
-
--- Internal function to calculate relative luminance of a color
-function M._get_luminance(color)
-  if not color or type(color) ~= "string" then
-    return nil
-  end
-  
-  local r, g, b = color:match("^#([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])$")
-  if not r or not g or not b then
-    return nil
-  end
-  
-  r = tonumber(r, 16) / 255
-  g = tonumber(g, 16) / 255
-  b = tonumber(b, 16) / 255
-  
-  -- Apply gamma correction
-  local function gamma_correct(c)
-    if c <= 0.03928 then
-      return c / 12.92
-    else
-      return math.pow((c + 0.055) / 1.055, 2.4)
-    end
-  end
-  
-  r = gamma_correct(r)
-  g = gamma_correct(g)
-  b = gamma_correct(b)
-  
-  -- Calculate relative luminance
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b
-end
-
--- Internal function to calculate contrast ratio between two luminance values
-function M._calculate_contrast_ratio(l1, l2)
-  local lighter = math.max(l1, l2)
-  local darker = math.min(l1, l2)
-  return (lighter + 0.05) / (darker + 0.05)
-end
-
--- Internal function to lighten a color by a given factor
-function M._lighten_color(color, factor)
-  if not color or type(color) ~= "string" or not factor then
-    return color
-  end
-  
-  local r, g, b = color:match("^#([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])$")
-  if not r or not g or not b then
-    return color
-  end
-  
-  r = tonumber(r, 16)
-  g = tonumber(g, 16)
-  b = tonumber(b, 16)
-  
-  -- Lighten by moving towards white
-  r = math.min(255, math.floor(r + (255 - r) * factor))
-  g = math.min(255, math.floor(g + (255 - g) * factor))
-  b = math.min(255, math.floor(b + (255 - b) * factor))
-  
-  return string.format("#%02X%02X%02X", r, g, b)
-end
-
--- Internal function to darken a color by a given factor
-function M._darken_color(color, factor)
-  if not color or type(color) ~= "string" or not factor then
-    return color
-  end
-  
-  local r, g, b = color:match("^#([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])$")
-  if not r or not g or not b then
-    return color
-  end
-  
-  r = tonumber(r, 16)
-  g = tonumber(g, 16)
-  b = tonumber(b, 16)
-  
-  -- Darken by moving towards black
-  r = math.max(0, math.floor(r * (1 - factor)))
-  g = math.max(0, math.floor(g * (1 - factor)))
-  b = math.max(0, math.floor(b * (1 - factor)))
-  
-  return string.format("#%02X%02X%02X", r, g, b)
-end
-
--- Apply mode-specific color adjustments
--- PLACEHOLDER: This function provides a foundation for future mode-specific adjustments
--- Task 3.2 will implement proper light/dark mode detection and adjustments
-function M.apply_mode_adjustments(highlight_map, mode)
-  if not highlight_map or type(highlight_map) ~= "table" then
-    return highlight_map
-  end
-  
-  -- Default mode to dark if not provided
-  mode = mode or "dark"
-  
-  -- PLACEHOLDER: Currently returns the highlight map unchanged
-  -- Future implementation (task 3.2) will:
-  -- - Adjust contrast for light mode themes
-  -- - Modify background colors for better readability
-  -- - Apply brightness adjustments based on detected mode
-  -- - Handle edge cases for very light or very dark themes
-  
-  -- For now, we simply return the original highlight map
-  -- This ensures the function is callable and doesn't break the flow
-  return highlight_map
-end
+-- No color adjustment functions - using exact theme colors
 
 return M
