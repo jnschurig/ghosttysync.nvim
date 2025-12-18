@@ -88,9 +88,9 @@ function M.sync_theme()
   log_debug("Theme synchronization initiated")
   
   -- Check cache first for performance (Requirements 5.1, 5.2)
-  -- Skip cache if force_fresh is enabled
+  -- Skip cache if force_fresh is enabled or cache_timeout is 0
   local cached_data = nil
-  if not config.force_fresh then
+  if not config.force_fresh and config.cache_timeout > 0 then
     cached_data = M.get_cache()
   end
   

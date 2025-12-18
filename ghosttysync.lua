@@ -7,9 +7,9 @@ return {
       -- Enable automatic theme synchronization on startup
       auto_sync = true,
       
-      -- Cache timeout in seconds (30 seconds default)
-      -- Helps performance by avoiding repeated Ghostty CLI calls
-      cache_timeout = 30,
+      -- Cache timeout in seconds (0 = no caching, always fresh)
+      -- Set to 0 to always recalculate theme on every sync
+      cache_timeout = 0,
       
       -- Enable debug logging for troubleshooting
       -- Set to true if you want to see what the plugin is doing
