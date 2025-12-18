@@ -2,7 +2,7 @@
 -- Tests the highlight group application functions
 
 -- Load the nvim_applier module
-local nvim_applier = require('chosttysync.nvim_applier')
+local nvim_applier = require('ghosttysync.nvim_applier')
 
 -- Test apply_highlights with invalid input
 local function test_apply_highlights_invalid_input()
@@ -123,8 +123,8 @@ end
 local function test_set_colorscheme_name_valid_input()
   print("Testing set_colorscheme_name with valid input...")
   
-  local success, message = nvim_applier.set_colorscheme_name("chosttysync")
-  if success and message:match("Colorscheme name set to 'chosttysync'") then
+  local success, message = nvim_applier.set_colorscheme_name("ghosttysync")
+  if success and message:match("Colorscheme name set to 'ghosttysync'") then
     print("✓ Valid colorscheme name test passed")
     return true
   else

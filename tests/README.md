@@ -1,13 +1,13 @@
-# ChosttySync Unit Tests
+# GhosttySync Unit Tests
 
-This directory contains unit tests for the ChosttySync Neovim plugin.
+This directory contains unit tests for the GhosttySync Neovim plugin.
 
 ## Running Tests
 
 ### Prerequisites
 
 - Lua interpreter (lua or luajit)
-- The ChosttySync plugin source code
+- The GhosttySync plugin source code
 
 ### Running All Tests
 
@@ -43,7 +43,7 @@ tests.test_get_theme_info()
 
 ### ghostty_config_spec.lua
 
-Tests for the `lua/chosttysync/ghostty_config.lua` module:
+Tests for the `lua/ghosttysync/ghostty_config.lua` module:
 
 #### CLI Command Execution Tests (`test_execute_show_config`)
 - ✅ Ghostty executable not found in PATH

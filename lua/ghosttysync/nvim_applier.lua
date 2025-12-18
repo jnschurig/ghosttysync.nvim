@@ -34,9 +34,9 @@ local function log_error(message)
   -- For now, we'll use print for compatibility with tests
   local vim_api = get_vim_api()
   if vim_api and vim_api.notify then
-    vim_api.notify("[ChosttySync] " .. message, vim_api.log.levels.ERROR)
+    vim_api.notify("[GhosttySync] " .. message, vim_api.log.levels.ERROR)
   elseif vim and vim.notify then
-    vim.notify("[ChosttySync] " .. message, vim.log.levels.ERROR)
+    vim.notify("[GhosttySync] " .. message, vim.log.levels.ERROR)
   else
     -- Fallback for test environment - don't print to avoid cluttering test output
     -- Tests can check the error messages in return values
@@ -47,9 +47,9 @@ end
 local function log_warning(message)
   local vim_api = get_vim_api()
   if vim_api and vim_api.notify then
-    vim_api.notify("[ChosttySync] " .. message, vim_api.log.levels.WARN)
+    vim_api.notify("[GhosttySync] " .. message, vim_api.log.levels.WARN)
   elseif vim and vim.notify then
-    vim.notify("[ChosttySync] " .. message, vim.log.levels.WARN)
+    vim.notify("[GhosttySync] " .. message, vim.log.levels.WARN)
   else
     -- Fallback for test environment - don't print to avoid cluttering test output
     -- Tests can check the warning messages in return values

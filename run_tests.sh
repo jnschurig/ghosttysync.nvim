@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Test runner script for ChosttySync plugin
+# Test runner script for GhosttySync plugin
 # Runs unit tests for the configuration reader module
 
-echo "Running ChosttySync unit tests..."
+echo "Running GhosttySync unit tests..."
 echo
 
 # Check if lua is available

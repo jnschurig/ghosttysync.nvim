@@ -2,7 +2,7 @@
 -- Tests the highlight group mapping logic
 
 -- Load the color_mapper module
-local color_mapper = require('chosttysync.color_mapper')
+local color_mapper = require('ghosttysync.color_mapper')
 
 -- Test data
 local test_colors = {

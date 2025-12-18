@@ -2,7 +2,7 @@
 
 ## Introduction
 
-ChosttySync is a Neovim plugin that automatically synchronizes the terminal theme with Neovim's colorscheme by reading Ghostty terminal emulator theme information and dynamically applying corresponding colors to Neovim on startup. This ensures a consistent visual experience between the terminal and editor environments.
+GhosttySync is a Neovim plugin that automatically synchronizes the terminal theme with Neovim's colorscheme by reading Ghostty terminal emulator theme information and dynamically applying corresponding colors to Neovim on startup. This ensures a consistent visual experience between the terminal and editor environments.
 
 ## Requirements
 

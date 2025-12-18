@@ -1,15 +1,15 @@
-# ChosttySync Design Document
+# GhosttySync Design Document
 
 ## Overview
 
-ChosttySync is a Neovim plugin that automatically synchronizes terminal themes from Ghostty with Neovim's colorscheme. The plugin reads Ghostty's configuration files, extracts color information, detects light/dark mode, and applies corresponding colors to Neovim highlight groups on startup.
+GhosttySync is a Neovim plugin that automatically synchronizes terminal themes from Ghostty with Neovim's colorscheme. The plugin reads Ghostty's configuration files, extracts color information, detects light/dark mode, and applies corresponding colors to Neovim highlight groups on startup.
 
 ## Architecture
 
 The plugin follows a modular architecture with clear separation of concerns:
 
 ```
-ChosttySync Plugin
+GhosttySync Plugin
 ├── Configuration Reader (ghostty_config.lua)
 ├── Theme Parser (theme_parser.lua)  
 ├── Color Mapper (color_mapper.lua)

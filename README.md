@@ -1,4 +1,4 @@
-# ChosttySync
+# GhosttySync
 
 A Neovim plugin that automatically synchronizes Ghostty terminal themes with Neovim colorschemes.
 
@@ -8,9 +8,9 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
-  "your-username/chosttysync",
+  "your-username/ghosttysync",
   config = function()
-    require("chosttysync").setup()
+    require("ghosttysync").setup()
   end
 }
 ```
@@ -18,7 +18,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 ## Configuration
 
 ```lua
-require("chosttysync").setup({
+require("ghosttysync").setup({
   -- Enable automatic theme sync on startup (default: true)
   auto_sync = true,
   
@@ -35,7 +35,7 @@ require("chosttysync").setup({
 The plugin automatically syncs your Ghostty theme with Neovim on startup. You can also manually trigger synchronization:
 
 ```vim
-:ChosttySyncTheme
+:GhosttySyncTheme
 ```
 
 ## Requirements
@@ -47,7 +47,7 @@ The plugin automatically syncs your Ghostty theme with Neovim on startup. You ca
 ## Plugin Structure
 
 ```
-lua/chosttysync/
+lua/ghosttysync/
 ├── init.lua           # Main controller and plugin entry point
 ├── ghostty_config.lua # Ghostty CLI execution and config parsing
 ├── theme_parser.lua   # Theme parsing and color extraction

@@ -1,4 +1,4 @@
--- Test suite for ChosttySync init module (main controller)
+-- Test suite for GhosttySync init module (main controller)
 
 -- Add the lua directory to the package path
 package.path = package.path .. ";./lua/?.lua;./lua/?/init.lua"
@@ -34,7 +34,7 @@ _G.vim = {
 }
 
 -- Load the module
-local init = require('chosttysync.init')
+local init = require('ghosttysync.init')
 
 -- Test functions
 local function test_cache_functions()

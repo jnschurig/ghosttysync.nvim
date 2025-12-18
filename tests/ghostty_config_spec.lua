@@ -33,7 +33,7 @@ end
 setup_vim_mocks()
 
 -- Load the module under test
-local ghostty_config = require('lua.chosttysync.ghostty_config')
+local ghostty_config = require('lua.ghosttysync.ghostty_config')
 
 -- Test helper functions
 local function assert_equal(actual, expected, message)

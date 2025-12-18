@@ -1,4 +1,4 @@
--- ChosttySync configuration for the ghosttysync.nvim repository
+-- GhosttySync configuration for the ghosttysync.nvim repository
 -- Handles the naming mismatch between repo name and module name
 
 return {
@@ -7,8 +7,8 @@ return {
   lazy = false,
   priority = 1000,
   config = function()
-    -- The module is still named 'chosttysync' internally
-    require("chosttysync").setup({
+    -- The module is still named 'ghosttysync' internally
+    require("ghosttysync").setup({
       -- Enable automatic theme synchronization on startup
       auto_sync = true,
       
@@ -20,18 +20,18 @@ return {
     })
     
     -- Optional: Set up keymaps for manual control
-    vim.keymap.set('n', '<leader>ts', ':ChosttySyncTheme<CR>', { 
+    vim.keymap.set('n', '<leader>ts', ':GhosttySyncTheme<CR>', { 
       desc = 'Sync Ghostty theme with Neovim',
       silent = true 
     })
     
-    vim.keymap.set('n', '<leader>td', ':ChosttySyncDebug<CR>', { 
-      desc = 'Toggle ChosttySync debug mode',
+    vim.keymap.set('n', '<leader>td', ':GhosttySyncDebug<CR>', { 
+      desc = 'Toggle GhosttySync debug mode',
       silent = true 
     })
     
-    vim.keymap.set('n', '<leader>tt', ':ChosttySyncStatus<CR>', { 
-      desc = 'Show ChosttySync status',
+    vim.keymap.set('n', '<leader>tt', ':GhosttySyncStatus<CR>', { 
+      desc = 'Show GhosttySync status',
       silent = true 
     })
   end,

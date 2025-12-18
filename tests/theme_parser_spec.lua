@@ -4,7 +4,7 @@
 -- Add the lua directory to package path for testing
 package.path = package.path .. ";./lua/?.lua;./lua/?/init.lua"
 
-local theme_parser = require('chosttysync.theme_parser')
+local theme_parser = require('ghosttysync.theme_parser')
 
 -- Test helper functions
 local function assert_equal(actual, expected, message)

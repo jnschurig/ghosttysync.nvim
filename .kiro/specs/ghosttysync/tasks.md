@@ -1,7 +1,7 @@
 # Implementation Plan
 
 - [x] 1. Set up plugin structure and core interfaces
-  - Create Neovim plugin directory structure (lua/chosttysync/)
+  - Create Neovim plugin directory structure (lua/ghosttysync/)
   - Define module interfaces and data structures
   - Create plugin entry point with basic setup function
   - _Requirements: 1.1, 1.2_

@@ -1,13 +1,13 @@
--- ChosttySync: Neovim plugin to sync Ghostty terminal themes
+-- GhosttySync: Neovim plugin to sync Ghostty terminal themes
 -- Main controller module that orchestrates the theme synchronization process
 
 local M = {}
 
 -- Import required modules
-local ghostty_config = require('chosttysync.ghostty_config')
-local theme_parser = require('chosttysync.theme_parser')
-local color_mapper = require('chosttysync.color_mapper')
-local nvim_applier = require('chosttysync.nvim_applier')
+local ghostty_config = require('ghosttysync.ghostty_config')
+local theme_parser = require('ghosttysync.theme_parser')
+local color_mapper = require('ghosttysync.color_mapper')
+local nvim_applier = require('ghosttysync.nvim_applier')
 
 -- Plugin configuration with defaults
 local config = {
@@ -55,9 +55,9 @@ end
 local function log_debug(message)
   if config.debug then
     if vim and vim.notify then
-      vim.notify("[ChosttySync] " .. message, vim.log.levels.DEBUG)
+      vim.notify("[GhosttySync] " .. message, vim.log.levels.DEBUG)
     else
-      print("[ChosttySync] " .. message)
+      print("[GhosttySync] " .. message)
     end
   end
 end
@@ -65,18 +65,18 @@ end
 -- Log error messages
 local function log_error(message)
   if vim and vim.notify then
-    vim.notify("[ChosttySync] ERROR: " .. message, vim.log.levels.ERROR)
+    vim.notify("[GhosttySync] ERROR: " .. message, vim.log.levels.ERROR)
   else
-    print("[ChosttySync] ERROR: " .. message)
+    print("[GhosttySync] ERROR: " .. message)
   end
 end
 
 -- Log warning messages
 local function log_warning(message)
   if vim and vim.notify then
-    vim.notify("[ChosttySync] WARNING: " .. message, vim.log.levels.WARN)
+    vim.notify("[GhosttySync] WARNING: " .. message, vim.log.levels.WARN)
   else
-    print("[ChosttySync] WARNING: " .. message)
+    print("[GhosttySync] WARNING: " .. message)
   end
 end
 
@@ -205,7 +205,7 @@ function M.sync_theme()
   log_debug("Successfully applied highlights: " .. apply_message)
   
   -- Step 7: Set colorscheme name for identification
-  local colorscheme_name = "chosttysync_" .. (theme_info.name or "unknown"):gsub("[^%w_]", "_")
+  local colorscheme_name = "ghosttysync_" .. (theme_info.name or "unknown"):gsub("[^%w_]", "_")
   log_debug("Step 7: Setting colorscheme name: " .. colorscheme_name)
   local name_success, name_message = nvim_applier.set_colorscheme_name(colorscheme_name)
   if not name_success then
@@ -246,7 +246,7 @@ function M.setup(opts)
     config = vim.tbl_deep_extend("force", config, opts)
   end
   
-  log_debug("Setting up ChosttySync plugin")
+  log_debug("Setting up GhosttySync plugin")
   
   -- Set up automatic synchronization on startup if enabled
   -- Requirements 1.1: Plugin SHALL read Ghostty theme configuration when Neovim starts
@@ -254,7 +254,7 @@ function M.setup(opts)
     log_debug("Setting up automatic theme synchronization on startup")
     
     -- Create autocommand for VimEnter event to hook into Neovim startup
-    local augroup = vim.api.nvim_create_augroup("ChosttySync", { clear = true })
+    local augroup = vim.api.nvim_create_augroup("GhosttySync", { clear = true })
     
     vim.api.nvim_create_autocmd("VimEnter", {
       group = augroup,
@@ -289,7 +289,7 @@ function M.setup(opts)
       group = augroup,
       callback = function(args)
         -- Only sync if it's not our own colorscheme to avoid infinite loops
-        if args.match and not args.match:match("^chosttysync_") then
+        if args.match and not args.match:match("^ghosttysync_") then
           log_debug("ColorScheme event detected (" .. args.match .. "), syncing Ghostty theme")
           vim.defer_fn(function()
             M.sync_theme()
@@ -304,20 +304,20 @@ function M.setup(opts)
   
   -- Create user command for manual synchronization
   -- Provide manual sync command for user-triggered updates
-  vim.api.nvim_create_user_command("ChosttySyncTheme", function()
+  vim.api.nvim_create_user_command("GhosttySyncTheme", function()
     log_debug("Manual theme sync command triggered")
     local success, message = M.sync_theme()
     if success then
       if vim and vim.notify then
-        vim.notify("ChosttySync: " .. message, vim.log.levels.INFO)
+        vim.notify("GhosttySync: " .. message, vim.log.levels.INFO)
       else
-        print("ChosttySync: " .. message)
+        print("GhosttySync: " .. message)
       end
     else
       if vim and vim.notify then
-        vim.notify("ChosttySync: " .. message, vim.log.levels.ERROR)
+        vim.notify("GhosttySync: " .. message, vim.log.levels.ERROR)
       else
-        print("ChosttySync ERROR: " .. message)
+        print("GhosttySync ERROR: " .. message)
       end
     end
   end, {
@@ -325,36 +325,36 @@ function M.setup(opts)
   })
   
   -- Create additional user command to toggle debug mode
-  vim.api.nvim_create_user_command("ChosttySyncDebug", function()
+  vim.api.nvim_create_user_command("GhosttySyncDebug", function()
     config.debug = not config.debug
     local status = config.debug and "enabled" or "disabled"
-    local message = "ChosttySync debug mode " .. status
+    local message = "GhosttySync debug mode " .. status
     if vim and vim.notify then
       vim.notify(message, vim.log.levels.INFO)
     else
       print(message)
     end
   end, {
-    desc = "Toggle ChosttySync debug mode"
+    desc = "Toggle GhosttySync debug mode"
   })
   
   -- Create command to force fresh sync (bypass cache)
-  vim.api.nvim_create_user_command("ChosttySyncForce", function()
+  vim.api.nvim_create_user_command("GhosttySyncForce", function()
     log_debug("Force sync command triggered - bypassing cache")
     -- Temporarily clear cache and force fresh sync
     cache.data = nil
     local success, message = M.sync_theme()
     if success then
       if vim and vim.notify then
-        vim.notify("ChosttySync (forced): " .. message, vim.log.levels.INFO)
+        vim.notify("GhosttySync (forced): " .. message, vim.log.levels.INFO)
       else
-        print("ChosttySync (forced): " .. message)
+        print("GhosttySync (forced): " .. message)
       end
     else
       if vim and vim.notify then
-        vim.notify("ChosttySync (forced): " .. message, vim.log.levels.ERROR)
+        vim.notify("GhosttySync (forced): " .. message, vim.log.levels.ERROR)
       else
-        print("ChosttySync ERROR (forced): " .. message)
+        print("GhosttySync ERROR (forced): " .. message)
       end
     end
   end, {
@@ -362,16 +362,16 @@ function M.setup(opts)
   })
   
   -- Create command to show current configuration
-  vim.api.nvim_create_user_command("ChosttySyncStatus", function()
+  vim.api.nvim_create_user_command("GhosttySyncStatus", function()
     local cached_data = M.get_cache()
     local cache_status = cached_data and "valid" or "empty"
     
     -- Check if autocmds exist
-    local autocmds = vim.api.nvim_get_autocmds({ group = "ChosttySync" })
+    local autocmds = vim.api.nvim_get_autocmds({ group = "GhosttySync" })
     local autocmd_count = #autocmds
     
     local status_message = string.format(
-      "ChosttySync Status:\n" ..
+      "GhosttySync Status:\n" ..
       "  Auto sync: %s\n" ..
       "  Debug: %s\n" ..
       "  Cache timeout: %ds\n" ..
@@ -399,13 +399,13 @@ function M.setup(opts)
       print(status_message)
     end
   end, {
-    desc = "Show ChosttySync plugin status and configuration"
+    desc = "Show GhosttySync plugin status and configuration"
   })
   
   -- Create command to test autocmd manually
-  vim.api.nvim_create_user_command("ChosttySyncTest", function()
+  vim.api.nvim_create_user_command("GhosttySyncTest", function()
     log_debug("Manual autocmd test triggered")
-    vim.api.nvim_exec_autocmds("VimEnter", { group = "ChosttySync" })
+    vim.api.nvim_exec_autocmds("VimEnter", { group = "GhosttySync" })
   end, {
     desc = "Manually trigger VimEnter autocmd for testing"
   })
@@ -423,7 +423,7 @@ function M.setup(opts)
   end
   
   if config.debug then
-    local config_str = "ChosttySync: Plugin initialized with config: "
+    local config_str = "GhosttySync: Plugin initialized with config: "
     if vim and vim.inspect then
       config_str = config_str .. vim.inspect(config)
     else
