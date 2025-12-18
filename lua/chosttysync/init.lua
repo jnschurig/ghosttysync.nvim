@@ -1,0 +1,337 @@
+-- ChosttySync: Neovim plugin to sync Ghostty terminal themes
+-- Main controller module that orchestrates the theme synchronization process
+
+local M = {}
+
+-- Import required modules
+local ghostty_config = require('chosttysync.ghostty_config')
+local theme_parser = require('chosttysync.theme_parser')
+local color_mapper = require('chosttysync.color_mapper')
+local nvim_applier = require('chosttysync.nvim_applier')
+
+-- Plugin configuration with defaults
+local config = {
+  -- Enable automatic theme sync on startup
+  auto_sync = true,
+  -- Cache timeout in seconds (30 seconds)
+  cache_timeout = 30,
+  -- Enable debug logging
+  debug = false,
+}
+
+-- Cache for theme data to improve performance
+local cache = {
+  data = nil,
+  timestamp = 0,
+}
+
+-- Check if cache is still valid
+local function is_cache_valid()
+  return cache.data and (os.time() - cache.timestamp) < config.cache_timeout
+end
+
+-- Get cached theme data if valid
+function M.get_cache()
+  if is_cache_valid() then
+    return cache.data
+  end
+  return nil
+end
+
+-- Store theme data in cache
+function M.set_cache(data)
+  cache.data = data
+  cache.timestamp = os.time()
+end
+
+-- Get current plugin configuration
+function M.get_config()
+  return vim.deepcopy and vim.deepcopy(config) or config
+end
+
+-- Log debug messages
+local function log_debug(message)
+  if config.debug then
+    if vim and vim.notify then
+      vim.notify("[ChosttySync] " .. message, vim.log.levels.DEBUG)
+    else
+      print("[ChosttySync] " .. message)
+    end
+  end
+end
+
+-- Log error messages
+local function log_error(message)
+  if vim and vim.notify then
+    vim.notify("[ChosttySync] ERROR: " .. message, vim.log.levels.ERROR)
+  else
+    print("[ChosttySync] ERROR: " .. message)
+  end
+end
+
+-- Log warning messages
+local function log_warning(message)
+  if vim and vim.notify then
+    vim.notify("[ChosttySync] WARNING: " .. message, vim.log.levels.WARN)
+  else
+    print("[ChosttySync] WARNING: " .. message)
+  end
+end
+
+-- Main theme synchronization function
+-- Orchestrates the complete theme synchronization process
+-- Integrates all modules: config reader, parser, mapper, applier
+-- Handles the full data flow from CLI execution to highlight application
+function M.sync_theme()
+  log_debug("Theme synchronization initiated")
+  
+  -- Check cache first for performance (Requirements 5.1, 5.2)
+  local cached_data = M.get_cache()
+  if cached_data then
+    log_debug("Using cached theme data")
+    
+    -- Apply cached highlight map directly
+    local success, message, errors = nvim_applier.apply_highlights(cached_data.highlight_map)
+    if success then
+      -- Set colorscheme name
+      local name_success, name_message = nvim_applier.set_colorscheme_name(cached_data.colorscheme_name)
+      if name_success then
+        log_debug("Applied cached theme successfully")
+        return true, "Theme synchronized from cache"
+      else
+        log_warning("Failed to set colorscheme name from cache: " .. name_message)
+        -- Continue with fresh sync
+      end
+    else
+      log_warning("Failed to apply cached theme, falling back to fresh sync: " .. message)
+    end
+    -- Clear invalid cache and continue with fresh sync
+    cache.data = nil
+  end
+  
+  -- Step 1: Read Ghostty configuration via CLI (Requirements 1.1, 3.1)
+  log_debug("Step 1: Reading Ghostty configuration via CLI")
+  local theme_info, config_error = ghostty_config.get_theme_info()
+  if not theme_info then
+    local error_msg = "Failed to read Ghostty configuration: " .. (config_error or "unknown error")
+    log_error(error_msg)
+    -- Requirement 1.3: Fall back gracefully without crashing
+    return false, error_msg
+  end
+  
+  log_debug("Successfully read Ghostty theme: " .. (theme_info.name or "unknown"))
+  
+  -- Step 2: Parse theme and extract colors (Requirements 3.2)
+  log_debug("Step 2: Extracting colors from theme configuration")
+  local colors, parse_error = theme_parser.extract_colors(theme_info)
+  if not colors then
+    local error_msg = "Failed to extract colors: " .. (parse_error or "unknown error")
+    log_error(error_msg)
+    return false, error_msg
+  end
+  
+  local palette_size = 0
+  if colors.palette then
+    for _ in pairs(colors.palette) do
+      palette_size = palette_size + 1
+    end
+  end
+  log_debug("Successfully extracted colors: background=" .. (colors.background or "none") .. 
+           ", foreground=" .. (colors.foreground or "none") .. 
+           ", palette_size=" .. palette_size)
+  
+  -- Step 3: Detect light/dark mode (Requirements 4.1, 4.2, 4.3)
+  log_debug("Step 3: Detecting theme mode")
+  local mode = theme_parser.detect_mode(colors)
+  log_debug("Detected theme mode: " .. mode)
+  
+  -- Step 4: Map colors to Neovim highlight groups (Requirements 1.2, 3.2)
+  log_debug("Step 4: Mapping colors to Neovim highlight groups")
+  local highlight_map, mapping_error = color_mapper.create_highlight_map(colors, mode)
+  if not highlight_map then
+    local error_msg = "Failed to create highlight map: " .. (mapping_error or "unknown error")
+    log_error(error_msg)
+    return false, error_msg
+  end
+  
+  local highlight_count = 0
+  for _ in pairs(highlight_map) do
+    highlight_count = highlight_count + 1
+  end
+  log_debug("Created highlight map with " .. highlight_count .. " groups")
+  
+  -- Step 5: Clear existing highlights before applying new theme
+  log_debug("Step 5: Clearing existing highlights")
+  local clear_success, clear_message, clear_errors = nvim_applier.clear_existing_highlights()
+  if not clear_success then
+    log_warning("Failed to clear existing highlights: " .. clear_message)
+    -- Continue anyway, as this is not critical for functionality
+  else
+    log_debug("Successfully cleared existing highlights")
+  end
+  
+  -- Step 6: Apply highlights to Neovim (Requirements 1.2)
+  log_debug("Step 6: Applying highlights to Neovim")
+  local apply_success, apply_message, apply_errors = nvim_applier.apply_highlights(highlight_map)
+  if not apply_success then
+    local error_msg = "Failed to apply highlights: " .. apply_message
+    log_error(error_msg)
+    return false, error_msg
+  end
+  
+  log_debug("Successfully applied highlights: " .. apply_message)
+  
+  -- Step 7: Set colorscheme name for identification
+  local colorscheme_name = "chosttysync_" .. (theme_info.name or "unknown"):gsub("[^%w_]", "_")
+  log_debug("Step 7: Setting colorscheme name: " .. colorscheme_name)
+  local name_success, name_message = nvim_applier.set_colorscheme_name(colorscheme_name)
+  if not name_success then
+    log_warning("Failed to set colorscheme name: " .. name_message)
+    -- Continue anyway, as this is not critical for core functionality
+  else
+    log_debug("Successfully set colorscheme name")
+  end
+  
+  -- Step 8: Cache the results for performance (Requirements 5.1, 5.2)
+  log_debug("Step 8: Caching theme data for future use")
+  M.set_cache({
+    theme_info = theme_info,
+    colors = colors,
+    mode = mode,
+    highlight_map = highlight_map,
+    colorscheme_name = colorscheme_name,
+    timestamp = os.time()
+  })
+  
+  -- Log success with comprehensive summary
+  local success_msg = string.format(
+    "Theme synchronized successfully: %s (%s mode, %d highlight groups applied)",
+    theme_info.name or "unknown",
+    mode,
+    highlight_count
+  )
+  log_debug(success_msg)
+  
+  return true, success_msg
+end
+
+-- Plugin setup function with configuration options
+-- Requirements 1.1, 1.2: Initialize plugin and set up automatic theme synchronization
+function M.setup(opts)
+  -- Merge user options with defaults
+  if opts then
+    config = vim.tbl_deep_extend("force", config, opts)
+  end
+  
+  log_debug("Setting up ChosttySync plugin")
+  
+  -- Set up automatic synchronization on startup if enabled
+  -- Requirements 1.1: Plugin SHALL read Ghostty theme configuration when Neovim starts
+  if config.auto_sync then
+    log_debug("Setting up automatic theme synchronization on startup")
+    
+    -- Create autocommand for VimEnter event to hook into Neovim startup
+    vim.api.nvim_create_autocmd("VimEnter", {
+      group = vim.api.nvim_create_augroup("ChosttySync", { clear = true }),
+      callback = function()
+        log_debug("VimEnter event triggered, starting automatic theme sync")
+        local success, message = M.sync_theme()
+        if success then
+          log_debug("Automatic theme sync completed: " .. message)
+        else
+          log_warning("Automatic theme sync failed: " .. message)
+        end
+      end,
+      desc = "Sync Ghostty theme with Neovim on startup"
+    })
+  else
+    log_debug("Automatic theme synchronization disabled")
+  end
+  
+  -- Create user command for manual synchronization
+  -- Provide manual sync command for user-triggered updates
+  vim.api.nvim_create_user_command("ChosttySyncTheme", function()
+    log_debug("Manual theme sync command triggered")
+    local success, message = M.sync_theme()
+    if success then
+      if vim and vim.notify then
+        vim.notify("ChosttySync: " .. message, vim.log.levels.INFO)
+      else
+        print("ChosttySync: " .. message)
+      end
+    else
+      if vim and vim.notify then
+        vim.notify("ChosttySync: " .. message, vim.log.levels.ERROR)
+      else
+        print("ChosttySync ERROR: " .. message)
+      end
+    end
+  end, {
+    desc = "Manually sync Ghostty theme with Neovim"
+  })
+  
+  -- Create additional user command to toggle debug mode
+  vim.api.nvim_create_user_command("ChosttySyncDebug", function()
+    config.debug = not config.debug
+    local status = config.debug and "enabled" or "disabled"
+    local message = "ChosttySync debug mode " .. status
+    if vim and vim.notify then
+      vim.notify(message, vim.log.levels.INFO)
+    else
+      print(message)
+    end
+  end, {
+    desc = "Toggle ChosttySync debug mode"
+  })
+  
+  -- Create command to show current configuration
+  vim.api.nvim_create_user_command("ChosttySyncStatus", function()
+    local cached_data = M.get_cache()
+    local cache_status = cached_data and "valid" or "empty"
+    local status_message = string.format(
+      "ChosttySync Status:\n" ..
+      "  Auto sync: %s\n" ..
+      "  Debug: %s\n" ..
+      "  Cache timeout: %ds\n" ..
+      "  Cache status: %s",
+      config.auto_sync and "enabled" or "disabled",
+      config.debug and "enabled" or "disabled",
+      config.cache_timeout,
+      cache_status
+    )
+    
+    if cached_data then
+      status_message = status_message .. string.format(
+        "\n  Current theme: %s\n" ..
+        "  Theme mode: %s",
+        cached_data.theme_info and cached_data.theme_info.name or "unknown",
+        cached_data.mode or "unknown"
+      )
+    end
+    
+    if vim and vim.notify then
+      vim.notify(status_message, vim.log.levels.INFO)
+    else
+      print(status_message)
+    end
+  end, {
+    desc = "Show ChosttySync plugin status and configuration"
+  })
+  
+  log_debug("Plugin setup completed successfully")
+  
+  if config.debug then
+    local config_str = "ChosttySync: Plugin initialized with config: "
+    if vim and vim.inspect then
+      config_str = config_str .. vim.inspect(config)
+    else
+      -- Fallback for test environment
+      config_str = config_str .. "auto_sync=" .. tostring(config.auto_sync) .. 
+                   ", debug=" .. tostring(config.debug) .. 
+                   ", cache_timeout=" .. tostring(config.cache_timeout)
+    end
+    print(config_str)
+  end
+end
+
+return M
