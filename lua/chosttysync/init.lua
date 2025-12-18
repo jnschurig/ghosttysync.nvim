@@ -17,6 +17,8 @@ local config = {
   cache_timeout = 30,
   -- Enable debug logging
   debug = false,
+  -- Force fresh sync (bypass cache) - useful for debugging
+  force_fresh = false,
 }
 
 -- Cache for theme data to improve performance
@@ -86,7 +88,12 @@ function M.sync_theme()
   log_debug("Theme synchronization initiated")
   
   -- Check cache first for performance (Requirements 5.1, 5.2)
-  local cached_data = M.get_cache()
+  -- Skip cache if force_fresh is enabled
+  local cached_data = nil
+  if not config.force_fresh then
+    cached_data = M.get_cache()
+  end
+  
   if cached_data then
     log_debug("Using cached theme data")
     
@@ -120,6 +127,22 @@ function M.sync_theme()
   end
   
   log_debug("Successfully read Ghostty theme: " .. (theme_info.name or "unknown"))
+  
+  -- Debug: Show detected colors
+  if config.debug and theme_info.colors then
+    log_debug("Detected colors:")
+    log_debug("  Background: " .. (theme_info.colors.background or "none"))
+    log_debug("  Foreground: " .. (theme_info.colors.foreground or "none"))
+    log_debug("  Selection BG: " .. (theme_info.colors.selection_background or "none"))
+    log_debug("  Selection FG: " .. (theme_info.colors.selection_foreground or "none"))
+    if theme_info.colors.palette then
+      local palette_count = 0
+      for _ in pairs(theme_info.colors.palette) do
+        palette_count = palette_count + 1
+      end
+      log_debug("  Palette colors: " .. palette_count)
+    end
+  end
   
   -- Step 2: Parse theme and extract colors (Requirements 3.2)
   log_debug("Step 2: Extracting colors from theme configuration")
@@ -231,18 +254,49 @@ function M.setup(opts)
     log_debug("Setting up automatic theme synchronization on startup")
     
     -- Create autocommand for VimEnter event to hook into Neovim startup
+    local augroup = vim.api.nvim_create_augroup("ChosttySync", { clear = true })
+    
     vim.api.nvim_create_autocmd("VimEnter", {
-      group = vim.api.nvim_create_augroup("ChosttySync", { clear = true }),
+      group = augroup,
       callback = function()
         log_debug("VimEnter event triggered, starting automatic theme sync")
-        local success, message = M.sync_theme()
-        if success then
-          log_debug("Automatic theme sync completed: " .. message)
-        else
-          log_warning("Automatic theme sync failed: " .. message)
-        end
+        
+        -- Add a small delay to ensure terminal is fully initialized
+        vim.defer_fn(function()
+          local success, message = M.sync_theme()
+          if success then
+            log_debug("Automatic theme sync completed: " .. message)
+          else
+            log_warning("Automatic theme sync failed: " .. message)
+            -- Try once more after a longer delay
+            vim.defer_fn(function()
+              log_debug("Retrying automatic theme sync...")
+              local retry_success, retry_message = M.sync_theme()
+              if retry_success then
+                log_debug("Retry theme sync completed: " .. retry_message)
+              else
+                log_error("Retry theme sync also failed: " .. retry_message)
+              end
+            end, 1000) -- 1 second delay for retry
+          end
+        end, 100) -- 100ms delay for initial sync
       end,
       desc = "Sync Ghostty theme with Neovim on startup"
+    })
+    
+    -- Also try to sync on ColorScheme event in case another plugin changes colors
+    vim.api.nvim_create_autocmd("ColorScheme", {
+      group = augroup,
+      callback = function(args)
+        -- Only sync if it's not our own colorscheme to avoid infinite loops
+        if args.match and not args.match:match("^chosttysync_") then
+          log_debug("ColorScheme event detected (" .. args.match .. "), syncing Ghostty theme")
+          vim.defer_fn(function()
+            M.sync_theme()
+          end, 50) -- Small delay to let the colorscheme settle
+        end
+      end,
+      desc = "Sync Ghostty theme when colorscheme changes"
     })
   else
     log_debug("Automatic theme synchronization disabled")
@@ -284,20 +338,50 @@ function M.setup(opts)
     desc = "Toggle ChosttySync debug mode"
   })
   
+  -- Create command to force fresh sync (bypass cache)
+  vim.api.nvim_create_user_command("ChosttySyncForce", function()
+    log_debug("Force sync command triggered - bypassing cache")
+    -- Temporarily clear cache and force fresh sync
+    cache.data = nil
+    local success, message = M.sync_theme()
+    if success then
+      if vim and vim.notify then
+        vim.notify("ChosttySync (forced): " .. message, vim.log.levels.INFO)
+      else
+        print("ChosttySync (forced): " .. message)
+      end
+    else
+      if vim and vim.notify then
+        vim.notify("ChosttySync (forced): " .. message, vim.log.levels.ERROR)
+      else
+        print("ChosttySync ERROR (forced): " .. message)
+      end
+    end
+  end, {
+    desc = "Force sync Ghostty theme (bypass cache)"
+  })
+  
   -- Create command to show current configuration
   vim.api.nvim_create_user_command("ChosttySyncStatus", function()
     local cached_data = M.get_cache()
     local cache_status = cached_data and "valid" or "empty"
+    
+    -- Check if autocmds exist
+    local autocmds = vim.api.nvim_get_autocmds({ group = "ChosttySync" })
+    local autocmd_count = #autocmds
+    
     local status_message = string.format(
       "ChosttySync Status:\n" ..
       "  Auto sync: %s\n" ..
       "  Debug: %s\n" ..
       "  Cache timeout: %ds\n" ..
-      "  Cache status: %s",
+      "  Cache status: %s\n" ..
+      "  Autocmds registered: %d",
       config.auto_sync and "enabled" or "disabled",
       config.debug and "enabled" or "disabled",
       config.cache_timeout,
-      cache_status
+      cache_status,
+      autocmd_count
     )
     
     if cached_data then
@@ -318,7 +402,25 @@ function M.setup(opts)
     desc = "Show ChosttySync plugin status and configuration"
   })
   
+  -- Create command to test autocmd manually
+  vim.api.nvim_create_user_command("ChosttySyncTest", function()
+    log_debug("Manual autocmd test triggered")
+    vim.api.nvim_exec_autocmds("VimEnter", { group = "ChosttySync" })
+  end, {
+    desc = "Manually trigger VimEnter autocmd for testing"
+  })
+  
   log_debug("Plugin setup completed successfully")
+  
+  -- Debug: Show autocmd status
+  if config.debug then
+    log_debug("Autocmd setup status:")
+    log_debug("  Auto sync enabled: " .. tostring(config.auto_sync))
+    if config.auto_sync then
+      log_debug("  VimEnter autocmd created for automatic theme sync")
+      log_debug("  ColorScheme autocmd created for theme change detection")
+    end
+  end
   
   if config.debug then
     local config_str = "ChosttySync: Plugin initialized with config: "

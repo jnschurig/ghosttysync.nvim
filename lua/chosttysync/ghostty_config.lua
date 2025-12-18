@@ -177,10 +177,9 @@ function M.extract_theme_info(config)
   -- Extract theme name
   theme_info.name = config.theme or "unknown"
 
-  -- Extract and normalize basic colors
+  -- Extract and normalize basic colors (only the specified ones)
   local background = normalize_color(config.background)
   local foreground = normalize_color(config.foreground)
-  local cursor_color = normalize_color(config.cursor_color or config["cursor-color"])
 
   if background then
     theme_info.colors.background = background
@@ -188,11 +187,8 @@ function M.extract_theme_info(config)
   if foreground then
     theme_info.colors.foreground = foreground
   end
-  if cursor_color then
-    theme_info.colors.cursor_color = cursor_color
-  end
 
-  -- Extract terminal color palette
+  -- Extract terminal color palette (ONLY colors 0-15)
   -- Ghostty uses format: palette = N=#color
   local palette = {}
   
@@ -201,10 +197,15 @@ function M.extract_theme_info(config)
     for _, entry in ipairs(config.palette_entries) do
       local color_num, color_value = entry:match("^(%d+)=(.+)$")
       if color_num and color_value then
-        local normalized = normalize_color(color_value)
-        if normalized then
-          palette[tonumber(color_num)] = normalized
+        local num = tonumber(color_num)
+        -- ONLY extract standard terminal colors (0-15), ignore 256-color palette
+        if num and num >= 0 and num <= 15 then
+          local normalized = normalize_color(color_value)
+          if normalized then
+            palette[num] = normalized
+          end
         end
+        -- Explicitly ignore colors 16-255
       end
     end
   end

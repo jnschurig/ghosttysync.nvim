@@ -65,7 +65,8 @@ function M.create_highlight_map(colors, mode)
   -- Extract essential colors with fallbacks
   local bg = adjusted_colors.background or "#000000"
   local fg = adjusted_colors.foreground or "#FFFFFF"
-  local cursor = adjusted_colors.cursor or fg
+  local selection_bg = adjusted_colors.selection_background or "#404040"
+  local selection_fg = adjusted_colors.selection_foreground or fg
   local palette = adjusted_colors.palette or {}
   
   -- Create base highlight map
@@ -157,13 +158,14 @@ function M.create_highlight_map(colors, mode)
   -- UI elements
   highlight_map.Cursor = { 
     fg = bg, 
-    bg = cursor 
+    bg = fg  -- Use foreground color for cursor
   }
   highlight_map.CursorLine = { 
     bg = palette[0] or "#000000"   -- Slightly different background for cursor line
   }
   highlight_map.Visual = { 
-    bg = palette[8] or "#808080"   -- Gray background for visual selection
+    fg = selection_fg,
+    bg = selection_bg              -- Use selection colors for visual mode
   }
   highlight_map.Search = { 
     fg = bg,
@@ -207,7 +209,8 @@ function M.validate_colors(colors)
   -- Ensure we have at least basic colors with fallbacks
   validated_colors.background = validated_colors.background or "#000000"
   validated_colors.foreground = validated_colors.foreground or "#FFFFFF"
-  validated_colors.cursor = validated_colors.cursor or validated_colors.foreground
+  validated_colors.selection_background = validated_colors.selection_background or "#404040"
+  validated_colors.selection_foreground = validated_colors.selection_foreground or validated_colors.foreground
   validated_colors.palette = validated_colors.palette or {}
   
   return true, validated_colors

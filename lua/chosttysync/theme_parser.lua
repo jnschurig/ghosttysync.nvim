@@ -134,6 +134,7 @@ function M.parse_cli_output(output)
 end
 
 -- Extract color palette from parsed configuration data
+-- Only extracts: background, foreground, selection-foreground, selection-background, and palette colors 0-15
 function M.extract_colors(config_data)
   if not config_data or type(config_data) ~= "table" then
     return nil, "Invalid configuration data"
@@ -142,7 +143,8 @@ function M.extract_colors(config_data)
   local colors = {
     background = nil,
     foreground = nil,
-    cursor = nil,
+    selection_foreground = nil,
+    selection_background = nil,
     palette = {}
   }
   
@@ -156,28 +158,30 @@ function M.extract_colors(config_data)
     colors.foreground = normalize_to_hex(config_data.foreground)
   end
   
-  -- Extract and validate cursor color (try multiple possible keys)
-  local cursor_keys = {"cursor_color", "cursor-color", "cursor"}
-  for _, key in ipairs(cursor_keys) do
-    if config_data[key] then
-      colors.cursor = normalize_to_hex(config_data[key])
-      break
-    end
+  -- Extract selection colors
+  if config_data.selection_foreground then
+    colors.selection_foreground = normalize_to_hex(config_data.selection_foreground)
   end
   
-  -- Extract terminal color palette (colors 0-15)
+  if config_data.selection_background then
+    colors.selection_background = normalize_to_hex(config_data.selection_background)
+  end
+  
+  -- Extract ONLY terminal color palette (colors 0-15)
+  -- Explicitly ignore any colors beyond the standard 16-color palette
   if config_data.palette_entries then
     for _, entry in ipairs(config_data.palette_entries) do
       local color_num, color_value = entry:match("^(%d+)=(.+)$")
       if color_num and color_value then
         local num = tonumber(color_num)
-        -- Only process standard terminal colors (0-15)
+        -- ONLY process standard terminal colors (0-15), ignore 256-color palette
         if num and num >= 0 and num <= 15 then
           local normalized = normalize_to_hex(color_value)
           if normalized then
             colors.palette[num] = normalized
           end
         end
+        -- Explicitly ignore colors 16-255 (256-color palette)
       end
     end
   end
@@ -194,8 +198,13 @@ function M.extract_colors(config_data)
     colors.foreground = "#FFFFFF"  -- Default to white foreground
   end
   
-  if not colors.cursor then
-    colors.cursor = colors.foreground  -- Default cursor to foreground color
+  -- Set default selection colors if not provided
+  if not colors.selection_background then
+    colors.selection_background = "#404040"  -- Default selection background
+  end
+  
+  if not colors.selection_foreground then
+    colors.selection_foreground = colors.foreground  -- Default to foreground color
   end
   
   -- Ensure we have a complete standard palette (0-15)

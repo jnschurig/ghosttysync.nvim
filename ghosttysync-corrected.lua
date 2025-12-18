@@ -1,18 +1,21 @@
+-- ChosttySync configuration for the ghosttysync.nvim repository
+-- Handles the naming mismatch between repo name and module name
+
 return {
-  "your-username/chosttysync.nvim", -- Replace with actual plugin path when published
+  "jnschurig/ghosttysync.nvim",
+  branch = "v0", -- Specify the branch you want
   lazy = false,
-  priority = 1000, -- Load before other colorscheme plugins
+  priority = 1000,
   config = function()
+    -- The module is still named 'chosttysync' internally
     require("chosttysync").setup({
       -- Enable automatic theme synchronization on startup
       auto_sync = true,
       
       -- Cache timeout in seconds (30 seconds default)
-      -- Helps performance by avoiding repeated Ghostty CLI calls
       cache_timeout = 30,
       
       -- Enable debug logging for troubleshooting
-      -- Set to true if you want to see what the plugin is doing
       debug = false,
     })
     
