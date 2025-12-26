@@ -315,7 +315,7 @@ function M.setup(opts)
 		if success then
 			if vim and vim.notify then
 				vim.notify("GhosttySync: " .. message, vim.log.levels.INFO)
-				vim.notify("GhosttySync Colors: " .. config.M.colors)
+				vim.notify("GhosttySync Colors: " .. M.colors)
 			else
 				print("GhosttySync: " .. message)
 			end
