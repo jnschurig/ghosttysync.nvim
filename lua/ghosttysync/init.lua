@@ -123,7 +123,7 @@ function M.sync_theme()
 		local error_msg = "Failed to read Ghostty configuration: " .. (config_error or "unknown error")
 		log_error(error_msg)
 		-- Requirement 1.3: Fall back gracefully without crashing
-		log_debug("------------------------ " .. theme_info)
+		print("------------------------ " .. theme_info)
 		return false, error_msg
 	end
 
