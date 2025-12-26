@@ -128,7 +128,7 @@ function M.sync_theme()
 	end
 
 	log_debug("Successfully read Ghostty theme: " .. (theme_info.name or "unknown"))
-	log_debug("Theme Info: " .. (theme_info or "unknown"))
+	log_debug("------------------------------------- Theme Info: " .. (theme_info or "unknown"))
 
 	-- Debug: Show detected colors
 	if config.debug and theme_info.colors then
