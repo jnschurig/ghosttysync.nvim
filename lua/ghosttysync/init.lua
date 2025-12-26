@@ -384,9 +384,9 @@ function M.setup(opts)
 				.. "  Autocmds registered: %d",
 			-- config.auto_sync and "enabled" or "disabled",
 			-- config.cache_timeout,
-			-- cache_status,
-			-- autocmd_count,
 			config.debug and "enabled" or "disabled"
+			-- cache_status,
+			-- autocmd_count
 		)
 
 		-- if cached_data then
