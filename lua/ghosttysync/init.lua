@@ -398,7 +398,7 @@ function M.setup(opts)
 		--     )
 		-- end
 
-		if vim and vim.notify then
+		if vim and vim.notify and false then
 			vim.notify(status_message, vim.log.levels.INFO)
 		else
 			print(status_message)
