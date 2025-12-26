@@ -384,7 +384,8 @@ function M.setup(opts)
 				.. "  Autocmds registered: %d",
 			-- config.auto_sync and "enabled" or "disabled",
 			-- config.cache_timeout,
-			config.debug and "enabled" or "disabled"
+			config.debug and "enabled" or "disabled",
+			config.M.colors
 			-- cache_status,
 			-- autocmd_count
 		)
