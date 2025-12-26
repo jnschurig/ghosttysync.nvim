@@ -372,8 +372,8 @@ function M.setup(opts)
 		-- local cache_status = cached_data and "valid" or "empty"
 
 		-- Check if autocmds exist
-		local autocmds = vim.api.nvim_get_autocmds({ group = "GhosttySync" })
-		local autocmd_count = #autocmds
+		-- local autocmds = vim.api.nvim_get_autocmds({ group = "GhosttySync" })
+		-- local autocmd_count = #autocmds
 
 		local status_message = string.format(
 			"GhosttySync Status:\n"
@@ -382,11 +382,11 @@ function M.setup(opts)
 				-- .. "  Cache timeout: %ds\n"
 				-- .. "  Cache status: %s\n"
 				.. "  Autocmds registered: %d",
-			config.auto_sync and "enabled" or "disabled",
-			config.debug and "enabled" or "disabled",
+			-- config.auto_sync and "enabled" or "disabled",
 			-- config.cache_timeout,
 			-- cache_status,
-			autocmd_count
+			-- autocmd_count,
+			config.debug and "enabled" or "disabled"
 		)
 
 		-- if cached_data then
