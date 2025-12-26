@@ -5,21 +5,21 @@ local M = {}
 
 -- Helper function to validate color format
 local function is_valid_color(color)
-  if not color or type(color) ~= "string" then
-    return false
-  end
+	if not color or type(color) ~= "string" then
+		return false
+	end
 
-  -- Check for hex color format (#RRGGBB or #RGB)
-  if color:match("^#%x%x%x%x%x%x$") or color:match("^#%x%x%x$") then
-    return true
-  end
+	-- Check for hex color format (#RRGGBB or #RGB)
+	if color:match("^#%x%x%x%x%x%x$") or color:match("^#%x%x%x$") then
+		return true
+	end
 
-  -- Check for rgb() format
-  if color:match("^rgb%(%d+,%s*%d+,%s*%d+%)$") then
-    return true
-  end
+	-- Check for rgb() format
+	if color:match("^rgb%(%d+,%s*%d+,%s*%d+%)$") then
+		return true
+	end
 
-  return false
+	return false
 end
 
 -- Helper function to normalize color values
@@ -83,8 +83,6 @@ function M.execute_show_config()
 	if not result or result == "" then
 		return nil, "Ghostty command returned empty output"
 	end
-
-	print(result)
 
 	return result, nil
 end
