@@ -12,39 +12,39 @@ local nvim_applier = require("ghosttysync.nvim_applier")
 -- Plugin configuration with defaults
 local config = {
 	-- Enable automatic theme sync on startup
-	auto_sync = true,
+	-- auto_sync = true,
 	-- Cache timeout in seconds (30 seconds)
-	cache_timeout = 30,
+	-- cache_timeout = 30,
 	-- Enable debug logging
 	debug = false,
 	-- Force fresh sync (bypass cache) - useful for debugging
-	force_fresh = false,
+	-- force_fresh = false,
 }
 
--- Cache for theme data to improve performance
-local cache = {
-	data = nil,
-	timestamp = 0,
-}
+-- -- Cache for theme data to improve performance
+-- local cache = {
+--   data = nil,
+--   timestamp = 0,
+-- }
 
--- Check if cache is still valid
-local function is_cache_valid()
-	return cache.data and (os.time() - cache.timestamp) < config.cache_timeout
-end
+-- -- Check if cache is still valid
+-- local function is_cache_valid()
+--   return cache.data and (os.time() - cache.timestamp) < config.cache_timeout
+-- end
 
--- Get cached theme data if valid
-function M.get_cache()
-	if is_cache_valid() then
-		return cache.data
-	end
-	return nil
-end
+-- -- Get cached theme data if valid
+-- function M.get_cache()
+--   if is_cache_valid() then
+--     return cache.data
+--   end
+--   return nil
+-- end
 
--- Store theme data in cache
-function M.set_cache(data)
-	cache.data = data
-	cache.timestamp = os.time()
-end
+-- -- Store theme data in cache
+-- function M.set_cache(data)
+--   cache.data = data
+--   cache.timestamp = os.time()
+-- end
 
 -- Get current plugin configuration
 function M.get_config()
@@ -87,34 +87,34 @@ end
 function M.sync_theme()
 	log_debug("Theme synchronization initiated")
 
-	-- Check cache first for performance (Requirements 5.1, 5.2)
-	-- Skip cache if force_fresh is enabled or cache_timeout is 0
-	local cached_data = nil
-	if not config.force_fresh and config.cache_timeout > 0 then
-		cached_data = M.get_cache()
-	end
-
-	if cached_data then
-		log_debug("Using cached theme data")
-
-		-- Apply cached highlight map directly
-		local success, message, errors = nvim_applier.apply_highlights(cached_data.highlight_map)
-		if success then
-			-- Set colorscheme name
-			local name_success, name_message = nvim_applier.set_colorscheme_name(cached_data.colorscheme_name)
-			if name_success then
-				log_debug("Applied cached theme successfully")
-				return true, "Theme synchronized from cache"
-			else
-				log_warning("Failed to set colorscheme name from cache: " .. name_message)
-				-- Continue with fresh sync
-			end
-		else
-			log_warning("Failed to apply cached theme, falling back to fresh sync: " .. message)
-		end
-		-- Clear invalid cache and continue with fresh sync
-		cache.data = nil
-	end
+	-- -- Check cache first for performance (Requirements 5.1, 5.2)
+	-- -- Skip cache if force_fresh is enabled or cache_timeout is 0
+	-- local cached_data = nil
+	-- if not config.force_fresh and config.cache_timeout > 0 then
+	--   cached_data = M.get_cache()
+	-- end
+	--
+	-- if cached_data then
+	--   log_debug("Using cached theme data")
+	--
+	--   -- Apply cached highlight map directly
+	--   local success, message, errors = nvim_applier.apply_highlights(cached_data.highlight_map)
+	--   if success then
+	--     -- Set colorscheme name
+	--     local name_success, name_message = nvim_applier.set_colorscheme_name(cached_data.colorscheme_name)
+	--     if name_success then
+	--       log_debug("Applied cached theme successfully")
+	--       return true, "Theme synchronized from cache"
+	--     else
+	--       log_warning("Failed to set colorscheme name from cache: " .. name_message)
+	--       -- Continue with fresh sync
+	--     end
+	--   else
+	--     log_warning("Failed to apply cached theme, falling back to fresh sync: " .. message)
+	--   end
+	--   -- Clear invalid cache and continue with fresh sync
+	--   cache.data = nil
+	-- end
 
 	-- Step 1: Read Ghostty configuration via CLI (Requirements 1.1, 3.1)
 	log_debug("Step 1: Reading Ghostty configuration via CLI")
@@ -221,15 +221,15 @@ function M.sync_theme()
 	end
 
 	-- Step 8: Cache the results for performance (Requirements 5.1, 5.2)
-	log_debug("Step 8: Caching theme data for future use")
-	M.set_cache({
-		theme_info = theme_info,
-		colors = colors,
-		mode = mode,
-		highlight_map = highlight_map,
-		colorscheme_name = colorscheme_name,
-		timestamp = os.time(),
-	})
+	-- log_debug("Step 8: Caching theme data for future use")
+	-- M.set_cache({
+	--   theme_info = theme_info,
+	--   colors = colors,
+	--   mode = mode,
+	--   highlight_map = highlight_map,
+	--   colorscheme_name = colorscheme_name,
+	--   timestamp = os.time(),
+	-- })
 
 	-- Log success with comprehensive summary
 	local success_msg = string.format(
@@ -344,32 +344,32 @@ function M.setup(opts)
 	})
 
 	-- Create command to force fresh sync (bypass cache)
-	vim.api.nvim_create_user_command("GhosttySyncForce", function()
-		log_debug("Force sync command triggered - bypassing cache")
-		-- Temporarily clear cache and force fresh sync
-		cache.data = nil
-		local success, message = M.sync_theme()
-		if success then
-			if vim and vim.notify then
-				vim.notify("GhosttySync (forced): " .. message, vim.log.levels.INFO)
-			else
-				print("GhosttySync (forced): " .. message)
-			end
-		else
-			if vim and vim.notify then
-				vim.notify("GhosttySync (forced): " .. message, vim.log.levels.ERROR)
-			else
-				print("GhosttySync ERROR (forced): " .. message)
-			end
-		end
-	end, {
-		desc = "Force sync Ghostty theme (bypass cache)",
-	})
+	-- vim.api.nvim_create_user_command("GhosttySyncForce", function()
+	--   log_debug("Force sync command triggered - bypassing cache")
+	--   -- Temporarily clear cache and force fresh sync
+	--   cache.data = nil
+	--   local success, message = M.sync_theme()
+	--   if success then
+	--     if vim and vim.notify then
+	--       vim.notify("GhosttySync (forced): " .. message, vim.log.levels.INFO)
+	--     else
+	--       print("GhosttySync (forced): " .. message)
+	--     end
+	--   else
+	--     if vim and vim.notify then
+	--       vim.notify("GhosttySync (forced): " .. message, vim.log.levels.ERROR)
+	--     else
+	--       print("GhosttySync ERROR (forced): " .. message)
+	--     end
+	--   end
+	-- end, {
+	--   desc = "Force sync Ghostty theme (bypass cache)",
+	-- })
 
 	-- Create command to show current configuration
 	vim.api.nvim_create_user_command("GhosttySyncStatus", function()
-		local cached_data = M.get_cache()
-		local cache_status = cached_data and "valid" or "empty"
+		-- local cached_data = M.get_cache()
+		-- local cache_status = cached_data and "valid" or "empty"
 
 		-- Check if autocmds exist
 		local autocmds = vim.api.nvim_get_autocmds({ group = "GhosttySync" })
@@ -379,24 +379,24 @@ function M.setup(opts)
 			"GhosttySync Status:\n"
 				.. "  Auto sync: %s\n"
 				.. "  Debug: %s\n"
-				.. "  Cache timeout: %ds\n"
-				.. "  Cache status: %s\n"
+				-- .. "  Cache timeout: %ds\n"
+				-- .. "  Cache status: %s\n"
 				.. "  Autocmds registered: %d",
 			config.auto_sync and "enabled" or "disabled",
 			config.debug and "enabled" or "disabled",
-			config.cache_timeout,
-			cache_status,
+			-- config.cache_timeout,
+			-- cache_status,
 			autocmd_count
 		)
 
-		if cached_data then
-			status_message = status_message
-				.. string.format(
-					"\n  Current theme: %s\n" .. "  Theme mode: %s",
-					cached_data.theme_info and cached_data.theme_info.name or "unknown",
-					cached_data.mode or "unknown"
-				)
-		end
+		-- if cached_data then
+		--   status_message = status_message
+		--     .. string.format(
+		--       "\n  Current theme: %s\n" .. "  Theme mode: %s",
+		--       cached_data.theme_info and cached_data.theme_info.name or "unknown",
+		--       cached_data.mode or "unknown"
+		--     )
+		-- end
 
 		if vim and vim.notify then
 			vim.notify(status_message, vim.log.levels.INFO)
@@ -438,12 +438,11 @@ function M.setup(opts)
 				.. tostring(config.auto_sync)
 				.. ", debug="
 				.. tostring(config.debug)
-				.. ", cache_timeout="
-				.. tostring(config.cache_timeout)
+			-- .. ", cache_timeout="
+			-- .. tostring(config.cache_timeout)
 		end
 		print(config_str)
 	end
 end
 
 return M
-
