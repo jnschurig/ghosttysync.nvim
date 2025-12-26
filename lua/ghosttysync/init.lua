@@ -127,6 +127,7 @@ function M.sync_theme()
 	end
 
 	log_debug("Successfully read Ghostty theme: " .. (theme_info.name or "unknown"))
+	log_debug("Theme Info: " .. (theme_info or "unknown"))
 
 	-- Debug: Show detected colors
 	if config.debug and theme_info.colors then
@@ -315,7 +316,6 @@ function M.setup(opts)
 		if success then
 			if vim and vim.notify then
 				vim.notify("GhosttySync: " .. message, vim.log.levels.INFO)
-				vim.notify("GhosttySync Colors: " .. M.colors)
 			else
 				print("GhosttySync: " .. message)
 			end
