@@ -142,6 +142,10 @@ function M.sync_theme()
 			.. (theme_info.colors.selection_background or "none")
 			.. "\n  Selection FG: "
 			.. (theme_info.colors.selection_foreground or "none")
+			.. "\n  Palette: "
+		for key, value in pairs(theme_info.colors.palette) do
+			detected_colors_msg = detected_colors_msg .. "\n    " .. key .. ": " .. value
+		end
 		log_debug(detected_colors_msg)
 		-- log_debug("Detected colors:")
 		-- log_debug("  Background: " .. (theme_info.colors.background or "none"))
