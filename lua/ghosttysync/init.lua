@@ -157,6 +157,10 @@ function M.sync_theme()
 		end
 	end
 
+	for key, _ in pairs(theme_info.colors) do
+		log_debug("# theme_info.colors." .. key)
+	end
+
 	-- Step 2: Parse theme and extract colors (Requirements 3.2)
 	log_debug("Step 2: Extracting colors from theme configuration")
 	local colors, parse_error = theme_parser.extract_colors(theme_info)
