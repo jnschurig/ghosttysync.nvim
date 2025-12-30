@@ -128,7 +128,6 @@ function M.sync_theme()
 	end
 
 	log_debug("Successfully read Ghostty theme: " .. (theme_info.name or "unknown"))
-	-- log_debug("------------------------------------- Theme Info: " .. (theme_info.colors or "unknown"))
 
 	-- Debug: Show detected colors
 	if config.debug and theme_info.colors then
@@ -143,26 +142,15 @@ function M.sync_theme()
 			.. "\n  Selection FG: "
 			.. (theme_info.colors.selection_foreground or "none")
 			.. "\n  Palette: "
-		for key, value in pairs(theme_info.colors.palette) do
-			detected_colors_msg = detected_colors_msg .. "\n    " .. key .. ": " .. value
-		end
-		log_debug(detected_colors_msg)
-		-- log_debug("Detected colors:")
-		-- log_debug("  Background: " .. (theme_info.colors.background or "none"))
-		-- log_debug("  Foreground: " .. (theme_info.colors.foreground or "none"))
-		-- log_debug("  Selection BG: " .. (theme_info.colors.selection_background or "none"))
-		-- log_debug("  Selection FG: " .. (theme_info.colors.selection_foreground or "none"))
 		if theme_info.colors.palette then
 			local palette_count = 0
-			for _ in pairs(theme_info.colors.palette) do
+			for key, value in pairs(theme_info.colors.palette) do
 				palette_count = palette_count + 1
+				detected_colors_msg = detected_colors_msg .. "\n    " .. key .. ": " .. value
 			end
 			log_debug("  Palette colors: " .. palette_count)
 		end
-	end
-
-	for key, _ in pairs(theme_info.colors) do
-		log_debug("# theme_info.colors." .. key)
+		log_debug(detected_colors_msg)
 	end
 
 	-- Step 2: Parse theme and extract colors (Requirements 3.2)
@@ -175,9 +163,11 @@ function M.sync_theme()
 	end
 
 	local palette_size = 0
+	local colors_text = ""
 	if colors.palette then
-		for _ in pairs(colors.palette) do
+		for key, value in pairs(colors.palette) do
 			palette_size = palette_size + 1
+			colors_text = colors_text .. "\n    " .. key .. ": " .. value
 		end
 	end
 	log_debug(
@@ -185,7 +175,13 @@ function M.sync_theme()
 			.. (colors.background or "none")
 			.. ", foreground="
 			.. (colors.foreground or "none")
-			.. ", palette_size="
+			.. "\n  Selection BG: "
+			.. (colors.selection_background or "none")
+			.. "\n  Selection FG: "
+			.. (colors.selection_foreground or "none")
+			.. "\n  Palette: "
+			.. colors_text
+			.. "\n  palette_size="
 			.. palette_size
 	)
 
