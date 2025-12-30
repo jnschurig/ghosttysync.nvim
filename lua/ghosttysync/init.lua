@@ -128,15 +128,26 @@ function M.sync_theme()
 	end
 
 	log_debug("Successfully read Ghostty theme: " .. (theme_info.name or "unknown"))
-	log_debug("------------------------------------- Theme Info: " .. (theme_info or "unknown"))
+	-- log_debug("------------------------------------- Theme Info: " .. (theme_info.colors or "unknown"))
 
 	-- Debug: Show detected colors
 	if config.debug and theme_info.colors then
-		log_debug("Detected colors:")
-		log_debug("  Background: " .. (theme_info.colors.background or "none"))
-		log_debug("  Foreground: " .. (theme_info.colors.foreground or "none"))
-		log_debug("  Selection BG: " .. (theme_info.colors.selection_background or "none"))
-		log_debug("  Selection FG: " .. (theme_info.colors.selection_foreground or "none"))
+		local detected_colors_msg = ""
+			.. "Detected colors:"
+			.. "  Background: "
+			.. (theme_info.colors.background or "none")
+			.. "  Foreground: "
+			.. (theme_info.colors.foreground or "none")
+			.. "  Selection BG: "
+			.. (theme_info.colors.selection_background or "none")
+			.. "  Selection FG: "
+			.. (theme_info.colors.selection_foreground or "none")
+		log_debug(detected_colors_msg)
+		-- log_debug("Detected colors:")
+		-- log_debug("  Background: " .. (theme_info.colors.background or "none"))
+		-- log_debug("  Foreground: " .. (theme_info.colors.foreground or "none"))
+		-- log_debug("  Selection BG: " .. (theme_info.colors.selection_background or "none"))
+		-- log_debug("  Selection FG: " .. (theme_info.colors.selection_foreground or "none"))
 		if theme_info.colors.palette then
 			local palette_count = 0
 			for _ in pairs(theme_info.colors.palette) do
