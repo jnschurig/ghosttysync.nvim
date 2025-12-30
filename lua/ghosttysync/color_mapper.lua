@@ -119,48 +119,48 @@ function M.create_highlight_map(colors, mode)
 		fg = palette[7], -- or "#80FFFF", -- Bright cyan for special characters
 	}
 	highlight_map.Statement = {
-		fg = palette[9] or "#FF8080", -- Bright red for statements
+		fg = palette[9], -- or "#FF8080", -- Bright red for statements
 	}
 	highlight_map.PreProc = {
-		fg = palette[5] or "#FF80FF", -- Bright magenta for preprocessor
+		fg = palette[5], -- or "#FF80FF", -- Bright magenta for preprocessor
 	}
 	highlight_map.Operator = {
-		fg = palette[6] or "#FFFFFF", -- White for operators
+		fg = palette[6], -- or "#FFFFFF", -- White for operators
 	}
 
 	-- Diagnostic highlight groups with background colors for visibility
 	highlight_map.DiagnosticError = {
-		fg = palette[9] or "#FF8080", -- Bright red for errors
+		fg = palette[9], -- or "#FF8080", -- Bright red for errors
 		-- bg = selection_bg,
 	}
 	highlight_map.DiagnosticWarn = {
-		fg = palette[11] or "#FFFF80", -- Bright yellow for warnings
+		fg = palette[11], -- or "#FFFF80", -- Bright yellow for warnings
 		-- bg = selection_bg,
 	}
 	highlight_map.DiagnosticHint = {
-		fg = palette[14] or "#80FFFF", -- Bright cyan for hints
+		fg = palette[14], -- or "#80FFFF", -- Bright cyan for hints
 		-- bg = selection_bg,
 	}
 	highlight_map.DiagnosticInfo = {
-		fg = palette[12] or "#8080FF", -- Bright blue for info
+		fg = palette[12], -- or "#8080FF", -- Bright blue for info
 		-- bg = selection_bg,
 	}
 
 	-- Legacy diagnostic names for compatibility (no background colors)
 	highlight_map.Error = {
-		fg = palette[9] or "#FF8080", -- Bright red for errors
+		fg = palette[9], -- or "#FF8080", -- Bright red for errors
 		-- bg = palette[0],
 	}
 	highlight_map.Warning = {
-		fg = palette[11] or "#FFFF80", -- Bright yellow for warnings
+		fg = palette[11], -- or "#FFFF80", -- Bright yellow for warnings
 		-- bg = palette[0],
 	}
 	highlight_map.Hint = {
-		fg = palette[14] or "#80FFFF", -- Bright cyan for hints
+		fg = palette[14], -- or "#80FFFF", -- Bright cyan for hints
 		-- bg = palette[0],
 	}
 	highlight_map.Note = {
-		fg = palette[12] or "#8080FF", -- Bright blue for info
+		fg = palette[12], -- or "#8080FF", -- Bright blue for info
 		-- bg = palette[0],
 	}
 
