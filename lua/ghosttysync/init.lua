@@ -141,6 +141,10 @@ function M.sync_theme()
 			.. (theme_info.colors.selection_background or "none")
 			.. "\n  Selection FG: "
 			.. (theme_info.colors.selection_foreground or "none")
+			.. "\n  cursor_color: "
+			.. (theme_info.colors.cursor_color or "none")
+			.. "\n  cursor_text: "
+			.. (theme_info.colors.cursor_text or "none")
 			.. "\n  Palette: "
 		if theme_info.colors.palette then
 			local palette_count = 0
@@ -179,6 +183,10 @@ function M.sync_theme()
 			.. (colors.selection_background or "none")
 			.. "\n  Selection FG: "
 			.. (colors.selection_foreground or "none")
+			.. "\n  cursor_color: "
+			.. (colors.cursor_color or "none")
+			.. "\n  cursor_text: "
+			.. (colors.cursor_text or "none")
 			.. "\n  Palette: "
 			.. colors_text
 			.. "\n  palette_size="
