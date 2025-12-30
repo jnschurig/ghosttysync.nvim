@@ -90,19 +90,19 @@ function M.create_highlight_map(colors, mode)
 		fg = palette[5], -- or "#FF0000", -- Red for conditionals (if, else, etc.)
 	}
 	highlight_map.String = {
-		fg = palette[10], -- or "#00FF00", -- Green for strings
+		fg = palette[2], -- or "#00FF00", -- Green for strings
 	}
 	highlight_map.Function = {
-		fg = palette[2], -- or "#0000FF", -- Blue for functions
+		fg = palette[6], -- or "#0000FF", -- Blue for functions
 	}
 	highlight_map.Variable = {
 		fg = fg, -- Use foreground color for variables
 	}
 	highlight_map.Type = {
-		fg = palette[12], -- or "#00FFFF", -- Cyan for types
+		fg = palette[4], -- or "#00FFFF", -- Cyan for types
 	}
 	highlight_map.Number = {
-		fg = palette[4], -- or "#FFFF00", -- Yellow for numbers
+		fg = palette[3], -- or "#FFFF00", -- Yellow for numbers
 	}
 
 	-- Additional syntax groups
@@ -110,7 +110,7 @@ function M.create_highlight_map(colors, mode)
 		fg = fg, -- Use foreground for identifiers
 	}
 	highlight_map.Constant = {
-		fg = palette[6], -- or "#FF00FF", -- Magenta for constants
+		fg = palette[4], -- or "#FF00FF", -- Magenta for constants
 	}
 	highlight_map.Special = {
 		fg = palette[7], -- or "#80FFFF", -- Bright cyan for special characters
@@ -122,7 +122,7 @@ function M.create_highlight_map(colors, mode)
 		fg = palette[9] or "#FF8080", -- Bright red for statements
 	}
 	highlight_map.PreProc = {
-		fg = palette[13] or "#FF80FF", -- Bright magenta for preprocessor
+		fg = palette[5] or "#FF80FF", -- Bright magenta for preprocessor
 	}
 	highlight_map.Operator = {
 		fg = palette[6] or "#FFFFFF", -- White for operators
@@ -131,37 +131,37 @@ function M.create_highlight_map(colors, mode)
 	-- Diagnostic highlight groups with background colors for visibility
 	highlight_map.DiagnosticError = {
 		fg = palette[9] or "#FF8080", -- Bright red for errors
-		bg = selection_bg,
+		-- bg = selection_bg,
 	}
 	highlight_map.DiagnosticWarn = {
 		fg = palette[11] or "#FFFF80", -- Bright yellow for warnings
-		bg = selection_bg,
+		-- bg = selection_bg,
 	}
 	highlight_map.DiagnosticHint = {
 		fg = palette[14] or "#80FFFF", -- Bright cyan for hints
-		bg = selection_bg,
+		-- bg = selection_bg,
 	}
 	highlight_map.DiagnosticInfo = {
 		fg = palette[12] or "#8080FF", -- Bright blue for info
-		bg = selection_bg,
+		-- bg = selection_bg,
 	}
 
 	-- Legacy diagnostic names for compatibility (no background colors)
 	highlight_map.Error = {
 		fg = palette[9] or "#FF8080", -- Bright red for errors
-		bg = selection_bg,
+		-- bg = palette[0],
 	}
 	highlight_map.Warning = {
 		fg = palette[11] or "#FFFF80", -- Bright yellow for warnings
-		bg = selection_bg,
+		-- bg = palette[0],
 	}
 	highlight_map.Hint = {
 		fg = palette[14] or "#80FFFF", -- Bright cyan for hints
-		bg = selection_bg,
+		-- bg = palette[0],
 	}
 	highlight_map.Note = {
 		fg = palette[12] or "#8080FF", -- Bright blue for info
-		bg = selection_bg,
+		-- bg = palette[0],
 	}
 
 	-- UI elements
