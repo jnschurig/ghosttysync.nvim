@@ -83,7 +83,7 @@ function M.create_highlight_map(colors, mode)
 
 	-- Syntax highlighting groups
 	highlight_map.Keyword = {
-		fg = palette[5], -- or "#FF0000", -- Red for keywords
+		fg = palette[1], -- or "#FF0000", -- Red for keywords
 		bold = true,
 	}
 	highlight_map.Conditional = {
@@ -174,8 +174,10 @@ function M.create_highlight_map(colors, mode)
 		-- bg = selection_bg or "#000000", -- Slightly different background for cursor line
 	}
 	highlight_map.Visual = {
+		-- fg = selection_fg,
+		-- bg = selection_bg, -- Use selection colors for visual mode
 		fg = selection_fg,
-		bg = selection_bg, -- Use selection colors for visual mode
+		bg = palette[8], -- Use selection colors for visual mode
 	}
 	highlight_map.Search = {
 		fg = bg,
@@ -183,11 +185,11 @@ function M.create_highlight_map(colors, mode)
 	}
 	highlight_map.IncSearch = {
 		fg = bg,
-		bg = palette[15], -- or "#FFFF00", -- Yellow background for search
+		bg = palette[7], -- or "#FFFF00", -- Yellow background for search
 	}
 	highlight_map.CurSearch = {
 		fg = bg,
-		bg = palette[11], -- or "#FFFF00", -- Yellow background for search
+		bg = palette[3], -- or "#FFFF00", -- Yellow background for search
 	}
 
 	-- No color adjustments - use exact theme colors
