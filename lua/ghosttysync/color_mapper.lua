@@ -176,7 +176,7 @@ function M.create_highlight_map(colors, mode)
 	highlight_map.Visual = {
 		-- fg = selection_fg,
 		-- bg = selection_bg, -- Use selection colors for visual mode
-		fg = selection_fg,
+		-- fg = selection_fg,
 		bg = palette[8], -- Use selection colors for visual mode
 	}
 	highlight_map.Search = {
