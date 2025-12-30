@@ -135,108 +135,108 @@ end
 
 -- Extract color palette from parsed configuration data
 -- Only extracts: background, foreground, selection-foreground, selection-background, and palette colors 0-15
-function M.extract_colors(config_data)
-	if not config_data or type(config_data) ~= "table" then
-		return nil, "Invalid configuration data"
-	end
-
-	local colors = {
-		background = nil,
-		foreground = nil,
-		selection_foreground = nil,
-		selection_background = nil,
-		palette = {},
-	}
-
-	-- Extract and validate background color
-	if config_data.colors.background then
-		colors.background = config_data.colors.background
-	end
-
-	-- Extract and validate foreground color
-	if config_data.colors.foreground then
-		colors.foreground = config_data.colors.foreground
-	end
-
-	-- Extract selection colors
-	if config_data.colors.selection_foreground then
-		colors.selection_foreground = config_data.colors.selection_foreground
-	end
-
-	if config_data.colors.selection_background then
-		colors.selection_background = config_data.colors.selection_background
-	end
-
-	-- Extract ONLY terminal color palette (colors 0-15)
-	-- Explicitly ignore any colors beyond the standard 16-color palette
-	if config_data.colors.palette then
-		colors.palette = config_data.colors.palette
-		-- for color_num, color_value in ipairs(config_data.colors.palette) do
-		-- 	-- local color_num, color_value = entry:match("^(%d+)=(.+)$")
-		-- 	if color_num and color_value then
-		-- 		local num = tonumber(color_num)
-		-- 		-- ONLY process standard terminal colors (0-15), ignore 256-color palette
-		-- 		if num and num >= 0 and num <= 15 then
-		-- 			local normalized = color_value
-		-- 			if normalized then
-		-- 				colors.palette[num] = normalized
-		-- 			end
-		-- 		end
-		-- 		-- Explicitly ignore colors 16-255 (256-color palette)
-		-- 	end
-		-- end
-	end
-
-	-- Note: We don't validate for empty config here since we provide defaults below
-	-- This allows the function to work even with minimal or empty configuration
-
-	-- Set default values for missing essential colors
-	if not colors.background then
-		colors.background = "#000000" -- Default to black background
-	end
-
-	if not colors.foreground then
-		colors.foreground = "#FFFFFF" -- Default to white foreground
-	end
-
-	-- Set default selection colors if not provided
-	if not colors.selection_background then
-		colors.selection_background = "#404040" -- Default selection background
-	end
-
-	if not colors.selection_foreground then
-		colors.selection_foreground = colors.foreground -- Default to foreground color
-	end
-
-	-- Ensure we have a complete standard palette (0-15)
-	local default_palette = {
-		[0] = "#000000", -- black
-		[1] = "#FF0000", -- red
-		[2] = "#00FF00", -- green
-		[3] = "#FFFF00", -- yellow
-		[4] = "#0000FF", -- blue
-		[5] = "#FF00FF", -- magenta
-		[6] = "#00FFFF", -- cyan
-		[7] = "#FFFFFF", -- white
-		[8] = "#808080", -- bright black
-		[9] = "#FF8080", -- bright red
-		[10] = "#80FF80", -- bright green
-		[11] = "#FFFF80", -- bright yellow
-		[12] = "#8080FF", -- bright blue
-		[13] = "#FF80FF", -- bright magenta
-		[14] = "#80FFFF", -- bright cyan
-		[15] = "#FFFFFF", -- bright white
-	}
-
-	-- Fill in missing palette colors with defaults
-	for i = 0, 15 do
-		if not colors.palette[i] then
-			colors.palette[i] = default_palette[i]
-		end
-	end
-
-	return colors, nil
-end
+-- function M.extract_colors(config_data)
+-- 	if not config_data or type(config_data) ~= "table" then
+-- 		return nil, "Invalid configuration data"
+-- 	end
+--
+-- 	local colors = {
+-- 		background = nil,
+-- 		foreground = nil,
+-- 		selection_foreground = nil,
+-- 		selection_background = nil,
+-- 		palette = {},
+-- 	}
+--
+-- 	-- Extract and validate background color
+-- 	if config_data.colors.background then
+-- 		colors.background = config_data.colors.background
+-- 	end
+--
+-- 	-- Extract and validate foreground color
+-- 	if config_data.colors.foreground then
+-- 		colors.foreground = config_data.colors.foreground
+-- 	end
+--
+-- 	-- Extract selection colors
+-- 	if config_data.colors.selection_foreground then
+-- 		colors.selection_foreground = config_data.colors.selection_foreground
+-- 	end
+--
+-- 	if config_data.colors.selection_background then
+-- 		colors.selection_background = config_data.colors.selection_background
+-- 	end
+--
+-- 	-- Extract ONLY terminal color palette (colors 0-15)
+-- 	-- Explicitly ignore any colors beyond the standard 16-color palette
+-- 	if config_data.colors.palette then
+-- 		colors.palette = config_data.colors.palette
+-- 		-- for color_num, color_value in ipairs(config_data.colors.palette) do
+-- 		-- 	-- local color_num, color_value = entry:match("^(%d+)=(.+)$")
+-- 		-- 	if color_num and color_value then
+-- 		-- 		local num = tonumber(color_num)
+-- 		-- 		-- ONLY process standard terminal colors (0-15), ignore 256-color palette
+-- 		-- 		if num and num >= 0 and num <= 15 then
+-- 		-- 			local normalized = color_value
+-- 		-- 			if normalized then
+-- 		-- 				colors.palette[num] = normalized
+-- 		-- 			end
+-- 		-- 		end
+-- 		-- 		-- Explicitly ignore colors 16-255 (256-color palette)
+-- 		-- 	end
+-- 		-- end
+-- 	end
+--
+-- 	-- Note: We don't validate for empty config here since we provide defaults below
+-- 	-- This allows the function to work even with minimal or empty configuration
+--
+-- 	-- Set default values for missing essential colors
+-- 	if not colors.background then
+-- 		colors.background = "#000000" -- Default to black background
+-- 	end
+--
+-- 	if not colors.foreground then
+-- 		colors.foreground = "#FFFFFF" -- Default to white foreground
+-- 	end
+--
+-- 	-- Set default selection colors if not provided
+-- 	if not colors.selection_background then
+-- 		colors.selection_background = "#404040" -- Default selection background
+-- 	end
+--
+-- 	if not colors.selection_foreground then
+-- 		colors.selection_foreground = colors.foreground -- Default to foreground color
+-- 	end
+--
+-- 	-- Ensure we have a complete standard palette (0-15)
+-- 	local default_palette = {
+-- 		[0] = "#000000", -- black
+-- 		[1] = "#FF0000", -- red
+-- 		[2] = "#00FF00", -- green
+-- 		[3] = "#FFFF00", -- yellow
+-- 		[4] = "#0000FF", -- blue
+-- 		[5] = "#FF00FF", -- magenta
+-- 		[6] = "#00FFFF", -- cyan
+-- 		[7] = "#FFFFFF", -- white
+-- 		[8] = "#808080", -- bright black
+-- 		[9] = "#FF8080", -- bright red
+-- 		[10] = "#80FF80", -- bright green
+-- 		[11] = "#FFFF80", -- bright yellow
+-- 		[12] = "#8080FF", -- bright blue
+-- 		[13] = "#FF80FF", -- bright magenta
+-- 		[14] = "#80FFFF", -- bright cyan
+-- 		[15] = "#FFFFFF", -- bright white
+-- 	}
+--
+-- 	-- Fill in missing palette colors with defaults
+-- 	for i = 0, 15 do
+-- 		if not colors.palette[i] then
+-- 			colors.palette[i] = default_palette[i]
+-- 		end
+-- 	end
+--
+-- 	return colors, nil
+-- end
 
 -- Detect if theme is light or dark mode based on background color
 -- PLACEHOLDER: This function will be implemented in task 3.2 (optional)
