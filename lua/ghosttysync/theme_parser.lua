@@ -42,46 +42,46 @@ M.ThemeConfig = {
 -- end
 
 -- Helper function to normalize color values to hex format
-local function normalize_to_hex(color)
-	if not color or type(color) ~= "string" then
-		return nil
-	end
-
-	-- Trim whitespace
-	color = color:gsub("^%s*(.-)%s*$", "%1")
-
-	-- If already valid 6-digit hex, return as-is
-	if color:match("^#%x%x%x%x%x%x$") then
-		return color:upper()
-	end
-
-	-- Convert 3-digit hex to 6-digit
-	if color:match("^#%x%x%x$") then
-		local r, g, b = color:match("^#(%x)(%x)(%x)$")
-		return "#" .. r:upper() .. r:upper() .. g:upper() .. g:upper() .. b:upper() .. b:upper()
-	end
-
-	-- Handle rgb() format
-	local r, g, b = color:match("^rgb%((%d+),%s*(%d+),%s*(%d+)%)$")
-	if r and g and b then
-		local red = math.min(255, math.max(0, tonumber(r)))
-		local green = math.min(255, math.max(0, tonumber(g)))
-		local blue = math.min(255, math.max(0, tonumber(b)))
-		return string.format("#%02X%02X%02X", red, green, blue)
-	end
-
-	-- Handle rgba() format (ignore alpha)
-	r, g, b = color:match("^rgba%((%d+),%s*(%d+),%s*(%d+),%s*[%d%.]+%)$")
-	if r and g and b then
-		local red = math.min(255, math.max(0, tonumber(r)))
-		local green = math.min(255, math.max(0, tonumber(g)))
-		local blue = math.min(255, math.max(0, tonumber(b)))
-		return string.format("#%02X%02X%02X", red, green, blue)
-	end
-
-	-- If we can't normalize, return nil
-	return nil
-end
+-- local function normalize_to_hex(color)
+-- 	if not color or type(color) ~= "string" then
+-- 		return nil
+-- 	end
+--
+-- 	-- Trim whitespace
+-- 	color = color:gsub("^%s*(.-)%s*$", "%1")
+--
+-- 	-- If already valid 6-digit hex, return as-is
+-- 	if color:match("^#%x%x%x%x%x%x$") then
+-- 		return color:upper()
+-- 	end
+--
+-- 	-- Convert 3-digit hex to 6-digit
+-- 	if color:match("^#%x%x%x$") then
+-- 		local r, g, b = color:match("^#(%x)(%x)(%x)$")
+-- 		return "#" .. r:upper() .. r:upper() .. g:upper() .. g:upper() .. b:upper() .. b:upper()
+-- 	end
+--
+-- 	-- Handle rgb() format
+-- 	local r, g, b = color:match("^rgb%((%d+),%s*(%d+),%s*(%d+)%)$")
+-- 	if r and g and b then
+-- 		local red = math.min(255, math.max(0, tonumber(r)))
+-- 		local green = math.min(255, math.max(0, tonumber(g)))
+-- 		local blue = math.min(255, math.max(0, tonumber(b)))
+-- 		return string.format("#%02X%02X%02X", red, green, blue)
+-- 	end
+--
+-- 	-- Handle rgba() format (ignore alpha)
+-- 	r, g, b = color:match("^rgba%((%d+),%s*(%d+),%s*(%d+),%s*[%d%.]+%)$")
+-- 	if r and g and b then
+-- 		local red = math.min(255, math.max(0, tonumber(r)))
+-- 		local green = math.min(255, math.max(0, tonumber(g)))
+-- 		local blue = math.min(255, math.max(0, tonumber(b)))
+-- 		return string.format("#%02X%02X%02X", red, green, blue)
+-- 	end
+--
+-- 	-- If we can't normalize, return nil
+-- 	return nil
+-- end
 
 -- Parse CLI output from `ghostty +show-config`
 function M.parse_cli_output(output)
@@ -150,33 +150,33 @@ function M.extract_colors(config_data)
 
 	-- Extract and validate background color
 	if config_data.colors.background then
-		colors.background = normalize_to_hex(config_data.colors.background)
+		colors.background = config_data.colors.background
 	end
 
 	-- Extract and validate foreground color
 	if config_data.colors.foreground then
-		colors.foreground = normalize_to_hex(config_data.colors.foreground)
+		colors.foreground = config_data.colors.foreground
 	end
 
 	-- Extract selection colors
 	if config_data.colors.selection_foreground then
-		colors.selection_foreground = normalize_to_hex(config_data.colors.selection_foreground)
+		colors.selection_foreground = config_data.colors.selection_foreground
 	end
 
 	if config_data.colors.selection_background then
-		colors.selection_background = normalize_to_hex(config_data.colors.selection_background)
+		colors.selection_background = config_data.colors.selection_background
 	end
 
 	-- Extract ONLY terminal color palette (colors 0-15)
 	-- Explicitly ignore any colors beyond the standard 16-color palette
 	if config_data.colors.palette then
-		for _, entry in ipairs(config_data.colors.palette) do
-			local color_num, color_value = entry:match("^(%d+)=(.+)$")
+		for color_num, color_value in ipairs(config_data.colors.palette) do
+			-- local color_num, color_value = entry:match("^(%d+)=(.+)$")
 			if color_num and color_value then
 				local num = tonumber(color_num)
 				-- ONLY process standard terminal colors (0-15), ignore 256-color palette
 				if num and num >= 0 and num <= 15 then
-					local normalized = normalize_to_hex(color_value)
+					local normalized = color_value
 					if normalized then
 						colors.palette[num] = normalized
 					end
