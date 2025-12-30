@@ -171,9 +171,9 @@ function M.sync_theme()
 		end
 	end
 	log_debug(
-		"Successfully extracted colors: background="
+		"Successfully extracted colors: \n  background="
 			.. (colors.background or "none")
-			.. ", foreground="
+			.. "\n  foreground="
 			.. (colors.foreground or "none")
 			.. "\n  Selection BG: "
 			.. (colors.selection_background or "none")

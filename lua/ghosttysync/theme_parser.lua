@@ -170,20 +170,21 @@ function M.extract_colors(config_data)
 	-- Extract ONLY terminal color palette (colors 0-15)
 	-- Explicitly ignore any colors beyond the standard 16-color palette
 	if config_data.colors.palette then
-		for color_num, color_value in ipairs(config_data.colors.palette) do
-			-- local color_num, color_value = entry:match("^(%d+)=(.+)$")
-			if color_num and color_value then
-				local num = tonumber(color_num)
-				-- ONLY process standard terminal colors (0-15), ignore 256-color palette
-				if num and num >= 0 and num <= 15 then
-					local normalized = color_value
-					if normalized then
-						colors.palette[num] = normalized
-					end
-				end
-				-- Explicitly ignore colors 16-255 (256-color palette)
-			end
-		end
+		colors.palette = config_data.colors.palette
+		-- for color_num, color_value in ipairs(config_data.colors.palette) do
+		-- 	-- local color_num, color_value = entry:match("^(%d+)=(.+)$")
+		-- 	if color_num and color_value then
+		-- 		local num = tonumber(color_num)
+		-- 		-- ONLY process standard terminal colors (0-15), ignore 256-color palette
+		-- 		if num and num >= 0 and num <= 15 then
+		-- 			local normalized = color_value
+		-- 			if normalized then
+		-- 				colors.palette[num] = normalized
+		-- 			end
+		-- 		end
+		-- 		-- Explicitly ignore colors 16-255 (256-color palette)
+		-- 	end
+		-- end
 	end
 
 	-- Note: We don't validate for empty config here since we provide defaults below
