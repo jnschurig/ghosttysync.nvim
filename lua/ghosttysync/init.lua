@@ -132,7 +132,7 @@ function M.sync_theme()
 
 	-- Debug: Show detected colors
 	if config.debug and theme_info.colors then
-		local detected_colors_msg = "----------\n"
+		local detected_colors_msg = ""
 			.. "Detected colors: "
 			.. "\n  Background: "
 			.. (theme_info.colors.background or "none")

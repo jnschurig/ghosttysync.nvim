@@ -149,28 +149,28 @@ function M.extract_colors(config_data)
 	}
 
 	-- Extract and validate background color
-	if config_data.background then
-		colors.background = normalize_to_hex(config_data.background)
+	if config_data.colors.background then
+		colors.background = normalize_to_hex(config_data.colors.background)
 	end
 
 	-- Extract and validate foreground color
-	if config_data.foreground then
-		colors.foreground = normalize_to_hex(config_data.foreground)
+	if config_data.colors.foreground then
+		colors.foreground = normalize_to_hex(config_data.colors.foreground)
 	end
 
 	-- Extract selection colors
-	if config_data.selection_foreground then
-		colors.selection_foreground = normalize_to_hex(config_data.selection_foreground)
+	if config_data.colors.selection_foreground then
+		colors.selection_foreground = normalize_to_hex(config_data.colors.selection_foreground)
 	end
 
-	if config_data.selection_background then
-		colors.selection_background = normalize_to_hex(config_data.selection_background)
+	if config_data.colors.selection_background then
+		colors.selection_background = normalize_to_hex(config_data.colors.selection_background)
 	end
 
 	-- Extract ONLY terminal color palette (colors 0-15)
 	-- Explicitly ignore any colors beyond the standard 16-color palette
-	if config_data.palette_entries then
-		for _, entry in ipairs(config_data.palette_entries) do
+	if config_data.colors.palette then
+		for _, entry in ipairs(config_data.colors.palette) do
 			local color_num, color_value = entry:match("^(%d+)=(.+)$")
 			if color_num and color_value then
 				local num = tonumber(color_num)
