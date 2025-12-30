@@ -22,36 +22,6 @@ local function is_valid_color(color)
 	return false
 end
 
--- Helper function to normalize color values
-local function normalize_color(color)
-	if not color then
-		return nil
-	end
-
-	-- Convert to string and trim
-	color = tostring(color):gsub("^%s*(.-)%s*$", "%1")
-
-	-- If it's already a valid hex color, return as-is
-	if color:match("^#%x%x%x%x%x%x$") then
-		return color
-	end
-
-	-- Convert 3-digit hex to 6-digit
-	if color:match("^#%x%x%x$") then
-		local r, g, b = color:match("^#(%x)(%x)(%x)$")
-		return "#" .. r .. r .. g .. g .. b .. b
-	end
-
-	-- Handle rgb() format
-	local r, g, b = color:match("^rgb%((%d+),%s*(%d+),%s*(%d+)%)$")
-	if r and g and b then
-		return string.format("#%02x%02x%02x", tonumber(r), tonumber(g), tonumber(b))
-	end
-
-	-- If we can't normalize it, return nil
-	return nil
-end
-
 -- Execute `ghostty +show-config` command and return output
 function M.execute_show_config()
 	-- function execute_show_config()
@@ -181,8 +151,8 @@ function M.extract_theme_info(config)
 	theme_info.name = config.theme or "unknown"
 
 	-- Extract and normalize basic colors (only the specified ones)
-	local background = normalize_color(config.background)
-	local foreground = normalize_color(config.foreground)
+	local background = config.background
+	local foreground = config.foreground
 
 	if background then
 		theme_info.colors.background = background
@@ -203,7 +173,7 @@ function M.extract_theme_info(config)
 				local num = tonumber(color_num)
 				-- ONLY extract standard terminal colors (0-15), ignore 256-color palette
 				if num and num >= 0 and num <= 15 then
-					local normalized = normalize_color(color_value)
+					local normalized = color_value
 					if normalized then
 						palette[num] = normalized
 					end
@@ -219,8 +189,8 @@ function M.extract_theme_info(config)
 	end
 
 	-- Extract selection colors if available
-	local selection_bg = normalize_color(config.selection_background or config["selection-background"])
-	local selection_fg = normalize_color(config.selection_foreground or config["selection-foreground"])
+	local selection_bg = (config.selection_background or config["selection-background"])
+	local selection_fg = (config.selection_foreground or config["selection-foreground"])
 
 	if selection_bg then
 		theme_info.colors.selection_background = selection_bg
@@ -228,6 +198,12 @@ function M.extract_theme_info(config)
 	if selection_fg then
 		theme_info.colors.selection_foreground = selection_fg
 	end
+
+	local cursor_color = config["cursor-color"]
+	local cursor_text = config["cursor-text"]
+
+	theme_info.colors.cursor_color = cursor_color
+	theme_info.colors.cursor_text = cursor_text
 
 	-- Validate that we have at least basic colors
 	if not theme_info.colors.background and not theme_info.colors.foreground then
