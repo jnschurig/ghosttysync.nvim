@@ -71,127 +71,48 @@ function M.create_highlight_map(colors, mode)
 	local cursor_color = colors.cursor_color
 	local cursor_text = colors.cursor_text
 
-	-- Create base highlight map
-	local highlight_map = {}
-
 	-- Core Neovim highlight groups
-	highlight_map.Normal = { fg = fg, bg = bg }
-	highlight_map.Comment = {
-		fg = palette[8] or "#808080", -- Use bright black for comments
-		italic = true,
-	}
 
+	-- Create base highlight map
 	-- Syntax highlighting groups
-	highlight_map.Keyword = {
-		fg = palette[1], -- or "#FF0000", -- Red for keywords
-		bold = true,
-	}
-	highlight_map.Conditional = {
-		fg = palette[5], -- or "#FF0000", -- Red for conditionals (if, else, etc.)
-	}
-	highlight_map.String = {
-		fg = palette[2], -- or "#00FF00", -- Green for strings
-	}
-	highlight_map.Function = {
-		fg = palette[6], -- or "#0000FF", -- Blue for functions
-	}
-	highlight_map.Variable = {
-		fg = fg, -- Use foreground color for variables
-	}
-	highlight_map.Type = {
-		fg = palette[4], -- or "#00FFFF", -- Cyan for types
-	}
-	highlight_map.Number = {
-		fg = palette[3], -- or "#FFFF00", -- Yellow for numbers
-	}
+	local highlight_map = {
+		Normal = { fg = fg, bg = bg },
+		Comment = { fg = palette[8] or "#808080", italic = true }, -- Use bright black for comments
+		Keyword = { fg = palette[1], bold = true }, -- or "#FF0000", -- Red for keywords
+		Conditional = { fg = palette[5] }, -- or "#FF0000", -- Red for conditionals (if, else, etc.)
+		String = { fg = palette[2] }, -- or "#00FF00", -- Green for strings
+		Function = { fg = palette[6] }, -- or "#0000FF", -- Blue for functions
+		Variable = { fg = fg }, -- Use foreground color for variables
+		Type = { fg = palette[4] }, -- or "#00FFFF", -- Cyan for types
+		Number = { fg = palette[3] }, -- or "#FFFF00", -- Yellow for numbers
+		Identifier = { fg = fg }, -- Use foreground for identifiers
+		Constant = { fg = palette[4] }, -- or "#FF00FF", -- Magenta for constants
+		Special = { fg = palette[7] }, -- or "#80FFFF", -- Bright cyan for special characters
+		SpecialChar = { fg = palette[7] }, -- or "#80FFFF", -- Bright cyan for special characters
+		Statement = { fg = palette[9] }, -- or "#FF8080", -- Bright red for statements
+		PreProc = { fg = palette[5] }, -- or "#FF80FF", -- Bright magenta for preprocessor
+		Operator = { fg = palette[6] }, -- or "#FFFFFF", -- White for operators
 
-	-- Additional syntax groups
-	highlight_map.Identifier = {
-		fg = fg, -- Use foreground for identifiers
-	}
-	highlight_map.Constant = {
-		fg = palette[4], -- or "#FF00FF", -- Magenta for constants
-	}
-	highlight_map.Special = {
-		fg = palette[7], -- or "#80FFFF", -- Bright cyan for special characters
-	}
-	highlight_map.SpecialChar = {
-		fg = palette[7], -- or "#80FFFF", -- Bright cyan for special characters
-	}
-	highlight_map.Statement = {
-		fg = palette[9], -- or "#FF8080", -- Bright red for statements
-	}
-	highlight_map.PreProc = {
-		fg = palette[5], -- or "#FF80FF", -- Bright magenta for preprocessor
-	}
-	highlight_map.Operator = {
-		fg = palette[6], -- or "#FFFFFF", -- White for operators
-	}
+		DiagnosticError = { fg = palette[9] }, -- bg = selection_bg,  -- or "#FF8080", -- Bright red for errors
+		DiagnosticWarn = { fg = palette[11] }, -- bg = selection_bg,  -- or "#FFFF80", -- Bright yellow for warnings
+		DiagnosticHint = { fg = palette[14] }, -- bg = selection_bg,  -- or "#80FFFF", -- Bright cyan for hints
+		DiagnosticInfo = { fg = palette[12] }, -- bg = selection_bg,
 
-	-- Diagnostic highlight groups with background colors for visibility
-	highlight_map.DiagnosticError = {
-		fg = palette[9], -- or "#FF8080", -- Bright red for errors
-		-- bg = selection_bg,
-	}
-	highlight_map.DiagnosticWarn = {
-		fg = palette[11], -- or "#FFFF80", -- Bright yellow for warnings
-		-- bg = selection_bg,
-	}
-	highlight_map.DiagnosticHint = {
-		fg = palette[14], -- or "#80FFFF", -- Bright cyan for hints
-		-- bg = selection_bg,
-	}
-	highlight_map.DiagnosticInfo = {
-		fg = palette[12], -- or "#8080FF", -- Bright blue for info
-		-- bg = selection_bg,
-	}
+		-- Legacy diagnostic names for compatibility (no background colors)
+		Error = { fg = palette[9] }, -- bg = selection_bg,  -- or "#FF8080", -- Bright red for errors
+		Warning = { fg = palette[11] }, -- bg = selection_bg,  -- or "#FFFF80", -- Bright yellow for warnings
+		Hint = { fg = palette[14] }, -- bg = selection_bg,  -- or "#80FFFF", -- Bright cyan for hints
+		Note = { fg = palette[12] }, -- bg = selection_bg,
 
-	-- Legacy diagnostic names for compatibility (no background colors)
-	highlight_map.Error = {
-		fg = palette[9], -- or "#FF8080", -- Bright red for errors
-		-- bg = palette[0],
+		-- UI elements
+		Cursor = { fg = cursor_text, bg = cursor_color }, -- Use foreground color for cursor
+		CursorLine = { bg = palette[0] }, -- bg = selection_bg or "#000000", -- Slightly different background for cursor line
+		Visual = { bg = selection_bg, fg = selection_fg }, -- Use selection colors for visual mode },
+		-- Visual = { bg = palette[8] }, -- fg = selection_fg, -- Use selection colors for visual mode },
+		Search = { fg = bg, bg = palette[7] }, -- or "#FFFF00", -- Yellow background for search
+		IncSearch = { fg = bg, bg = palette[7] }, -- or "#FFFF00", -- Yellow background for search
+		CurSearch = { fg = bg, bg = palette[3] }, -- or "#FFFF00", -- Yellow background for search
 	}
-	highlight_map.Warning = {
-		fg = palette[11], -- or "#FFFF80", -- Bright yellow for warnings
-		-- bg = palette[0],
-	}
-	highlight_map.Hint = {
-		fg = palette[14], -- or "#80FFFF", -- Bright cyan for hints
-		-- bg = palette[0],
-	}
-	highlight_map.Note = {
-		fg = palette[12], -- or "#8080FF", -- Bright blue for info
-		-- bg = palette[0],
-	}
-
-	-- UI elements
-	highlight_map.Cursor = {
-		fg = cursor_text,
-		bg = cursor_color, -- Use foreground color for cursor
-	}
-	highlight_map.CursorLine = {
-		bg = palette[0], -- or "#000000", -- Slightly different background for cursor line
-		-- bg = selection_bg or "#000000", -- Slightly different background for cursor line
-	}
-	highlight_map.Visual = {
-		-- fg = selection_fg,
-		-- bg = selection_bg, -- Use selection colors for visual mode
-		-- fg = selection_fg,
-		bg = palette[8], -- Use selection colors for visual mode
-	}
-	highlight_map.Search = {
-		fg = bg,
-		bg = palette[7], -- or "#FFFF00", -- Yellow background for search
-	}
-	highlight_map.IncSearch = {
-		fg = bg,
-		bg = palette[7], -- or "#FFFF00", -- Yellow background for search
-	}
-	highlight_map.CurSearch = {
-		fg = bg,
-		bg = palette[3], -- or "#FFFF00", -- Yellow background for search
-	}
-
 	-- No color adjustments - use exact theme colors
 
 	return highlight_map, nil
