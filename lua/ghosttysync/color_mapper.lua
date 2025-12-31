@@ -107,7 +107,7 @@ function M.create_highlight_map(colors, mode)
 		-- UI elements
 		Cursor = { fg = cursor_text, bg = cursor_color }, -- Use foreground color for cursor
 		CursorLine = { bg = palette[0] }, -- bg = selection_bg or "#000000", -- Slightly different background for cursor line
-		Visual = { bg = selection_bg, fg = selection_fg }, -- Use selection colors for visual mode },
+		Visual = { bg = selection_bg }, -- fg = selection_fg Use selection colors for visual mode },
 		-- Visual = { bg = palette[8] }, -- fg = selection_fg, -- Use selection colors for visual mode },
 		Search = { fg = bg, bg = palette[7] }, -- or "#FFFF00", -- Yellow background for search
 		IncSearch = { fg = bg, bg = palette[7] }, -- or "#FFFF00", -- Yellow background for search
