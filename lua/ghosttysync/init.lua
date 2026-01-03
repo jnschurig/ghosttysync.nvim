@@ -157,42 +157,6 @@ function M.sync_theme()
 		log_debug(detected_colors_msg)
 	end
 
-	-- -- Step 2: Parse theme and extract colors (Requirements 3.2)
-	-- log_debug("Step 2: Extracting colors from theme configuration")
-	-- local colors, parse_error = theme_parser.extract_colors(theme_info)
-	-- if not colors then
-	-- 	local error_msg = "Failed to extract colors: " .. (parse_error or "unknown error")
-	-- 	log_error(error_msg)
-	-- 	return false, error_msg
-	-- end
-	--
-	-- local palette_size = 0
-	-- local colors_text = ""
-	-- if colors.palette then
-	-- 	for key, value in pairs(colors.palette) do
-	-- 		palette_size = palette_size + 1
-	-- 		colors_text = colors_text .. "\n    " .. key .. ": " .. value
-	-- 	end
-	-- end
-	-- log_debug(
-	-- 	"Successfully extracted colors: \n  background="
-	-- 		.. (colors.background or "none")
-	-- 		.. "\n  foreground="
-	-- 		.. (colors.foreground or "none")
-	-- 		.. "\n  Selection BG: "
-	-- 		.. (colors.selection_background or "none")
-	-- 		.. "\n  Selection FG: "
-	-- 		.. (colors.selection_foreground or "none")
-	-- 		.. "\n  cursor_color: "
-	-- 		.. (colors.cursor_color or "none")
-	-- 		.. "\n  cursor_text: "
-	-- 		.. (colors.cursor_text or "none")
-	-- 		.. "\n  Palette: "
-	-- 		.. colors_text
-	-- 		.. "\n  palette_size="
-	-- 		.. palette_size
-	-- )
-
 	local colors = theme_info.colors
 
 	-- Step 3: Detect light/dark mode (Requirements 4.1, 4.2, 4.3)

@@ -3,25 +3,6 @@
 
 local M = {}
 
--- Helper function to validate color format
-local function is_valid_color(color)
-	if not color or type(color) ~= "string" then
-		return false
-	end
-
-	-- Check for hex color format (#RRGGBB or #RGB)
-	if color:match("^#%x%x%x%x%x%x$") or color:match("^#%x%x%x$") then
-		return true
-	end
-
-	-- Check for rgb() format
-	if color:match("^rgb%(%d+,%s*%d+,%s*%d+%)$") then
-		return true
-	end
-
-	return false
-end
-
 -- Execute `ghostty +show-config` command and return output
 function M.execute_show_config()
 	-- function execute_show_config()
@@ -139,7 +120,7 @@ end
 -- Extract theme information from parsed configuration
 function M.extract_theme_info(config)
 	-- if not config or type(config) ~= "table" then
-	-- 	return nil, "Invalid or empty configuration provided"
+	--   return nil, "Invalid or empty configuration provided"
 	-- end
 
 	local theme_info = {

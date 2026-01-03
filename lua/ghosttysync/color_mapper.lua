@@ -50,12 +50,6 @@ function M.create_highlight_map(colors, mode)
 		return nil, "Invalid colors provided"
 	end
 
-	-- -- Validate and normalize colors first
-	-- local valid, validated_colors = M.validate_colors(colors)
-	-- if not valid then
-	--   return nil, "Color validation failed: " .. (validated_colors or "unknown error")
-	-- end
-
 	-- Default mode to dark if not provided
 	mode = mode or "dark"
 
@@ -117,84 +111,5 @@ function M.create_highlight_map(colors, mode)
 
 	return highlight_map, nil
 end
-
--- -- Validate color values before applying to Neovim
--- function M.validate_colors(colors)
---   if not colors or type(colors) ~= "table" then
---     return false, "Colors must be a table"
---   end
---
---   local validated_colors = {}
---
---   -- Validate and normalize individual color values
---   for key, value in pairs(colors) do
---     if key == "palette" and type(value) == "table" then
---       -- Validate palette colors
---       validated_colors.palette = {}
---       for i, color in pairs(value) do
---         local normalized = M._normalize_color(color)
---         if normalized then
---           validated_colors.palette[i] = normalized
---         end
---       end
---     else
---       -- Validate individual color values (background, foreground, cursor)
---       local normalized = M._normalize_color(value)
---       if normalized then
---         validated_colors[key] = normalized
---       end
---     end
---   end
---
---   -- Ensure we have at least basic colors with fallbacks
---   validated_colors.background = validated_colors.background or "#000000"
---   validated_colors.foreground = validated_colors.foreground or "#FFFFFF"
---   validated_colors.selection_background = validated_colors.selection_background or "#404040"
---   validated_colors.selection_foreground = validated_colors.selection_foreground or validated_colors.foreground
---   validated_colors.palette = validated_colors.palette or {}
---
---   return true, validated_colors
--- end
-
--- -- Internal function to normalize and validate individual color values
--- function M._normalize_color(color)
--- 	if not color or type(color) ~= "string" then
--- 		return nil
--- 	end
---
--- 	-- Remove whitespace
--- 	color = color:gsub("%s+", "")
---
--- 	-- Handle different color formats
--- 	if color:match("^#[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$") then
--- 		-- 3-digit hex: #RGB -> #RRGGBB
--- 		local r, g, b = color:match("^#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])$")
--- 		return ("#" .. r .. r .. g .. g .. b .. b):upper()
--- 	elseif color:match("^#[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$") then
--- 		-- 6-digit hex: #RRGGBB (already valid)
--- 		return color:upper()
--- 	elseif color:match("^rgb%(%s*%d+%s*,%s*%d+%s*,%s*%d+%s*%)$") then
--- 		-- RGB format: rgb(r, g, b)
--- 		local r, g, b = color:match("^rgb%(%s*(%d+)%s*,%s*(%d+)%s*,%s*(%d+)%s*%)$")
--- 		r, g, b = tonumber(r), tonumber(g), tonumber(b)
--- 		if r and g and b and r >= 0 and r <= 255 and g >= 0 and g <= 255 and b >= 0 and b <= 255 then
--- 			return string.format("#%02X%02X%02X", r, g, b)
--- 		end
--- 	elseif color:match("^0x[0-9a-fA-F]+$") then
--- 		-- Hex with 0x prefix
--- 		local hex = color:sub(3)
--- 		if #hex == 3 then
--- 			local r, g, b = hex:match("^([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])$")
--- 			return ("#" .. r .. r .. g .. g .. b .. b):upper()
--- 		elseif #hex == 6 then
--- 			return "#" .. hex:upper()
--- 		end
--- 	end
---
--- 	-- Invalid color format
--- 	return nil
--- end
-
--- No color adjustment functions - using exact theme colors
 
 return M
