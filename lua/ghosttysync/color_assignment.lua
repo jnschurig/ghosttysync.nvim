@@ -105,8 +105,8 @@ function M.assign_colors_from_theme(settings)
 		-- black = closest_color_match(pure_black, colors.palette),
 	}
 
-	colors.main.dark_gray = adjust_color_value(colors.main.gray, 0.5)
-	colors.main.black = adjust_color_value(colors.main.gray, 0.3)
+	colors.main.dark_gray = adjust_color_value(colors.main.gray, 0.4)
+	colors.main.black = adjust_color_value(colors.main.gray, 0.2)
 
 	colors.editor = {
 		link = colors.main.cyan,
@@ -119,8 +119,8 @@ function M.assign_colors_from_theme(settings)
 		fg_dark = adjust_color_value(settings.colors.foreground, 0.8),
 		selection = settings.colors.selection_background,
 		contrast = settings.colors.selection_background,
-		active = adjust_color_value(colors.main.gray, 0.5),
-		border = adjust_color_value(colors.main.gray, 0.6),
+		active = colors.main.dark_gray,
+		border = colors.main.gray,
 		highlight = colors.main.dark_gray,
 		disabled = colors.main.gray,
 		accent = colors.main.orange,
