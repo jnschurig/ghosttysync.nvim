@@ -159,8 +159,9 @@ function M.sync_theme()
 	end
 
 	-- local colors = theme_info.colors
-	config.theme_info = theme_info
-	local colors = color_assignment.assign_colors_from_theme(config)
+	-- config.theme_info = theme_info
+	theme_info.config = config
+	local colors = color_assignment.assign_colors_from_theme(theme_info)
 
 	-- Step 4: Map colors to Neovim highlight groups (Requirements 1.2, 3.2)
 	log_debug("Step 4: Mapping colors to Neovim highlight groups")
