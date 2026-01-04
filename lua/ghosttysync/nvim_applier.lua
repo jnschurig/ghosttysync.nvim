@@ -265,7 +265,8 @@ end
 -- Clear existing highlights before applying new theme
 function M.clear_existing_highlights()
 	local vim_api = get_vim_api()
-	local errors = {}
+	-- local errors = {}
+	local error = ""
 	local operations_completed = 0
 
 	-- Clear the current colorscheme name
@@ -276,7 +277,8 @@ function M.clear_existing_highlights()
 	if success1 then
 		operations_completed = operations_completed + 1
 	else
-		table.insert(errors, result1)
+		error = error .. result1
+		-- table.insert(errors, result1)
 	end
 
 	-- Reset all highlight groups to default
@@ -287,7 +289,8 @@ function M.clear_existing_highlights()
 	if success2 then
 		operations_completed = operations_completed + 1
 	else
-		table.insert(errors, result2)
+		error = error .. result2
+		-- table.insert(errors, result2)
 	end
 
 	-- Reload syntax highlighting to ensure clean state
@@ -300,21 +303,24 @@ function M.clear_existing_highlights()
 	if success3 then
 		operations_completed = operations_completed + 1
 	else
-		table.insert(errors, result3)
+		error = error .. result3
+		-- table.insert(errors, result3)
 	end
 
 	-- Return success if at least some operations completed
 	if operations_completed > 0 then
 		local success_msg = string.format("Cleared highlights (%d/3 operations successful)", operations_completed)
-		if #errors > 0 then
-			success_msg = success_msg .. string.format(" with %d errors", #errors)
+		-- if #errors > 0 then
+		if error ~= "" then
+			success_msg = success_msg .. " with errors"
 			log_warning(success_msg)
 		end
-		return true, success_msg, errors
+		return true, success_msg
 	else
-		local error_msg = "Failed to clear any highlights"
-		log_error(error_msg)
-		return false, error_msg, errors
+		-- local error = "Failed to clear any highlights"
+		-- log_error(error_msg)
+		log_error(error)
+		return false, error
 	end
 end
 
