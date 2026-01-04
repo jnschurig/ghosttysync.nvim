@@ -87,7 +87,7 @@ function M.assign_colors_from_theme(settings)
 	local local_use_palette = {}
 	for i = 1, 8 do
 		local idx = i + palette_index
-		local_use_palette[i] = settings.theme_colors.palette[idx]
+		local_use_palette[i] = settings.colors.palette[idx]
 	end
 
 	colors.palette = local_use_palette
@@ -109,15 +109,15 @@ function M.assign_colors_from_theme(settings)
 
 	colors.editor = {
 		link = colors.main.cyan,
-		cursor = settings.theme_colors.cursor_color,
-		cursor_text = settings.theme_colors.cursor_text,
+		cursor = settings.colors.cursor_color,
+		cursor_text = settings.colors.cursor_text,
 		title = colors.main.white,
-		bg = settings.theme_colors.background,
-		bg_alt = adjust_color_value(settings.theme_colors.background, 0.8),
-		fg = settings.theme_colors.foreground,
-		fg_dark = adjust_color_value(settings.theme_colors.foreground, 0.8),
-		selection = settings.theme_colors.selection_background,
-		contrast = settings.theme_colors.selection_background,
+		bg = settings.colors.background,
+		bg_alt = adjust_color_value(settings.colors.background, 0.8),
+		fg = settings.colors.foreground,
+		fg_dark = adjust_color_value(settings.colors.foreground, 0.8),
+		selection = settings.colors.selection_background,
+		contrast = settings.colors.selection_background,
 		active = adjust_color_value(colors.main.gray, 0.5),
 		border = adjust_color_value(colors.main.gray, 0.6),
 		highlight = colors.main.gray,
