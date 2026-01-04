@@ -3,47 +3,6 @@
 
 local M = {}
 
--- Example highlight group mapping structure
--- This serves as documentation for the expected highlight map format
-M.HighlightMap = {
-	-- Core highlight groups
-	Normal = { fg = "#ffffff", bg = "#000000" },
-	Comment = { fg = "#808080", italic = true },
-
-	-- Syntax highlighting groups
-	Keyword = { fg = "#ff6b6b", bold = true },
-	Conditional = { fg = "#ff6b6b" },
-	String = { fg = "#4ecdc4" },
-	Function = { fg = "#45b7d1" },
-	Variable = { fg = "#ffffff" },
-	Type = { fg = "#96ceb4" },
-	Number = { fg = "#feca57" },
-	Identifier = { fg = "#ffffff" },
-	Constant = { fg = "#ff00ff" },
-	Special = { fg = "#80ffff" },
-	Statement = { fg = "#ff8080" },
-	PreProc = { fg = "#ff80ff" },
-	Operator = { fg = "#ffffff" },
-
-	-- Diagnostic highlight groups (modern)
-	DiagnosticError = { fg = "#ff8080" },
-	DiagnosticWarn = { fg = "#ffff80" },
-	DiagnosticHint = { fg = "#80ffff" },
-	DiagnosticInfo = { fg = "#8080ff" },
-
-	-- Legacy diagnostic highlight groups
-	Error = { fg = "#ff6b6b", bg = "#2d1b1b" },
-	Warning = { fg = "#feca57", bg = "#2d2a1b" },
-	Hint = { fg = "#4ecdc4", bg = "#1b2d2a" },
-	Note = { fg = "#45b7d1", bg = "#1b252d" },
-
-	-- UI elements
-	Cursor = { fg = "#000000", bg = "#ffffff" },
-	CursorLine = { bg = "#000000" },
-	Visual = { bg = "#808080" },
-	Search = { fg = "#000000", bg = "#ffff00" },
-}
-
 -- Create highlight group mappings from Ghostty colors
 function M.create_highlight_map(colors)
 	if not colors or type(colors) ~= "table" then

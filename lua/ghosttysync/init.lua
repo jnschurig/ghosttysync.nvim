@@ -162,11 +162,6 @@ function M.sync_theme()
 	config.theme_info = theme_info
 	local colors = color_assignment.assign_colors_from_theme(config)
 
-	-- Step 3: Detect light/dark mode (Requirements 4.1, 4.2, 4.3)
-	-- log_debug("Step 3: Detecting theme mode")
-	-- local mode = theme_parser.detect_mode(colors)
-	-- log_debug("Detected theme mode: " .. mode)
-
 	-- Step 4: Map colors to Neovim highlight groups (Requirements 1.2, 3.2)
 	log_debug("Step 4: Mapping colors to Neovim highlight groups")
 	local highlight_map, mapping_error = highlight_mapping.create_highlight_map(colors)
@@ -182,19 +177,28 @@ function M.sync_theme()
 	end
 	log_debug("Created highlight map with " .. highlight_count .. " groups")
 
-	-- Step 5: Clear existing highlights before applying new theme
-	log_debug("Step 5: Clearing existing highlights")
-	local clear_success, clear_message, clear_errors = nvim_applier.clear_existing_highlights()
-	if not clear_success then
-		log_warning("Failed to clear existing highlights: " .. clear_message)
-	-- Continue anyway, as this is not critical for functionality
-	else
-		log_debug("Successfully cleared existing highlights")
+	-- -- Step 5: Clear existing highlights before applying new theme
+	-- log_debug("Step 5: Clearing existing highlights")
+	-- local clear_success, clear_message, clear_errors = nvim_applier.clear_existing_highlights()
+	-- if not clear_success then
+	-- 	log_warning("Failed to clear existing highlights: " .. clear_message)
+	-- -- Continue anyway, as this is not critical for functionality
+	-- else
+	-- 	log_debug("Successfully cleared existing highlights")
+	-- end
+
+	if config.debug then
+		local highlight_group_msg = ""
+		for key, value in pairs(highlight_map) do
+			highlight_group_msg = highlight_group_msg .. key .. ": fg=" .. value.fg .. " bg=" .. value.bg .. "\n"
+		end
+
+		log_debug(highlight_group_msg)
 	end
 
 	-- Step 6: Apply highlights to Neovim (Requirements 1.2)
 	log_debug("Step 6: Applying highlights to Neovim")
-	local apply_success, apply_message, apply_errors = nvim_applier.apply_highlights(highlight_map)
+	local apply_success, apply_message = nvim_applier.apply_highlights(highlight_map)
 	if not apply_success then
 		local error_msg = "Failed to apply highlights: " .. apply_message
 		log_error(error_msg)
