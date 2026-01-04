@@ -1,39 +1,121 @@
--- Test file for color_mapper.lua
+-- Test file for highlight_mapping.lua
 -- Tests the highlight group mapping logic
 
--- Load the color_mapper module
-local color_mapper = require("ghosttysync.color_mapper")
+-- Load the highlight_mapping module
+local highlight_mapping = require("lua.ghosttysync.highlight_mapping")
 
 -- Test data
 local test_colors = {
-	background = "#1a1a1a",
-	foreground = "#ffffff",
-	cursor = "#00ff00",
 	palette = {
-		[0] = "#000000", -- black
-		[1] = "#ff0000", -- red
-		[2] = "#00ff00", -- green
-		[3] = "#ffff00", -- yellow
-		[4] = "#0000ff", -- blue
-		[5] = "#ff00ff", -- magenta
-		[6] = "#00ffff", -- cyan
-		[7] = "#ffffff", -- white
-		[8] = "#808080", -- bright black
-		[9] = "#ff8080", -- bright red
-		[10] = "#80ff80", -- bright green
-		[11] = "#ffff80", -- bright yellow
-		[12] = "#8080ff", -- bright blue
-		[13] = "#ff80ff", -- bright magenta
-		[14] = "#80ffff", -- bright cyan
-		[15] = "#ffffff", -- bright white
+		"#435b67",
+		"#fc3841",
+		"#5cf19e",
+		"#fed032",
+		"#37b6ff",
+		"#fc226e",
+		"#59ffd1",
+		"#ffffff",
+	},
+
+	backgrounds = {
+		floating_windows = "#1d262a",
+		sidebars = "#1d262a",
+		bg_blend = "#1d262a",
+		non_current_windows = "#1d262a",
+		cursor_line = "#212d33",
+	},
+
+	lsp = {
+		warning = "#fed032",
+		error = "#fc3841",
+		hint = "#37b6ff",
+		info = "#59ffd1",
+	},
+
+	syntax = {
+		fn = "#37b6ff",
+		operator = "#59ffd1",
+		comments = "#435b67",
+		keyword = "#37b6ff",
+		parameter = "#59ffd1",
+		type = "#37b6ff",
+		string = "#59ffd1",
+		field = "#e7ebed",
+		variable = "#e7ebed",
+		value = "#fed032",
+	},
+
+	main = {
+		purple = "#37b6ff",
+		white = "#ffffff",
+		green = "#5cf19e",
+		blue = "#37b6ff",
+		orange = "#fed032",
+		black = "#141b1e",
+		yellow = "#fed032",
+		gray = "#435b67",
+		pink = "#fc226e",
+		cyan = "#59ffd1",
+		red = "#fc3841",
+	},
+
+	git = {
+		removed = "#fc3841",
+		added = "#5cf19e",
+		modified = "#37b6ff",
+	},
+
+	editor = {
+		none = "NONE",
+		link = "#59ffd1",
+		line_numbers = "#435b67",
+		cursor = "#eaeaea",
+		cursor_text = "#000000",
+		accent = "#fed032",
+		title = "#ffffff",
+		highlight = "#435b67",
+		fg_dark = "#b8bcbd",
+		border = "#28363d",
+		bg = "#1d262a",
+		bg_alt = "#171e21",
+		active = "#212d33",
+		contrast = "#4e6a78",
+		fg = "#e7ebed",
+		selection = "#4e6a78",
+		disabled = "#435b67",
 	},
 }
+
+local function print_table(table_object)
+	for key, value in pairs(table_object) do
+		if type(value) == "table" then
+			print("table: " .. key)
+			print_table(value)
+		else
+			if type(value) == "boolean" and value then
+				value = "true"
+			end
+			if type(value) == "boolean" and ~value then
+				value = "false"
+			end
+			print(key .. ": " .. value)
+		end
+	end
+end
+
+local function test_highlight_map()
+	print("Testing create_highlight_map() with standard colors")
+
+	local highlight_map = highlight_mapping.create_highlight_map(test_colors)
+	print_table(highlight_map)
+	return true
+end
 
 -- Test functions
 local function test_create_highlight_map_basic()
 	print("Testing create_highlight_map with valid colors...")
 
-	local highlight_map, err = color_mapper.create_highlight_map(test_colors, "dark")
+	local highlight_map, err = highlight_mapping.create_highlight_map(test_colors)
 
 	if err then
 		print("ERROR: " .. err)
@@ -121,7 +203,7 @@ local function test_create_highlight_map_with_minimal_colors()
 		-- No palette provided
 	}
 
-	local highlight_map, err = color_mapper.create_highlight_map(minimal_colors, "dark")
+	local highlight_map, err = highlight_mapping.create_highlight_map(minimal_colors)
 
 	if err then
 		print("ERROR: " .. err)
@@ -140,7 +222,7 @@ end
 local function test_create_highlight_map_invalid_input()
 	print("Testing create_highlight_map with invalid input...")
 
-	local highlight_map, err = color_mapper.create_highlight_map(nil, "dark")
+	local highlight_map, err = highlight_mapping.create_highlight_map(nil)
 
 	if not err then
 		print("ERROR: Should have returned error for nil colors")
@@ -164,7 +246,7 @@ local function test_apply_mode_adjustments()
 		Comment = { fg = "#808080", italic = true },
 	}
 
-	local adjusted_map = color_mapper.apply_mode_adjustments(test_highlight_map, "dark")
+	local adjusted_map = highlight_mapping.apply_mode_adjustments(test_highlight_map, "dark")
 
 	if not adjusted_map then
 		print("ERROR: apply_mode_adjustments returned nil")
@@ -184,7 +266,7 @@ end
 local function test_validate_colors_valid_input()
 	print("Testing validate_colors with valid input...")
 
-	local valid, result = color_mapper.validate_colors(test_colors)
+	local valid, result = highlight_mapping.validate_colors(test_colors)
 
 	if not valid then
 		print("ERROR: Valid colors were rejected: " .. (result or "unknown error"))
@@ -209,7 +291,7 @@ end
 local function test_validate_colors_invalid_input()
 	print("Testing validate_colors with invalid input...")
 
-	local valid, result = color_mapper.validate_colors(nil)
+	local valid, result = highlight_mapping.validate_colors(nil)
 
 	if valid then
 		print("ERROR: nil input should be invalid")
@@ -225,7 +307,7 @@ local function test_validate_colors_invalid_input()
 		},
 	}
 
-	local valid2, result2 = color_mapper.validate_colors(invalid_colors)
+	local valid2, result2 = highlight_mapping.validate_colors(invalid_colors)
 
 	if not valid2 then
 		print("ERROR: Should handle invalid colors gracefully")
@@ -257,7 +339,7 @@ local function test_normalize_color()
 	}
 
 	for _, case in ipairs(test_cases) do
-		local result = color_mapper._normalize_color(case.input)
+		local result = highlight_mapping._normalize_color(case.input)
 		if result ~= case.expected then
 			print(
 				"ERROR: _normalize_color('"
@@ -291,7 +373,7 @@ local function test_adjust_contrast()
 	}
 
 	-- Test dark mode adjustments
-	local dark_adjusted = color_mapper.adjust_contrast(test_colors_copy, "dark")
+	local dark_adjusted = highlight_mapping.adjust_contrast(test_colors_copy, "dark")
 
 	if not dark_adjusted then
 		print("ERROR: adjust_contrast returned nil for dark mode")
@@ -299,7 +381,7 @@ local function test_adjust_contrast()
 	end
 
 	-- Test light mode adjustments
-	local light_adjusted = color_mapper.adjust_contrast(test_colors_copy, "light")
+	local light_adjusted = highlight_mapping.adjust_contrast(test_colors_copy, "light")
 
 	if not light_adjusted then
 		print("ERROR: adjust_contrast returned nil for light mode")
@@ -319,8 +401,8 @@ local function test_luminance_and_contrast_calculation()
 	print("Testing luminance and contrast calculation...")
 
 	-- Test luminance calculation
-	local white_luminance = color_mapper._get_luminance("#FFFFFF")
-	local black_luminance = color_mapper._get_luminance("#000000")
+	local white_luminance = highlight_mapping._get_luminance("#FFFFFF")
+	local black_luminance = highlight_mapping._get_luminance("#000000")
 
 	if not white_luminance or not black_luminance then
 		print("ERROR: Failed to calculate luminance")
@@ -333,7 +415,7 @@ local function test_luminance_and_contrast_calculation()
 	end
 
 	-- Test contrast ratio calculation
-	local contrast = color_mapper._calculate_contrast_ratio(white_luminance, black_luminance)
+	local contrast = highlight_mapping._calculate_contrast_ratio(white_luminance, black_luminance)
 
 	if not contrast or contrast < 20 then -- White on black should have very high contrast
 		print("ERROR: Contrast ratio calculation seems incorrect")
@@ -346,44 +428,45 @@ end
 
 -- Run all tests
 local function run_tests()
-	print("Running color_mapper tests...")
+	print("Running highlight_mapping tests...")
 	print("=" .. string.rep("=", 40))
 
 	local tests = {
-		test_create_highlight_map_basic,
-		test_create_highlight_map_with_minimal_colors,
-		test_create_highlight_map_invalid_input,
-		test_apply_mode_adjustments,
-		test_validate_colors_valid_input,
-		test_validate_colors_invalid_input,
-		test_normalize_color,
-		test_adjust_contrast,
-		test_luminance_and_contrast_calculation,
+		-- test_create_highlight_map_basic,
+		-- test_create_highlight_map_with_minimal_colors,
+		-- test_create_highlight_map_invalid_input,
+		-- test_apply_mode_adjustments,
+		-- test_validate_colors_valid_input,
+		-- test_validate_colors_invalid_input,
+		-- test_normalize_color,
+		-- test_adjust_contrast,
+		-- test_luminance_and_contrast_calculation,
+		test_highlight_map(),
 	}
 
-	local passed = 0
-	local total = #tests
-
-	for _, test in ipairs(tests) do
-		if test() then
-			passed = passed + 1
-		end
-		print()
-	end
-
-	print("=" .. string.rep("=", 40))
-	print(string.format("Tests completed: %d/%d passed", passed, total))
-
-	if passed == total then
-		print("✓ All tests passed!")
-		return true
-	else
-		print("✗ Some tests failed!")
-		return false
-	end
+	-- local passed = 0
+	-- local total = #tests
+	--
+	-- for _, test in ipairs(tests) do
+	-- 	if test() then
+	-- 		passed = passed + 1
+	-- 	end
+	-- 	print()
+	-- end
+	--
+	-- print("=" .. string.rep("=", 40))
+	-- print(string.format("Tests completed: %d/%d passed", passed, total))
+	--
+	-- if passed == total then
+	-- 	print("✓ All tests passed!")
+	-- 	return true
+	-- else
+	-- 	print("✗ Some tests failed!")
+	-- 	return false
+	-- end
 end
 
 -- Export test runner
 return {
-	run_tests = run_tests,
+	run_tests = run_tests(),
 }

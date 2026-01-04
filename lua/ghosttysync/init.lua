@@ -5,8 +5,9 @@ local M = {}
 
 -- Import required modules
 local ghostty_config = require("ghosttysync.ghostty_config")
-local theme_parser = require("ghosttysync.theme_parser")
-local color_mapper = require("ghosttysync.color_mapper")
+-- local theme_parser = require("ghosttysync.theme_parser")
+local color_assignment = require("ghosttysync.color_assignment")
+local highlight_mapping = require("ghosttysync.highlight_mapping")
 local nvim_applier = require("ghosttysync.nvim_applier")
 
 -- Plugin configuration with defaults
@@ -157,16 +158,18 @@ function M.sync_theme()
 		log_debug(detected_colors_msg)
 	end
 
-	local colors = theme_info.colors
+	-- local colors = theme_info.colors
+	config.theme_info = theme_info
+	local colors = color_assignment.assign_colors_from_theme(config)
 
 	-- Step 3: Detect light/dark mode (Requirements 4.1, 4.2, 4.3)
-	log_debug("Step 3: Detecting theme mode")
-	local mode = theme_parser.detect_mode(colors)
-	log_debug("Detected theme mode: " .. mode)
+	-- log_debug("Step 3: Detecting theme mode")
+	-- local mode = theme_parser.detect_mode(colors)
+	-- log_debug("Detected theme mode: " .. mode)
 
 	-- Step 4: Map colors to Neovim highlight groups (Requirements 1.2, 3.2)
 	log_debug("Step 4: Mapping colors to Neovim highlight groups")
-	local highlight_map, mapping_error = color_mapper.create_highlight_map(colors, mode)
+	local highlight_map, mapping_error = highlight_mapping.create_highlight_map(colors)
 	if not highlight_map then
 		local error_msg = "Failed to create highlight map: " .. (mapping_error or "unknown error")
 		log_error(error_msg)

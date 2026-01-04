@@ -116,6 +116,7 @@ function M.assign_colors_from_theme(settings)
 	colors.editor = {
 		link = colors.main.cyan,
 		cursor = settings.theme_colors.cursor_color,
+		cursor_text = settings.theme_colors.cursor_text,
 		title = colors.main.white,
 		bg = settings.theme_colors.background,
 		bg_alt = adjust_color_value(settings.theme_colors.background, 0.8),
