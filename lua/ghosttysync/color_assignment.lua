@@ -105,7 +105,7 @@ function M.assign_colors_from_theme(settings)
 		-- black = closest_color_match(pure_black, colors.palette),
 	}
 
-	colors.main.dark_gray = closest_color_match(adjust_color_value(colors.main.gray, 0.5), colors.palette)
+	colors.main.dark_gray = adjust_color_value(colors.main.gray, 0.5)
 	colors.main.black = adjust_color_value(colors.main.gray, 0.3)
 
 	colors.editor = {
