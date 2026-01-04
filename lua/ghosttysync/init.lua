@@ -195,7 +195,7 @@ function M.sync_theme()
 	if config.debug then
 		local highlight_group_msg = ""
 		for key, value in pairs(highlight_map) do
-			highlight_group_msg = highlight_group_msg .. key .. ": fg=" .. value.fg or "none" .. " bg=" .. value.bg or "none" .. "\n"
+			highlight_group_msg = highlight_group_msg .. key .. ": fg=" .. (value.fg or "none") .. " bg=" .. (value.bg or "none") .. "\n"
 		end
 
 		log_debug(highlight_group_msg)
