@@ -180,6 +180,7 @@ function M.sync_theme()
 	for _ in pairs(highlight_map) do
 		highlight_count = highlight_count + 1
 	end
+  log_debug("darg_gray: " .. (colors.main.dark_gray or "unknown"))
 	log_debug("Created highlight map with " .. highlight_count .. " groups")
 
 	-- -- Step 5: Clear existing highlights before applying new theme
