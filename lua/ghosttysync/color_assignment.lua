@@ -105,6 +105,7 @@ function M.assign_colors_from_theme(settings)
 		-- black = closest_color_match(pure_black, colors.palette),
 	}
 
+	colors.main.dark_gray = closest_color_match(adjust_color_value(colors.main.gray, 0.5), colors.palette)
 	colors.main.black = adjust_color_value(colors.main.gray, 0.3)
 
 	colors.editor = {
@@ -120,7 +121,7 @@ function M.assign_colors_from_theme(settings)
 		contrast = settings.colors.selection_background,
 		active = adjust_color_value(colors.main.gray, 0.5),
 		border = adjust_color_value(colors.main.gray, 0.6),
-		highlight = colors.main.gray,
+		highlight = colors.main.dark_gray,
 		disabled = colors.main.gray,
 		accent = colors.main.orange,
 		line_numbers = colors.main.gray,
