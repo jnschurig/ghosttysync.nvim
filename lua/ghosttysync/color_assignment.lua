@@ -70,24 +70,18 @@ function M.assign_colors_from_theme(settings)
 	local pure_black = "#000000"
 	local pure_gray = "#808080"
 
-	local colors = {
-		-- editor = {
-		-- 	link = "#80CBC4",
-		-- 	cursor = "#FFCC00",
-		-- 	title = "#EEFFFF",
-		-- },
-	}
+	local colors = {}
 
 	-- Step 1, select the base set of 8 colors to work with
 	local palette_index = nil
-	if settings.config.mode == "primary" then
+	if settings.config.palette_set == "primary" then
 		palette_index = 0
 	end
-	if settings.config.mode == "secondary" then
+	if settings.config.palette_set == "secondary" then
 		palette_index = 8
 	end
 	if palette_index == nil then
-		return nil, "Incompatible palette mode: " .. settings.config.mode
+		return nil, "Incompatible palette set: " .. settings.config.palette_set .. " expected 'primary' or 'secondary'"
 	end
 
 	local local_use_palette = {}

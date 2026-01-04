@@ -18,6 +18,7 @@ local config = {
 	-- cache_timeout = 30,
 	-- Enable debug logging
 	debug = false,
+	palette_set = "primary",
 	-- Force fresh sync (bypass cache) - useful for debugging
 	-- force_fresh = false,
 }
