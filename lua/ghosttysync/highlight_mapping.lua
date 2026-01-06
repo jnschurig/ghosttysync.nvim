@@ -53,6 +53,11 @@ function M.create_highlight_map(colors)
 		Debug = { fg = m.red },
 		htmlLink = { fg = e.link, underline = true },
 
+		StatusLine = { fg = e.fg, bg = e.contrast },
+		StatusLineNC = { fg = e.contrast, bg = e.bg },
+		StatusLineTerm = { link = "StatusLine" },
+		StatusLineTermNC = { link = "StatusLineNC" },
+
 		DiagnosticError = { fg = l.error },
 		DiagnosticWarn = { fg = l.warning },
 		DiagnosticHint = { fg = l.hint },
