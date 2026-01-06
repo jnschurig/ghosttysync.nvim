@@ -207,9 +207,23 @@ function M.sync_theme()
 		log_debug(highlight_group_msg)
 	end
 
+	---checks if the user uses lualine and then sets the lualine theme
+	local set_lualine = function()
+		local has_lualine, lualine = pcall(require, "lualine")
+		if has_lualine then
+			lualine.setup({
+				options = {
+					theme = "auto",
+				},
+			})
+		end
+	end
+
 	-- Step 6: Apply highlights to Neovim (Requirements 1.2)
 	log_debug("Step 6: Applying highlights to Neovim")
 	local apply_success, apply_message = nvim_applier.apply_highlights(highlight_map)
+	set_lualine()
+
 	if not apply_success then
 		local error_msg = "Failed to apply highlights: " .. apply_message
 		log_error(error_msg)

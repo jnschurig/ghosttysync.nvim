@@ -103,6 +103,7 @@ function M.create_highlight_map(colors)
 		WinSeparator = { fg = e.border },
 		diffAdded = { fg = g.added },
 		diffRemoved = { fg = g.removed },
+
 		-- ToolbarLine   = { fg = e.fg, bg = e.bg_alt },
 		-- ToolbarButton = { fg = e.fg, bold = true },
 		-- NormalMode       = { fg = e.disabled }, -- Normal mode message in the cmdline
@@ -110,38 +111,6 @@ function M.create_highlight_map(colors)
 		-- ReplacelMode     = { link = "NormalMode" },
 		-- VisualMode       = { link = "NormalMode" },
 		-- CommandMode      = { link = "NormalMode" },
-
-		normal = {
-			a = { fg = e.accent, bg = e.highlight },
-			b = { fg = e.title, bg = e.bg_alt },
-			c = { fg = s.comments, bg = e.bg },
-		},
-
-		insert = {
-			a = { fg = m.green, bg = e.highlight },
-			b = { fg = e.title, bg = e.bg_alt },
-		},
-
-		visual = {
-			a = { fg = m.purple, bg = e.highlight },
-			b = { fg = e.title, bg = e.bg_alt },
-		},
-
-		replace = {
-			a = { fg = m.red, bg = e.highlight },
-			b = { fg = e.title, bg = e.bg_alt },
-		},
-
-		command = {
-			a = { fg = m.yellow, bg = e.highlight },
-			b = { fg = e.title, bg = e.bg_alt },
-		},
-
-		inactive = {
-			a = { fg = e.disabled, bg = e.bg },
-			b = { fg = e.disabled, bg = e.bg },
-			c = { fg = e.disabled, bg = e.bg },
-		},
 
 		DiagnosticFloatingError = { link = "DiagnosticError" },
 		DiagnosticSignError = { link = "DiagnosticError" },
