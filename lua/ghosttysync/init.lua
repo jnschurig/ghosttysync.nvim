@@ -183,14 +183,14 @@ function M.sync_theme()
 	log_debug("Created highlight map with " .. highlight_count .. " groups")
 
 	-- Step 5: Clear existing highlights before applying new theme
-	-- log_debug("Step 5: Clearing existing highlights")
-	-- local clear_success, clear_message = nvim_applier.clear_existing_highlights()
-	-- if not clear_success then
-	-- 	log_warning("Failed to clear existing highlights: " .. clear_message)
-	-- -- Continue anyway, as this is not critical for functionality
-	-- else
-	-- 	log_debug("Successfully cleared existing highlights")
-	-- end
+	log_debug("Step 5: Clearing existing highlights")
+	local clear_success, clear_message = nvim_applier.clear_existing_highlights()
+	if not clear_success then
+		log_warning("Failed to clear existing highlights: " .. clear_message)
+	-- Continue anyway, as this is not critical for functionality
+	else
+		log_debug("Successfully cleared existing highlights")
+	end
 
 	if config.debug then
 		local highlight_group_msg = ""
