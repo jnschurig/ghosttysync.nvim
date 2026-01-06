@@ -214,7 +214,6 @@ function M.get_theme_info()
 	if not theme_info then
 		return nil, "Failed to extract theme information: " .. (extract_err or "unknown error")
 	end
-	print(theme_info)
 
 	return theme_info, nil
 end
