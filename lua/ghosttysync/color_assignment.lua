@@ -90,7 +90,8 @@ function M.assign_colors_from_theme(settings)
 		local_use_palette[i] = settings.colors.palette[idx]
 	end
 
-	local_use_palette.insert(settings.colors.background)
+	local_use_palette[9] = settings.colors.background
+	-- local_use_palette.insert(settings.colors.background)
 	-- local_use_palette.insert(settings.colors.foreground)
 	-- local_use_palette.insert(settings.colors.selection_background)
 	-- local_use_palette.insert(settings.colors.selection_foreground)
