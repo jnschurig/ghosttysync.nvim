@@ -58,7 +58,8 @@ function M.create_highlight_map(colors)
 		StatusLineTerm = { link = "StatusLine" },
 		StatusLineTermNC = { link = "StatusLineNC" },
 
-		TabLineSel = { bg = e.bg_alt, fg = e.fg_alt, bold = true },
+		-- TabLineSel = { bg = e.bg_alt, fg = e.fg_alt, bold = true },
+		BufferLineTabSelected = { bg = e.bg_alt, fg = e.fg_alt, bold = true },
 		-- TabLineFill = { bg = e.bg_alt, fg = e.fg_alt, bold = true },
 		lualine_c_normal = { bg = e.bg_alt },
 
