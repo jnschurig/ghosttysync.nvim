@@ -92,12 +92,12 @@ function M.assign_colors_from_theme(settings)
 
 	colors.palette = local_use_palette
 
-	colors.palette.insert(settings.colors.background)
-	colors.palette.insert(settings.colors.foreground)
-	colors.palette.insert(settings.colors.selection_background)
-	colors.palette.insert(settings.colors.selection_foreground)
-	colors.palette.insert(settings.colors.cursor_color)
-	colors.palette.insert(settings.colors.cursor_text)
+	colors.palette.insert(settings.colors.background, 9)
+	colors.palette.insert(settings.colors.foreground, 10)
+	colors.palette.insert(settings.colors.selection_background, 11)
+	colors.palette.insert(settings.colors.selection_foreground, 12)
+	colors.palette.insert(settings.colors.cursor_color, 13)
+	colors.palette.insert(settings.colors.cursor_text, 14)
 	colors.main = {
 		red = closest_color_match(pure_red, colors.palette),
 		green = closest_color_match(pure_green, colors.palette),
