@@ -15,7 +15,7 @@ function M.set_lualine_highlight(colors)
 			-- b = { fg = m.red, bg = e.bg_alt },
 			c = { fg = e.fg, bg = e.selection },
 			-- c = { fg = m.red, bg = e.selection },
-			x = { fg = e.red, bg = m.red },
+			-- x = { fg = e.red, bg = m.red },
 		},
 
 		insert = {
