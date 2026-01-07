@@ -59,6 +59,7 @@ function M.create_highlight_map(colors)
 		StatusLineTermNC = { link = "StatusLineNC" },
 
 		TabLineSel = { bg = e.bg_alt, fg = e.fg_alt, bold = true },
+		TabLineFill = { bg = e.bg_alt, fg = e.fg_alt, bold = true },
 		lualine_c_normal = { bg = e.bg_alt },
 
 		DiagnosticError = { fg = l.error },
