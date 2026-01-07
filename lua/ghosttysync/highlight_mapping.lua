@@ -12,7 +12,7 @@ function M.set_lualine_highlight(colors)
 		normal = {
 			a = { fg = e.bg, bg = e.accent, gui = "bold" },
 			b = { fg = e.title, bg = e.bg_alt },
-			c = { fg = e.fg, bg = e.selection },
+			c = { fg = e.fg_alt, bg = e.selection },
 		},
 
 		insert = {
