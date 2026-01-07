@@ -91,12 +91,11 @@ function M.assign_colors_from_theme(settings)
 	end
 
 	local_use_palette[9] = settings.colors.background
-	-- local_use_palette.insert(settings.colors.background)
-	-- local_use_palette.insert(settings.colors.foreground)
-	-- local_use_palette.insert(settings.colors.selection_background)
-	-- local_use_palette.insert(settings.colors.selection_foreground)
-	-- local_use_palette.insert(settings.colors.cursor_color)
-	-- local_use_palette.insert(settings.colors.cursor_text)
+	local_use_palette[10] = settings.colors.foreground
+	local_use_palette[11] = settings.colors.selection_background
+	local_use_palette[12] = settings.colors.selection_foreground
+	local_use_palette[13] = settings.colors.cursor_color
+	local_use_palette[14] = settings.colors.cursor_text
 	colors.palette = local_use_palette
 	colors.main = {
 		red = closest_color_match(pure_red, colors.palette),
@@ -120,11 +119,11 @@ function M.assign_colors_from_theme(settings)
 		cursor = settings.colors.cursor_color,
 		cursor_text = settings.colors.cursor_text,
 		-- title = colors.main.white,
-		title = colors.editor.fg,
+		title = settings.colors.foreground,
 		bg = settings.colors.background,
-		bg_alt = adjust_color_value(settings.colors.background, 0.8),
 		fg = settings.colors.foreground,
-		fg_dark = adjust_color_value(settings.colors.foreground, 0.8),
+		bg_alt = settings.colors.selection_background,
+		fg_alt = settings.colors.selection_foreground,
 		selection = settings.colors.selection_background,
 		contrast = settings.colors.selection_foreground,
 		active = colors.main.dark_gray,
