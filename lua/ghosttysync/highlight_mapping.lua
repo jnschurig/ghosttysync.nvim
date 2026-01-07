@@ -154,7 +154,7 @@ function M.set_lualine_highlight(colors)
 	for key, _ in pairs(lualine) do
 		print("key: " .. key)
 	end
-	return lualine, nil
+	return { lualine = lualine_simple }, nil
 end
 -- Create highlight group mappings from Ghostty colors
 function M.create_highlight_map(colors)
