@@ -215,6 +215,10 @@ function M.sync_theme()
 					theme = "auto",
 				},
 			})
+			local lualine_customization, err = highlight_mapping.set_lualine_highlight(colors)
+			if not err and lualine_customization then
+				local lualine_success, apply_message = nvim_applier.apply_highlights(lualine_customization)
+			end
 		end
 	end
 

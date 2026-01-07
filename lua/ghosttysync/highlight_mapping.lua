@@ -3,7 +3,7 @@
 
 local M = {}
 
-local function set_lualine_highlight(colors)
+function M.set_lualine_highlight(colors)
 	local m = colors.main
 	local e = colors.editor
 
@@ -151,7 +151,7 @@ local function set_lualine_highlight(colors)
 	-- lualine_x_diff_removed_command xxx gui=nocombine guifg=#fc3841 guibg=#4e6a78
 	-- lualine_x_diff_removed_terminal xxx gui=nocombine guifg=#fc3841 guibg=#4e6a78
 	-- lualine_x_diff_removed_inactive xxx gui=nocombine guifg=#fc3841 guibg=#1d262a
-	return lualine
+	return lualine, nil
 end
 -- Create highlight group mappings from Ghostty colors
 function M.create_highlight_map(colors)
