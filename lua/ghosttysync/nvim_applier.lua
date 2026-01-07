@@ -156,16 +156,16 @@ local function validate_highlight_config(config)
 end
 
 ---checks if the user uses lualine and then sets the lualine theme
-local set_lualine = function()
-	local has_lualine, lualine = pcall(require, "lualine")
-	if has_lualine then
-		lualine.setup({
-			options = {
-				theme = "auto",
-			},
-		})
-	end
-end
+-- local set_lualine = function()
+-- 	local has_lualine, lualine = pcall(require, "lualine")
+-- 	if has_lualine then
+-- 		lualine.setup({
+-- 			options = {
+-- 				theme = "auto",
+-- 			},
+-- 		})
+-- 	end
+-- end
 
 -- Apply highlight group mappings to Neovim
 function M.apply_highlights(highlight_map)
@@ -235,7 +235,7 @@ function M.apply_highlights(highlight_map)
 			-- table.insert(all_errors, apply_error)
 		end
 
-		set_lualine()
+		-- set_lualine()
 
 		::continue::
 	end
