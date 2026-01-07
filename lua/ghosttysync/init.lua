@@ -220,8 +220,8 @@ function M.sync_theme()
 
 	-- Step 6: Apply highlights to Neovim (Requirements 1.2)
 	log_debug("Step 6: Applying highlights to Neovim")
-	local apply_success, apply_message = nvim_applier.apply_highlights(highlight_map)
 	set_lualine()
+	local apply_success, apply_message = nvim_applier.apply_highlights(highlight_map)
 
 	if not apply_success then
 		local error_msg = "Failed to apply highlights: " .. apply_message
