@@ -61,7 +61,9 @@ function M.create_highlight_map(colors)
 		-- BufferLineTabSelected = { bg = e.bg_alt, fg = e.fg_alt, bold = true },
 		-- TabLineSel = { bg = e.bg_alt, fg = e.fg_alt, bold = true },
 		-- TabLineFill = { bg = e.bg_alt, fg = e.fg_alt, bold = true },
-		-- lualine_c_normal = { bg = e.cursor },
+		lualine_c_normal = { bg = e.bg_alt },
+		lualine_a_command = { bg = e.bg_alt },
+		lualine_c_inactive = { bg = e.bg_alt },
 		-- lualine_transparent = { fg = e.bg },
 
 		DiagnosticError = { fg = l.error },
