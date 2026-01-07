@@ -218,7 +218,6 @@ function M.sync_theme()
 				options = {
 					-- theme = "auto",
 					theme = lualine_customization or "auto",
-					section_separators = ">>>>",
 				},
 			})
 			-- if not err and lualine_customization then
