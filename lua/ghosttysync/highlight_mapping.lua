@@ -7,7 +7,7 @@ function M.set_lualine_highlight(colors)
 	local m = colors.main
 	local e = colors.editor
 
-	local lualine_simple = {
+	local lualine = {
 
 		normal = {
 			a = { fg = e.bg, bg = e.accent, gui = "bold" },
@@ -42,14 +42,14 @@ function M.set_lualine_highlight(colors)
 		},
 	}
 
-	local lualine = {}
-
-	for action, action_table in pairs(lualine_simple) do
-		for letter, settings in pairs(action_table) do
-			local new_key = "lualine_" .. letter .. "_" .. action
-			lualine[new_key] = settings
-		end
-	end
+	-- local lualine = {}
+	--
+	-- for action, action_table in pairs(lualine_simple) do
+	-- 	for letter, settings in pairs(action_table) do
+	-- 		local new_key = "lualine_" .. letter .. "_" .. action
+	-- 		lualine[new_key] = settings
+	-- 	end
+	-- end
 
 	-- lualine_transparent xxx gui=nocombine guifg=#e7ebed guibg=#1d262a
 	-- lualine_a_insert xxx gui=bold,nocombine guifg=#1d262a guibg=#5cf19e
@@ -151,10 +151,10 @@ function M.set_lualine_highlight(colors)
 	-- lualine_x_diff_removed_command xxx gui=nocombine guifg=#fc3841 guibg=#4e6a78
 	-- lualine_x_diff_removed_terminal xxx gui=nocombine guifg=#fc3841 guibg=#4e6a78
 	-- lualine_x_diff_removed_inactive xxx gui=nocombine guifg=#fc3841 guibg=#1d262a
-	for key, _ in pairs(lualine) do
-		print("key: " .. key)
-	end
-	return { lualine = lualine_simple }, nil
+	-- for key, _ in pairs(lualine) do
+	-- 	print("key: " .. key)
+	-- end
+	return lualine, nil
 end
 -- Create highlight group mappings from Ghostty colors
 function M.create_highlight_map(colors)

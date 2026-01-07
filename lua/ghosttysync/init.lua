@@ -210,15 +210,19 @@ function M.sync_theme()
 	local set_lualine = function()
 		local has_lualine, lualine = pcall(require, "lualine")
 		if has_lualine then
+			local lualine_customization, _ = highlight_mapping.set_lualine_highlight(colors)
+			-- if not err and lualine_customization then
+			--      use_theme = lualine_customization
+			--    end
 			lualine.setup({
 				options = {
-					theme = "auto",
+					-- theme = "auto",
+					theme = lualine_customization or "auto",
 				},
 			})
-			local lualine_customization, err = highlight_mapping.set_lualine_highlight(colors)
-			if not err and lualine_customization then
-				local lualine_success, apply_message = nvim_applier.apply_highlights(lualine_customization)
-			end
+			-- if not err and lualine_customization then
+			-- 	local lualine_success, apply_message = nvim_applier.apply_highlights(lualine_customization)
+			-- end
 		end
 	end
 
