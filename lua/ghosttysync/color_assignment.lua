@@ -90,12 +90,12 @@ function M.assign_colors_from_theme(settings)
 		local_use_palette[i] = settings.colors.palette[idx]
 	end
 
-	local_use_palette[9] = settings.colors.background
-	local_use_palette[10] = settings.colors.foreground
-	local_use_palette[11] = settings.colors.selection_background
-	local_use_palette[12] = settings.colors.selection_foreground
-	local_use_palette[13] = settings.colors.cursor_color
-	local_use_palette[14] = settings.colors.cursor_text
+	-- local_use_palette[9] = settings.colors.background
+	-- local_use_palette[10] = settings.colors.foreground
+	-- local_use_palette[11] = settings.colors.selection_background
+	-- local_use_palette[12] = settings.colors.selection_foreground
+	-- local_use_palette[13] = settings.colors.cursor_color
+	-- local_use_palette[14] = settings.colors.cursor_text
 	colors.palette = local_use_palette
 	colors.main = {
 		red = closest_color_match(pure_red, colors.palette),
