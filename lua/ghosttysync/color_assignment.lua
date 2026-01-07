@@ -91,6 +91,13 @@ function M.assign_colors_from_theme(settings)
 	end
 
 	colors.palette = local_use_palette
+
+	colors.palette.insert(settings.colors.background)
+	colors.palette.insert(settings.colors.foreground)
+	colors.palette.insert(settings.colors.selection_background)
+	colors.palette.insert(settings.colors.selection_foreground)
+	colors.palette.insert(settings.colors.cursor_color)
+	colors.palette.insert(settings.colors.cursor_text)
 	colors.main = {
 		red = closest_color_match(pure_red, colors.palette),
 		green = closest_color_match(pure_green, colors.palette),
@@ -112,13 +119,14 @@ function M.assign_colors_from_theme(settings)
 		link = colors.main.cyan,
 		cursor = settings.colors.cursor_color,
 		cursor_text = settings.colors.cursor_text,
-		title = colors.main.white,
+		-- title = colors.main.white,
+		title = colors.editor.fg,
 		bg = settings.colors.background,
 		bg_alt = adjust_color_value(settings.colors.background, 0.8),
 		fg = settings.colors.foreground,
 		fg_dark = adjust_color_value(settings.colors.foreground, 0.8),
 		selection = settings.colors.selection_background,
-		contrast = settings.colors.selection_background,
+		contrast = settings.colors.selection_foreground,
 		active = colors.main.dark_gray,
 		border = colors.main.gray,
 		highlight = colors.main.dark_gray,
