@@ -57,103 +57,103 @@ local function log_warning(message)
 end
 
 -- Validate color format
-local function validate_color(color)
-	if type(color) ~= "string" then
-		return false, "Color must be a string"
-	end
+-- local function validate_color(color)
+-- 	if type(color) ~= "string" then
+-- 		return false, "Color must be a string"
+-- 	end
+--
+-- 	-- Check for valid hex color format (#RRGGBB or #RGB)
+-- 	if color:match("^#%x%x%x%x%x%x$") or color:match("^#%x%x%x$") then
+-- 		return true
+-- 	end
+--
+-- 	-- Check for valid color names (basic validation)
+-- 	local valid_names = {
+-- 		"black",
+-- 		"red",
+-- 		"green",
+-- 		"yellow",
+-- 		"blue",
+-- 		"magenta",
+-- 		"cyan",
+-- 		"white",
+-- 		"darkred",
+-- 		"darkgreen",
+-- 		"darkyellow",
+-- 		"darkblue",
+-- 		"darkmagenta",
+-- 		"darkcyan",
+-- 		"lightred",
+-- 		"lightgreen",
+-- 		"lightyellow",
+-- 		"lightblue",
+-- 		"lightmagenta",
+-- 		"lightcyan",
+-- 	}
+--
+-- 	for _, name in ipairs(valid_names) do
+-- 		if color:lower() == name then
+-- 			return true
+-- 		end
+-- 	end
+--
+-- 	return false, "Invalid color format: " .. color
+-- end
 
-	-- Check for valid hex color format (#RRGGBB or #RGB)
-	if color:match("^#%x%x%x%x%x%x$") or color:match("^#%x%x%x$") then
-		return true
-	end
-
-	-- Check for valid color names (basic validation)
-	local valid_names = {
-		"black",
-		"red",
-		"green",
-		"yellow",
-		"blue",
-		"magenta",
-		"cyan",
-		"white",
-		"darkred",
-		"darkgreen",
-		"darkyellow",
-		"darkblue",
-		"darkmagenta",
-		"darkcyan",
-		"lightred",
-		"lightgreen",
-		"lightyellow",
-		"lightblue",
-		"lightmagenta",
-		"lightcyan",
-	}
-
-	for _, name in ipairs(valid_names) do
-		if color:lower() == name then
-			return true
-		end
-	end
-
-	return false, "Invalid color format: " .. color
-end
-
--- Validate highlight group configuration
-local function validate_highlight_config(config)
-	if type(config) ~= "table" then
-		return false, "Highlight config must be a table"
-	end
-
-	local valid_config = {}
-	local errors = {}
-
-	-- Validate foreground color
-	if config.fg then
-		local valid, err = validate_color(config.fg)
-		if valid then
-			valid_config.fg = config.fg
-		else
-			table.insert(errors, "fg: " .. err)
-		end
-	end
-
-	-- Validate background color
-	if config.bg then
-		local valid, err = validate_color(config.bg)
-		if valid then
-			valid_config.bg = config.bg
-		else
-			table.insert(errors, "bg: " .. err)
-		end
-	end
-
-	-- Validate style attributes (boolean values)
-	local style_attrs = { "bold", "italic", "underline", "strikethrough", "reverse", "standout" }
-	for _, attr in ipairs(style_attrs) do
-		if config[attr] ~= nil then
-			if type(config[attr]) == "boolean" then
-				valid_config[attr] = config[attr]
-			else
-				table.insert(errors, attr .. ": must be boolean")
-			end
-		end
-	end
-
-	-- Check if we have at least one valid attribute
-	local has_valid_attrs = false
-	for _ in pairs(valid_config) do
-		has_valid_attrs = true
-		break
-	end
-
-	if not has_valid_attrs then
-		return false, "No valid attributes found", {}
-	end
-
-	return true, valid_config, errors
-end
+-- -- Validate highlight group configuration
+-- local function validate_highlight_config(config)
+-- 	if type(config) ~= "table" then
+-- 		return false, "Highlight config must be a table"
+-- 	end
+--
+-- 	local valid_config = {}
+-- 	local errors = {}
+--
+-- 	-- Validate foreground color
+-- 	if config.fg then
+-- 		local valid, err = validate_color(config.fg)
+-- 		if valid then
+-- 			valid_config.fg = config.fg
+-- 		else
+-- 			table.insert(errors, "fg: " .. err)
+-- 		end
+-- 	end
+--
+-- 	-- Validate background color
+-- 	if config.bg then
+-- 		local valid, err = validate_color(config.bg)
+-- 		if valid then
+-- 			valid_config.bg = config.bg
+-- 		else
+-- 			table.insert(errors, "bg: " .. err)
+-- 		end
+-- 	end
+--
+-- 	-- Validate style attributes (boolean values)
+-- 	local style_attrs = { "bold", "italic", "underline", "strikethrough", "reverse", "standout" }
+-- 	for _, attr in ipairs(style_attrs) do
+-- 		if config[attr] ~= nil then
+-- 			if type(config[attr]) == "boolean" then
+-- 				valid_config[attr] = config[attr]
+-- 			else
+-- 				table.insert(errors, attr .. ": must be boolean")
+-- 			end
+-- 		end
+-- 	end
+--
+-- 	-- Check if we have at least one valid attribute
+-- 	local has_valid_attrs = false
+-- 	for _ in pairs(valid_config) do
+-- 		has_valid_attrs = true
+-- 		break
+-- 	end
+--
+-- 	if not has_valid_attrs then
+-- 		return false, "No valid attributes found", {}
+-- 	end
+--
+-- 	return true, valid_config, errors
+-- end
 
 ---checks if the user uses lualine and then sets the lualine theme
 local set_lualine = function()
@@ -225,7 +225,6 @@ function M.apply_highlights(highlight_map)
 		local apply_success, apply_error = M.handle_api_errors(function()
 			-- vim_api.api.nvim_set_hl(0, group_name, validated_config)
 			vim_api.api.nvim_set_hl(0, group_name, group_config)
-			-- set_lualine()
 		end, string.format("setting highlight group '%s'", group_name))
 
 		if apply_success then
@@ -238,6 +237,8 @@ function M.apply_highlights(highlight_map)
 
 		::continue::
 	end
+
+	set_lualine()
 
 	-- Log summary
 	if success_count > 0 then
