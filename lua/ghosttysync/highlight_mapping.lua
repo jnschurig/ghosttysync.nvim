@@ -292,8 +292,8 @@ function M.create_highlight_map(colors)
 
 	local lualine_map = set_lualine_highlight(colors)
 
-	-- highlight_map = vim.tbl_deep_extend("keep", highlight_map, lualine_map)
-	highlight_map.lualine = lualine_map
+	highlight_map = vim.tbl_deep_extend("keep", highlight_map, lualine_map)
+	-- highlight_map.lualine = lualine_map
 
 	return highlight_map, nil
 end
