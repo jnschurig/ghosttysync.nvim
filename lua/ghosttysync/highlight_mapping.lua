@@ -44,7 +44,9 @@ function M.set_lualine_highlight(colors)
 			c = { fg = e.disabled, bg = e.bg },
 		},
 
-		diff_modified = { fg = m.red, bg = m.black },
+		diff_modified = {
+			x = { fg = m.red, bg = m.black },
+		},
 	}
 
 	-- local lualine = {}
