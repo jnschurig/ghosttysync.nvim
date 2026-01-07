@@ -225,6 +225,7 @@ function M.apply_highlights(highlight_map)
 		local apply_success, apply_error = M.handle_api_errors(function()
 			-- vim_api.api.nvim_set_hl(0, group_name, validated_config)
 			vim_api.api.nvim_set_hl(0, group_name, group_config)
+			set_lualine()
 		end, string.format("setting highlight group '%s'", group_name))
 
 		if apply_success then
@@ -234,8 +235,6 @@ function M.apply_highlights(highlight_map)
 			error_msg = error_msg .. apply_error .. "\n"
 			-- table.insert(all_errors, apply_error)
 		end
-
-		set_lualine()
 
 		::continue::
 	end
