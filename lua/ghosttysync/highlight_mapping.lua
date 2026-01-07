@@ -7,7 +7,7 @@ local function set_lualine_highlight(colors)
 	local m = colors.main
 	local e = colors.editor
 
-	local lualine = {
+	local lualine_simple = {
 
 		normal = {
 			a = { fg = e.bg, bg = e.accent, gui = "bold" },
@@ -42,6 +42,15 @@ local function set_lualine_highlight(colors)
 		},
 	}
 
+	local lualine = {}
+
+	for action, action_table in pairs(lualine_simple) do
+		for letter, settings in pairs(action_table) do
+			local new_key = "lualine_" .. letter .. "_" .. action
+			lualine[new_key] = settings
+		end
+	end
+
 	-- lualine_transparent xxx gui=nocombine guifg=#e7ebed guibg=#1d262a
 	-- lualine_a_insert xxx gui=bold,nocombine guifg=#1d262a guibg=#5cf19e
 	-- lualine_b_insert xxx gui=nocombine guifg=#eeffff guibg=#435b67
@@ -57,6 +66,41 @@ local function set_lualine_highlight(colors)
 	-- lualine_b_command xxx gui=nocombine guifg=#eeffff guibg=#435b67
 	-- lualine_a_visual xxx gui=bold,nocombine guifg=#1d262a guibg=#fc226e
 	-- lualine_b_visual xxx gui=nocombine guifg=#eeffff guibg=#435b67
+	-- lualine_c_12_normal xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
+	-- lualine_c_12_insert xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
+	-- lualine_c_12_visual xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
+	-- lualine_c_12_replace xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
+	-- lualine_c_12_command xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
+	-- lualine_c_12_terminal xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
+	-- lualine_c_12_inactive xxx gui=nocombine guifg=#59ffd1 guibg=#1d262a
+	-- lualine_c_diagnostics_error_normal xxx gui=nocombine guifg=#ff5370 guibg=#4e6a78
+	-- lualine_c_diagnostics_error_insert xxx gui=nocombine guifg=#ff5370 guibg=#4e6a78
+	-- lualine_c_diagnostics_error_visual xxx gui=nocombine guifg=#ff5370 guibg=#4e6a78
+	-- lualine_c_diagnostics_error_replace xxx gui=nocombine guifg=#ff5370 guibg=#4e6a78
+	-- lualine_c_diagnostics_error_command xxx gui=nocombine guifg=#ff5370 guibg=#4e6a78
+	-- lualine_c_diagnostics_error_terminal xxx gui=nocombine guifg=#ff5370 guibg=#4e6a78
+	-- lualine_c_diagnostics_error_inactive xxx gui=nocombine guifg=#ff5370 guibg=#1d262a
+	-- lualine_c_diagnostics_warn_normal xxx gui=nocombine guifg=#fee16c guibg=#4e6a78
+	-- lualine_c_diagnostics_warn_insert xxx gui=nocombine guifg=#fee16c guibg=#4e6a78
+	-- lualine_c_diagnostics_warn_visual xxx gui=nocombine guifg=#fee16c guibg=#4e6a78
+	-- lualine_c_diagnostics_warn_replace xxx gui=nocombine guifg=#fee16c guibg=#4e6a78
+	-- lualine_c_diagnostics_warn_command xxx gui=nocombine guifg=#fee16c guibg=#4e6a78
+	-- lualine_c_diagnostics_warn_terminal xxx gui=nocombine guifg=#fee16c guibg=#4e6a78
+	-- lualine_c_diagnostics_warn_inactive xxx gui=nocombine guifg=#fee16c guibg=#1d262a
+	-- lualine_c_diagnostics_info_normal xxx gui=nocombine guifg=#8cf8f7 guibg=#4e6a78
+	-- lualine_c_diagnostics_info_insert xxx gui=nocombine guifg=#8cf8f7 guibg=#4e6a78
+	-- lualine_c_diagnostics_info_visual xxx gui=nocombine guifg=#8cf8f7 guibg=#4e6a78
+	-- lualine_c_diagnostics_info_replace xxx gui=nocombine guifg=#8cf8f7 guibg=#4e6a78
+	-- lualine_c_diagnostics_info_command xxx gui=nocombine guifg=#8cf8f7 guibg=#4e6a78
+	-- lualine_c_diagnostics_info_terminal xxx gui=nocombine guifg=#8cf8f7 guibg=#4e6a78
+	-- lualine_c_diagnostics_info_inactive xxx gui=nocombine guifg=#8cf8f7 guibg=#1d262a
+	-- lualine_c_diagnostics_hint_normal xxx gui=nocombine guifg=#fc226e guibg=#4e6a78
+	-- lualine_c_diagnostics_hint_insert xxx gui=nocombine guifg=#fc226e guibg=#4e6a78
+	-- lualine_c_diagnostics_hint_visual xxx gui=nocombine guifg=#fc226e guibg=#4e6a78
+	-- lualine_c_diagnostics_hint_replace xxx gui=nocombine guifg=#fc226e guibg=#4e6a78
+	-- lualine_c_diagnostics_hint_command xxx gui=nocombine guifg=#fc226e guibg=#4e6a78
+	-- lualine_c_diagnostics_hint_terminal xxx gui=nocombine guifg=#fc226e guibg=#4e6a78
+	-- lualine_c_diagnostics_hint_inactive xxx gui=nocombine guifg=#fc226e guibg=#1d262a
 	-- lualine_x_6    xxx links to DiagnosticError
 	-- lualine_x_7_normal xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
 	-- lualine_x_7_insert xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
@@ -107,41 +151,6 @@ local function set_lualine_highlight(colors)
 	-- lualine_x_diff_removed_command xxx gui=nocombine guifg=#fc3841 guibg=#4e6a78
 	-- lualine_x_diff_removed_terminal xxx gui=nocombine guifg=#fc3841 guibg=#4e6a78
 	-- lualine_x_diff_removed_inactive xxx gui=nocombine guifg=#fc3841 guibg=#1d262a
-	-- lualine_c_12_normal xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
-	-- lualine_c_12_insert xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
-	-- lualine_c_12_visual xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
-	-- lualine_c_12_replace xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
-	-- lualine_c_12_command xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
-	-- lualine_c_12_terminal xxx gui=nocombine guifg=#59ffd1 guibg=#4e6a78
-	-- lualine_c_12_inactive xxx gui=nocombine guifg=#59ffd1 guibg=#1d262a
-	-- lualine_c_diagnostics_error_normal xxx gui=nocombine guifg=#ff5370 guibg=#4e6a78
-	-- lualine_c_diagnostics_error_insert xxx gui=nocombine guifg=#ff5370 guibg=#4e6a78
-	-- lualine_c_diagnostics_error_visual xxx gui=nocombine guifg=#ff5370 guibg=#4e6a78
-	-- lualine_c_diagnostics_error_replace xxx gui=nocombine guifg=#ff5370 guibg=#4e6a78
-	-- lualine_c_diagnostics_error_command xxx gui=nocombine guifg=#ff5370 guibg=#4e6a78
-	-- lualine_c_diagnostics_error_terminal xxx gui=nocombine guifg=#ff5370 guibg=#4e6a78
-	-- lualine_c_diagnostics_error_inactive xxx gui=nocombine guifg=#ff5370 guibg=#1d262a
-	-- lualine_c_diagnostics_warn_normal xxx gui=nocombine guifg=#fee16c guibg=#4e6a78
-	-- lualine_c_diagnostics_warn_insert xxx gui=nocombine guifg=#fee16c guibg=#4e6a78
-	-- lualine_c_diagnostics_warn_visual xxx gui=nocombine guifg=#fee16c guibg=#4e6a78
-	-- lualine_c_diagnostics_warn_replace xxx gui=nocombine guifg=#fee16c guibg=#4e6a78
-	-- lualine_c_diagnostics_warn_command xxx gui=nocombine guifg=#fee16c guibg=#4e6a78
-	-- lualine_c_diagnostics_warn_terminal xxx gui=nocombine guifg=#fee16c guibg=#4e6a78
-	-- lualine_c_diagnostics_warn_inactive xxx gui=nocombine guifg=#fee16c guibg=#1d262a
-	-- lualine_c_diagnostics_info_normal xxx gui=nocombine guifg=#8cf8f7 guibg=#4e6a78
-	-- lualine_c_diagnostics_info_insert xxx gui=nocombine guifg=#8cf8f7 guibg=#4e6a78
-	-- lualine_c_diagnostics_info_visual xxx gui=nocombine guifg=#8cf8f7 guibg=#4e6a78
-	-- lualine_c_diagnostics_info_replace xxx gui=nocombine guifg=#8cf8f7 guibg=#4e6a78
-	-- lualine_c_diagnostics_info_command xxx gui=nocombine guifg=#8cf8f7 guibg=#4e6a78
-	-- lualine_c_diagnostics_info_terminal xxx gui=nocombine guifg=#8cf8f7 guibg=#4e6a78
-	-- lualine_c_diagnostics_info_inactive xxx gui=nocombine guifg=#8cf8f7 guibg=#1d262a
-	-- lualine_c_diagnostics_hint_normal xxx gui=nocombine guifg=#fc226e guibg=#4e6a78
-	-- lualine_c_diagnostics_hint_insert xxx gui=nocombine guifg=#fc226e guibg=#4e6a78
-	-- lualine_c_diagnostics_hint_visual xxx gui=nocombine guifg=#fc226e guibg=#4e6a78
-	-- lualine_c_diagnostics_hint_replace xxx gui=nocombine guifg=#fc226e guibg=#4e6a78
-	-- lualine_c_diagnostics_hint_command xxx gui=nocombine guifg=#fc226e guibg=#4e6a78
-	-- lualine_c_diagnostics_hint_terminal xxx gui=nocombine guifg=#fc226e guibg=#4e6a78
-	-- lualine_c_diagnostics_hint_inactive xxx gui=nocombine guifg=#fc226e guibg=#1d262a
 	return lualine
 end
 -- Create highlight group mappings from Ghostty colors
