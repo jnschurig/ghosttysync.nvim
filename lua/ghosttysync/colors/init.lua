@@ -42,68 +42,6 @@ if background_match == pure_white then
 end
 
 local value_adjustment_scale = 0.25
--- print("------ termcolor test ------")
--- print("term_color type: ", type(term_colors))
---
--- local key_value_count = 0
--- local subkey_value_count = 0
--- for key, value in pairs(term_colors.colors) do
---   key_value_count = key_value_count + 1
---   print("key: " .. key)
---   if value then
---     if type(value) ~= "table" then
---       print("value: " .. value)
---     else
---       for subkey, subval in pairs(value) do
---         subkey_value_count = subkey_value_count + 1
---         print("  subkey: " .. subkey)
---         print("  subval: " .. subval)
---       end
---     end
---   else
---     print("value is nil")
---   end
--- end
--- print("key_value_count: " .. key_value_count)
--- print("subkey_value_count: " .. subkey_value_count)
-
--- print("-- ui table --")
--- local table_len = 0
--- for key, value in pairs(term_colors.ui) do
---   table_len = table_len + 1
---   print("key: " .. key .. " - value: " .. value)
--- end
--- print("ui table len: " .. table_len)
---
--- table_len = 0
---
--- print("-- palette table --")
--- for idx, value in ipairs(term_colors.palette) do
---   table_len = table_len + 1
---   print("idx: " .. idx .. " - value: " .. value)
--- end
--- print("palette table len: " .. table_len)
--- print("------ termcolor test end ------")
-
--- if term_colors == nil or term_colors.colors == nil then
---   term_colors.colors = {palette = {} }
--- end
---
--- if term_colors.colors.cursor_color == nil then term_colors.colors.cursor_color = pure_white end
--- if term_colors.colors.cursor_text == nil then term_colors.colors.cursor_text = pure_black end
--- if term_colors.colors.selection_background == nil then term_colors.colors.selection_background = pure_gray end
--- if term_colors.colors.background == nil then term_colors.colors.background = pure_black end
--- if term_colors.colors.selection_foreground == nil then term_colors.colors.selection_foreground = pure_white end
--- if term_colors.colors.foreground == nil then term_colors.colors.foreground = pure_white end
--- if term_colors.colors.palette[1] == nil then term_colors.colors.cursor_color = pure_black end
--- if term_colors.colors.palette[2] == nil then term_colors.colors.cursor_color = pure_red end
--- if term_colors.colors.palette[3] == nil then term_colors.colors.cursor_color = pure_green end
--- if term_colors.colors.palette[4] == nil then term_colors.colors.cursor_color = pure_blue end
--- if term_colors.colors.palette[5] == nil then term_colors.colors.cursor_color = pure_yellow end
--- if term_colors.colors.palette[6] == nil then term_colors.colors.cursor_color = pure_purple end
--- if term_colors.colors.palette[7] == nil then term_colors.colors.cursor_color = pure_orange end
--- if term_colors.colors.palette[8] == nil then term_colors.colors.cursor_color = pure_white end
-
 
 ---colors table
 local colors = {
@@ -183,24 +121,6 @@ colors.backgrounds = {}
 --   }
 -- }
 
-		-- -- default Lighter theme style
-		-- colors.editor.fg = "#546E7A"
-		-- colors.editor.fg_dark = "#94A7B0"
-		-- colors.editor.selection = "#80CBC4"
-		-- colors.editor.line_numbers = "#CFD8DC"
-		-- colors.editor.accent = "#00BCD4"
-		-- colors.syntax.comments = "#AABFC9"
-		--
-		-- colors.main.red = "#E53935"
-		-- colors.main.green = "#91B859"
-		--
-		-- colors.main.yellow = "#F6A434"
-		-- colors.main.blue = "#6182B8"
-		-- colors.main.paleblue = "#8796B0"
-		-- colors.main.cyan = "#39ADB5"
-		-- colors.main.purple = "#7C4DFF"
-		-- colors.main.orange = "#F76D47"
-		-- colors.main.pink = "#FF5370"
 ---editor colors
 colors.editor.bg = term_colors.colors.background
 colors.editor.bg_alt = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
