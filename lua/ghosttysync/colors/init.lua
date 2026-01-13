@@ -34,7 +34,7 @@ local pure_gray   = "#808080"
 -- local term_colors = termcolor.query_all()
 local term_colors, _ = termcolor.get_theme_info()
 
-local background_match = functions.closest_color_match(termcolor.colors.background, {pure_black, pure_white})
+local background_match = functions.closest_color_match(term_colors.colors.background, {pure_black, pure_white})
 local color_mod_direction = -1
 
 if background_match == pure_white then
