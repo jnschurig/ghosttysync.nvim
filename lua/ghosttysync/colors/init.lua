@@ -92,7 +92,9 @@ colors.main.black    = functions.closest_color_match(pure_black, term_colors.col
 	---colors applied to the editor
 colors.editor = {
   link = colors.main.cyan,
-  cursor = colors.main.yellow,
+  -- cursor = colors.main.yellow,
+  cursor = term_colors.colors.cursor_color,
+  cursor_fg = term_colors.colors.cursor_text,
   title = term_colors.colors.foreground
 }
 
@@ -126,7 +128,7 @@ colors.editor.bg = term_colors.colors.background
 colors.editor.bg_alt = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
 colors.editor.fg = term_colors.colors.foreground
 colors.editor.fg_dark = functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
-colors.editor.selection = term_colors.colors.selection_background
+colors.editor.selection = term_colors.colors.selection_background -- TODO: needs to be closer in direction to the background
 colors.editor.contrast = functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
 colors.editor.active = colors.editor.selection -- similar to selection
 colors.editor.border = colors.editor.selection -- slightly darker than active
