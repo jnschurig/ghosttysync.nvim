@@ -24,17 +24,17 @@ M.change_style = function(style)
 end
 
 ---toggle between styles
-M.toggle_style = function()
-	if vim.g.ghosttysync_style_iterator == nil then
-		vim.g.ghosttysync_style_iterator = 0
-	end
-	local styles = {
-		"primary",
-		"secondary",
-	}
-	vim.g.ghosttysync_style_iterator = (vim.g.ghosttysync_style_iterator % #styles) + 1
-	M.change_style(styles[vim.g.ghosttysync_style_iterator])
-end
+-- M.toggle_style = function()
+-- 	if vim.g.ghosttysync_style_iterator == nil then
+-- 		vim.g.ghosttysync_style_iterator = 0
+-- 	end
+-- 	local styles = {
+-- 		"primary",
+-- 		"secondary",
+-- 	}
+-- 	vim.g.ghosttysync_style_iterator = (vim.g.ghosttysync_style_iterator % #styles) + 1
+-- 	M.change_style(styles[vim.g.ghosttysync_style_iterator])
+-- end
 
 ---toggle the end-of-buffer lines (~)
 M.toggle_eob = function()
