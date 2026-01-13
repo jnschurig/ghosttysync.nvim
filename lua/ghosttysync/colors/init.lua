@@ -119,6 +119,18 @@ local colors = {
   },
 }
 
+-- Ajdust color if it is the same as the background/foreground
+for color_name, color in pairs(colors.main) do
+  if color == term_colors.colors.background or color == term_colors.colors.foreground then
+    for new_name, _ in pairs(colors.main) do
+      if color_name ~= new_name then
+        colors.main[color_name] = colors.main[new_name]
+        break
+      end
+    end
+  end
+end
+
 colors.main.darkred     = functions.adjust_color_value(colors.main.red   , 1 + (value_adjustment_scale * color_mod_direction))
 colors.main.darkgreen   = functions.adjust_color_value(colors.main.green , 1 + (value_adjustment_scale * color_mod_direction))
 colors.main.darkyellow  = functions.adjust_color_value(colors.main.yellow, 1 + (value_adjustment_scale * color_mod_direction))
