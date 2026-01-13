@@ -34,6 +34,14 @@ local pure_gray   = "#808080"
 -- local term_colors = termcolor.query_all()
 local term_colors, _ = termcolor.get_theme_info()
 
+local background_match = functions.closest_color_match(termcolor.colors.background, {pure_black, pure_white})
+local color_mod_direction = -1
+
+if background_match == pure_white then
+  color_mod_direction = 1
+end
+
+local value_adjustment_scale = 0.25
 -- print("------ termcolor test ------")
 -- print("term_color type: ", type(term_colors))
 --
@@ -111,14 +119,14 @@ local colors = {
   },
 }
 
-colors.main.darkred     = functions.adjust_color_value(colors.main.red   , 0.75)
-colors.main.darkgreen   = functions.adjust_color_value(colors.main.green , 0.75)
-colors.main.darkyellow  = functions.adjust_color_value(colors.main.yellow, 0.75)
-colors.main.darkblue    = functions.adjust_color_value(colors.main.blue  , 0.75)
-colors.main.darkcyan    = functions.adjust_color_value(colors.main.cyan  , 0.75)
-colors.main.darkpurple  = functions.adjust_color_value(colors.main.purple, 0.75)
-colors.main.darkorange  = functions.adjust_color_value(colors.main.orange, 0.75)
-colors.main.paleblue    = functions.adjust_color_value(colors.main.blue  , 1.25)
+colors.main.darkred     = functions.adjust_color_value(colors.main.red   , 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkgreen   = functions.adjust_color_value(colors.main.green , 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkyellow  = functions.adjust_color_value(colors.main.yellow, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkblue    = functions.adjust_color_value(colors.main.blue  , 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkcyan    = functions.adjust_color_value(colors.main.cyan  , 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkpurple  = functions.adjust_color_value(colors.main.purple, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkorange  = functions.adjust_color_value(colors.main.orange, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.paleblue    = functions.adjust_color_value(colors.main.blue  , 1 + (value_adjustment_scale * color_mod_direction * -1))
 
 term_colors.colors.palette[17] = term_colors.colors.foreground
 term_colors.colors.palette[18] = term_colors.colors.background
@@ -163,18 +171,36 @@ colors.backgrounds = {}
 --   }
 -- }
 
+		-- -- default Lighter theme style
+		-- colors.editor.fg = "#546E7A"
+		-- colors.editor.fg_dark = "#94A7B0"
+		-- colors.editor.selection = "#80CBC4"
+		-- colors.editor.line_numbers = "#CFD8DC"
+		-- colors.editor.accent = "#00BCD4"
+		-- colors.syntax.comments = "#AABFC9"
+		--
+		-- colors.main.red = "#E53935"
+		-- colors.main.green = "#91B859"
+		--
+		-- colors.main.yellow = "#F6A434"
+		-- colors.main.blue = "#6182B8"
+		-- colors.main.paleblue = "#8796B0"
+		-- colors.main.cyan = "#39ADB5"
+		-- colors.main.purple = "#7C4DFF"
+		-- colors.main.orange = "#F76D47"
+		-- colors.main.pink = "#FF5370"
 ---editor colors
 colors.editor.bg = term_colors.colors.background
-colors.editor.bg_alt = functions.adjust_color_value(colors.editor.bg, 0.75)
+colors.editor.bg_alt = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
 colors.editor.fg = term_colors.colors.foreground
-colors.editor.fg_dark = functions.adjust_color_value(colors.editor.fg, 0.75)
+colors.editor.fg_dark = functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
 colors.editor.selection = term_colors.colors.selection_background
-colors.editor.contrast = functions.adjust_color_value(colors.editor.selection, 0.75) -- darker than selection
+colors.editor.contrast = functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
 colors.editor.active = colors.editor.selection -- similar to selection
 colors.editor.border = colors.editor.selection -- slightly darker than active
 colors.editor.line_numbers = colors.editor.border -- about the same as border
 colors.editor.highlight = colors.editor.selection
-colors.editor.disabled = functions.adjust_color_value(colors.editor.highlight, 1.25) -- lighter than highlight
+colors.editor.disabled = functions.adjust_color_value(colors.editor.highlight, 1 + (value_adjustment_scale * color_mod_direction * -1)) -- lighter than highlight
 colors.editor.accent = colors.main.purple
 colors.editor.none = "NONE"
 colors.syntax.comments = colors.main.gray -- use main.gray
