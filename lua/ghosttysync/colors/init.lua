@@ -39,7 +39,7 @@ local selection_background_diff = functions.color_diff(term_colors.colors.foregr
 
 local selection_adjustment_ratio = 1 - ((selection_benchmark_value - selection_background_diff) / 255 * color_mod_direction * -1)
 local selection_background_color = functions.adjust_color_value(term_colors.colors.selection_background, selection_adjustment_ratio)
-print("color: fg vs selection_bg | fg: " .. term_colors.colors.selection_foreground .. " | selection_bg: " .. selection_background_color .. " | diff: " .. selection_background_diff)
+print("color: fg vs selection_bg | fg: " .. term_colors.colors.foreground .. " | selection_bg: " .. selection_background_color .. " | diff: " .. selection_background_diff)
 ---colors table
 local colors = {
 	---main colors
