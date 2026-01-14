@@ -32,6 +32,19 @@ if background_match == pure_white then
 end
 
 local value_adjustment_scale = 0.25
+local selection_benchmark_value = 35 -- 30 to 40 is pretty much perfect.
+
+print("background: " .. term_colors.colors.background .. " | selection_background: " .. term_colors.colors.selection_background .. " | diff: " .. functions.color_diff(term_colors.colors.background, term_colors.colors.selection_background))
+local selection_background_diff = functions.color_diff(term_colors.colors.background, term_colors.colors.selection_background)
+
+-- if selection_background_diff ~= selection_benchmark_value then
+--
+--   selection_background_color = ""
+-- end
+
+local selection_adjustment_ratio = 1 - ((selection_benchmark_value - selection_background_diff) / 255 * color_mod_direction)
+
+local selection_background_color = functions.adjust_color_value(term_colors.colors.selection_background, selection_adjustment_ratio)
 
 ---colors table
 local colors = {
@@ -120,8 +133,8 @@ colors.editor.bg = term_colors.colors.background
 colors.editor.bg_alt = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
 colors.editor.fg = term_colors.colors.foreground
 colors.editor.fg_dark = functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
-colors.editor.selection = term_colors.colors.selection_background
--- colors.editor.selection = functions.adjust_color_value(term_colors.colors.selection_background, 1 + (value_adjustment_scale * color_mod_direction)) -- TODO: needs to be closer in direction to the background
+-- colors.editor.selection = term_colors.colors.selection_background
+colors.editor.selection = selection_background_color
 colors.editor.contrast = functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
 colors.editor.active = colors.editor.selection -- similar to selection
 colors.editor.border = colors.editor.selection -- slightly darker than active
