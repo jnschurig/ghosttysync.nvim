@@ -54,11 +54,6 @@ local colors = {
   },
 }
 
--- Ajust cyan color to be a bit darker on light backgrounds
-if color_mod_direction == 1 then
-  colors.main.cyan = functions.adjust_color_value(colors.main.cyan, 0.5)
-end
-
 -- Ajdust color if it is the same as the background/foreground
 for color_name, color in pairs(colors.main) do
   if color == term_colors.colors.background or color == term_colors.colors.foreground then
@@ -70,6 +65,13 @@ for color_name, color in pairs(colors.main) do
     end
   end
 end
+
+print("old cyan: " .. colors.main.cyan)
+-- Ajust cyan color to be a bit darker on light backgrounds
+if color_mod_direction == 1 then
+  colors.main.cyan = functions.adjust_color_value(colors.main.cyan, 0.5)
+end
+print("new cyan: " .. colors.main.cyan)
 
 colors.main.darkred     = functions.adjust_color_value(colors.main.red   , 1 + (value_adjustment_scale * color_mod_direction))
 colors.main.darkgreen   = functions.adjust_color_value(colors.main.green , 1 + (value_adjustment_scale * color_mod_direction))
