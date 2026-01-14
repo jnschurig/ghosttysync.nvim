@@ -32,7 +32,7 @@ if background_match == pure_white then
 end
 
 local value_adjustment_scale = 0.25
-local selection_benchmark_value = 35 -- 30 to 40 is pretty much perfect.
+local selection_benchmark_value = 50 -- 30 to 40 is pretty much perfect.
 
 local selection_background_diff = functions.color_diff(term_colors.colors.background, term_colors.colors.selection_background)
 
