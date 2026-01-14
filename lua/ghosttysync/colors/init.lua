@@ -120,7 +120,7 @@ colors.backgrounds = {}
 --     "#3b8eea", "#d670d6", "#29b8db", "#ffffff",
 --   }
 -- }
-print("foreground: " .. term_colors.colors.foreground .. " | selection_background: " .. selection_background_color .. " | diff: " .. functions.color_diff(term_colors.colors.background, selection_background_color))
+print("foreground: " .. term_colors.colors.foreground .. " | selection_background: " .. selection_background_color .. " | diff: " .. functions.color_diff(term_colors.colors.foreground, selection_background_color))
 ---editor colors
 colors.editor.bg = term_colors.colors.background
 colors.editor.bg_alt = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
