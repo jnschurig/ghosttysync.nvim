@@ -22,16 +22,6 @@ local pure_gray   = "#808080"
 -- 	palette_index = 9
 -- end
 
--- TODO: create a function in functions which will take the above as input
--- and return the colors.main colors below
-
--- local local_use_palette = {}
--- for i = 1, 8 do
--- 	local idx = i + palette_index
--- 	local_use_palette[i] = term_colors.palette[idx]
--- end
---
--- local term_colors = termcolor.query_all()
 local term_colors, _ = termcolor.get_theme_info()
 
 local background_match = functions.closest_color_match(term_colors.colors.background, {pure_black, pure_white})
@@ -47,13 +37,13 @@ local value_adjustment_scale = 0.25
 local colors = {
 	---main colors
 	main = {
-		red      = functions.closest_color_match(pure_red   , term_colors.colors.palette),
-		green    = functions.closest_color_match(pure_green , term_colors.colors.palette),
-		yellow   = functions.closest_color_match(pure_yellow, term_colors.colors.palette),
-		blue     = functions.closest_color_match(pure_blue  , term_colors.colors.palette),
-		purple   = functions.closest_color_match(pure_purple, term_colors.colors.palette),
-		cyan     = functions.closest_color_match(pure_cyan  , term_colors.colors.palette),
-		orange   = functions.closest_color_match(pure_orange, term_colors.colors.palette),
+		red    = functions.closest_color_match(pure_red   , term_colors.colors.palette),
+		green  = functions.closest_color_match(pure_green , term_colors.colors.palette),
+		yellow = functions.closest_color_match(pure_yellow, term_colors.colors.palette),
+		blue   = functions.closest_color_match(pure_blue  , term_colors.colors.palette),
+		purple = functions.closest_color_match(pure_purple, term_colors.colors.palette),
+		cyan   = functions.closest_color_match(pure_cyan  , term_colors.colors.palette),
+		orange = functions.closest_color_match(pure_orange, term_colors.colors.palette),
   },
 }
 
@@ -130,7 +120,8 @@ colors.editor.bg = term_colors.colors.background
 colors.editor.bg_alt = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
 colors.editor.fg = term_colors.colors.foreground
 colors.editor.fg_dark = functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
-colors.editor.selection = term_colors.colors.selection_background -- TODO: needs to be closer in direction to the background
+colors.editor.selection = functions.blend(term_colors.colors.selection_background, term_colors.colors.background, 0.25 * color_mod_direction)
+-- colors.editor.selection = term_colors.colors.selection_background -- TODO: needs to be closer in direction to the background
 colors.editor.contrast = functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
 colors.editor.active = colors.editor.selection -- similar to selection
 colors.editor.border = colors.editor.selection -- slightly darker than active

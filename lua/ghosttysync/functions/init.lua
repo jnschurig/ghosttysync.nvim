@@ -23,19 +23,6 @@ M.change_style = function(style)
 	vim.cmd("colorscheme ghosttysync")
 end
 
----toggle between styles
--- M.toggle_style = function()
--- 	if vim.g.ghosttysync_style_iterator == nil then
--- 		vim.g.ghosttysync_style_iterator = 0
--- 	end
--- 	local styles = {
--- 		"primary",
--- 		"secondary",
--- 	}
--- 	vim.g.ghosttysync_style_iterator = (vim.g.ghosttysync_style_iterator % #styles) + 1
--- 	M.change_style(styles[vim.g.ghosttysync_style_iterator])
--- end
-
 ---toggle the end-of-buffer lines (~)
 M.toggle_eob = function()
 	local colors = require("ghosttysync.colors").editor
@@ -62,7 +49,6 @@ local function hex_to_rgb(hex)
 	if not hex then
 		return { 0, 0, 0 }
 	end
-	-- remove leading '#', if present
 	hex = hex:gsub("#", "")
 	return {
 		tonumber(hex:sub(1, 2), 16),
@@ -70,19 +56,6 @@ local function hex_to_rgb(hex)
 		tonumber(hex:sub(5, 6), 16),
 	}
 end
-
--- local function rgb_to_hex(red, green, blue)
--- 	if red > 255 then
--- 		red = 255
--- 	end
--- 	if green > 255 then
--- 		green = 255
--- 	end
--- 	if blue > 255 then
--- 		blue = 255
--- 	end
--- 	return "#" .. string.format("%02x", red) .. string.format("%02x", green) .. string.format("%02x", blue)
--- end
 
 local function hex_color_diff(color1, color2)
 	local rgb1 = hex_to_rgb(color1)
@@ -108,12 +81,7 @@ M.closest_color_match = function(spec_color, colors_table)
 	local diff_score = 300 -- biggest difference can only be 255
 	local closest_color = nil
 
-	-- print("------- color test -------")
-	-- if not colors_table then
-	-- 	print("colors table is nil")
-	-- end
 	for _, color in ipairs(colors_table) do
-		-- print("coloridx: " .. _ .. "color: " .. color)
 		local new_diff = nil
 		if not color then
 			new_diff = 400
@@ -137,14 +105,6 @@ M.adjust_color_value = function(starting_color, adjustment_factor)
 	local b = math.min(math.floor(rgb[3] * adjustment_factor), 255)
 	return rgb_to_hex(r, g, b)
 end
-
--- local hex_to_rgb = function(c)
--- 	c = string.lower(c)
--- 	local r = tonumber(c:sub(2, 3), 16)
--- 	local g = tonumber(c:sub(4, 5), 16)
--- 	local b = tonumber(c:sub(6, 7), 16)
--- 	return { r, g, b }
--- end
 
 M.round = function(val)
 	return math.floor(val + 0.5)
