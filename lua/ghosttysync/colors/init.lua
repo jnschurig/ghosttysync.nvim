@@ -92,9 +92,11 @@ colors.main.black    = functions.closest_color_match(pure_black, term_colors.col
 	---colors applied to the editor
 colors.editor = {
   link = colors.main.cyan,
-  -- cursor = colors.main.yellow,
-  cursor = term_colors.colors.cursor_color,
-  cursor_fg = term_colors.colors.cursor_text,
+  cursor = colors.main.yellow,
+  cursor_fg = colors.main.black,
+  -- TODO: adjust these to be nicer. They work now.
+  -- cursor = term_colors.colors.cursor_color,
+  -- cursor_fg = term_colors.colors.cursor_text,
   title = term_colors.colors.foreground
 }
 
