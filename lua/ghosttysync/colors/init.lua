@@ -32,9 +32,10 @@ if background_match == pure_white then
 end
 
 local value_adjustment_scale = 0.25
-local selection_benchmark_value = 50 -- 30 to 40 is pretty much perfect.
+-- local selection_benchmark_value = 50 -- 30 to 40 is pretty much perfect.
+local selection_benchmark_value = 150 -- 30 to 40 is pretty much perfect.
 
-local selection_background_diff = functions.color_diff(term_colors.colors.background, term_colors.colors.selection_background)
+local selection_background_diff = functions.color_diff(term_colors.colors.foreground, term_colors.colors.selection_background)
 
 local selection_adjustment_ratio = 1 - ((selection_benchmark_value - selection_background_diff) / 255 * color_mod_direction)
 local selection_background_color = functions.adjust_color_value(term_colors.colors.selection_background, selection_adjustment_ratio)
