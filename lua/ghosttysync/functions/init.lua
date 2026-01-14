@@ -77,6 +77,10 @@ local function hex_color_diff(color1, color2)
 	return diff_score
 end
 
+M.color_diff = function(color1, color2)
+	return hex_color_diff(color1, color2)
+end
+
 M.closest_color_match = function(spec_color, colors_table)
 	local diff_score = 300 -- biggest difference can only be 255
 	local closest_color = nil
