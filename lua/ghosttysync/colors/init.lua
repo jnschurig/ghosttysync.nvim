@@ -66,6 +66,14 @@ for color_name, color in pairs(colors.main) do
   end
 end
 
+
+print("red: " .. colors.main.red)
+print("green: " .. colors.main.green)
+print("yellow: " .. colors.main.yellow)
+print("blue: " .. colors.main.blue)
+print("purple: " .. colors.main.purple)
+print("cyan: " .. colors.main.cyan)
+print("orange: " .. colors.main.orange)
 print("old cyan: " .. colors.main.cyan)
 -- Ajust cyan color to be a bit darker on light backgrounds
 if color_mod_direction == 1 then
