@@ -33,7 +33,7 @@ end
 
 local value_adjustment_scale = 0.25
 -- local selection_benchmark_value = 50 -- 30 to 40 is pretty much perfect.
-local selection_benchmark_value = 150 -- 30 to 40 is pretty much perfect.
+local selection_benchmark_value = 180
 
 local selection_background_diff = functions.color_diff(term_colors.colors.foreground, term_colors.colors.selection_background)
 
