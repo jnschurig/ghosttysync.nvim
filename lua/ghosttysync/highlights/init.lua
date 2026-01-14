@@ -317,9 +317,12 @@ M.main_highlights.editor = function()
         Ignore           = { fg = e.disabled },
         Underlined       = { fg = e.links, underline = true },
         Error            = { fg = l.error, bold = true },
-        Added            = { link = "DiffAdd" },
-        Changed          = { link = "DiffChange" },
-        Removed          = { link = "DiffDelete" },
+        -- Added            = { link = "DiffAdd" },
+        -- Changed          = { link = "DiffChange" },
+        -- Removed          = { link = "DiffDelete" },
+        Added            = { fg = g.added, bold = true },
+        Changed          = { fg = g.modified, bold = true },
+        Removed          = { fg = g.removed, bold = true },
 
         -- color highlights
         Black  = { fg = m.black },
