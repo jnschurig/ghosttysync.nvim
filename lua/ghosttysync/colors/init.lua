@@ -66,20 +66,12 @@ for color_name, color in pairs(colors.main) do
   end
 end
 
-
-print("red: " .. colors.main.red)
-print("green: " .. colors.main.green)
-print("yellow: " .. colors.main.yellow)
-print("blue: " .. colors.main.blue)
-print("purple: " .. colors.main.purple)
-print("cyan: " .. colors.main.cyan)
-print("orange: " .. colors.main.orange)
-print("old cyan: " .. colors.main.cyan)
--- Ajust cyan color to be a bit darker on light backgrounds
-if color_mod_direction == 1 then
-  colors.main.cyan = functions.adjust_color_value(colors.main.cyan, 0.5)
-end
-print("new cyan: " .. colors.main.cyan)
+-- print("old cyan: " .. colors.main.cyan)
+-- -- Ajust cyan color to be a bit darker on light backgrounds
+-- if color_mod_direction == 1 then
+--   colors.main.cyan = functions.adjust_color_value(colors.main.cyan, 0.5)
+-- end
+-- print("new cyan: " .. colors.main.cyan)
 
 colors.main.darkred     = functions.adjust_color_value(colors.main.red   , 1 + (value_adjustment_scale * color_mod_direction))
 colors.main.darkgreen   = functions.adjust_color_value(colors.main.green , 1 + (value_adjustment_scale * color_mod_direction))
@@ -89,6 +81,22 @@ colors.main.darkcyan    = functions.adjust_color_value(colors.main.cyan  , 1 + (
 colors.main.darkpurple  = functions.adjust_color_value(colors.main.purple, 1 + (value_adjustment_scale * color_mod_direction))
 colors.main.darkorange  = functions.adjust_color_value(colors.main.orange, 1 + (value_adjustment_scale * color_mod_direction))
 colors.main.paleblue    = functions.adjust_color_value(colors.main.blue  , 1 + (value_adjustment_scale * color_mod_direction * -1))
+
+print("red: " .. colors.main.red)
+print("green: " .. colors.main.green)
+print("yellow: " .. colors.main.yellow)
+print("blue: " .. colors.main.blue)
+print("purple: " .. colors.main.purple)
+print("cyan: " .. colors.main.cyan)
+print("orange: " .. colors.main.orange)
+print("darkred: " .. colors.main.darkred)
+print("darkgreen: "  .. colors.main.darkgreen)
+print("darkyellow: " .. colors.main.darkyellow)
+print("darkblue: "   .. colors.main.darkblue)
+print("darkpurple: " .. colors.main.darkpurple)
+print("darkcyan: "   .. colors.main.darkcyan)
+print("darkorange: " .. colors.main.darkorange)
+print("paleblue: " .. colors.main.paleblue)
 
 term_colors.colors.palette[17] = term_colors.colors.foreground
 term_colors.colors.palette[18] = term_colors.colors.background
