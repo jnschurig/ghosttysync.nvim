@@ -176,7 +176,7 @@ colors.syntax.type = colors.main.purple
 ---git colors
 colors.git.added = colors.main.green
 colors.git.removed = colors.main.red
-colors.git.modified = colors.main.yellow
+colors.git.modified = colors.main.orange
 
 ---lsp colors
 colors.lsp.warning = colors.main.yellow
