@@ -212,7 +212,7 @@ colors.backgrounds.cursor_line = colors.editor.active
 
 -- adjustments as needed
 if functions.color_diff(colors.main.gray, selection_background_color) < 60 then
-  colors.editor.selection = functions.adjust_color_value(selection_background_color, 1 + (value_adjustment_scale * color_mod_direction * -1))
+  colors.editor.selection = functions.adjust_color_value(selection_background_color, 1 + (value_adjustment_scale * 2 * color_mod_direction * -1))
 end
 
 return colors
