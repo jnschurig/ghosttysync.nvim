@@ -41,7 +41,7 @@ local default_term_colors = {
 
 local term_colors, _ = termcolor.get_theme_info()
 
-term_colors = vim.tbl_deep_extend("keep", term_colors, default_term_colors)
+term_colors = vim.tbl_deep_extend("keep", term_colors or {}, default_term_colors)
 
 local background_match = functions.closest_color_match(term_colors.colors.background, {pure_black, pure_white})
 local color_mod_direction = -1
