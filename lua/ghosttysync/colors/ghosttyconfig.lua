@@ -154,16 +154,17 @@ function M.extract_theme_info(config)
 	-- local cursor_color = config["cursor-color"]
 	-- local cursor_text  = config["cursor-text"]
 
-	theme_info.colors.background = config.background or config["background"] or "#000000"
-	theme_info.colors.foreground = config.foreground or config["foreground"] or "#ffffff"
+	-- theme_info.colors.cursor_color = cursor_color
+	-- theme_info.colors.cursor_text = cursor_text
+
+	theme_info.colors.background = config.background or config["background"]
+	theme_info.colors.foreground = config.foreground or config["foreground"]
 
 	theme_info.colors.selection_bg = (config.selection_background or config["selection-background"])
 	theme_info.colors.selection_fg = (config.selection_foreground or config["selection-foreground"])
 
 	theme_info.colors.cursor_color = config["cursor-color"]
 	theme_info.colors.cursor_text = config["cursor-text"]
-	-- theme_info.colors.cursor_color = cursor_color
-	-- theme_info.colors.cursor_text = cursor_text
 
 	-- Extract terminal color palette (ONLY colors 0-15)
 	-- Ghostty uses format: palette = N=#color
@@ -191,6 +192,14 @@ function M.extract_theme_info(config)
 	if next(palette) then
 		theme_info.colors.palette = palette
 	end
+
+	print("ghostty test")
+	for key, value in pairs(theme_info.colors) do
+		if key ~= "palette" then
+			print("key: " .. key .. " | value: " .. value)
+		end
+	end
+	print("ghostty test end")
 
 	-- Validate that we have at least basic colors
 	-- if not theme_info.colors.background and not theme_info.colors.foreground then
