@@ -181,7 +181,12 @@ colors.editor.highlight = colors.editor.selection
 colors.editor.disabled = functions.adjust_color_value(colors.editor.highlight, 1 + (value_adjustment_scale * color_mod_direction * -1)) -- lighter than highlight
 colors.editor.accent = colors.main.purple
 colors.editor.none = "NONE"
-colors.syntax.comments = colors.main.gray -- use main.gray
+-- colors.syntax.comments = colors.main.gray -- use main.gray
+colors.syntax.comments = term_colors.colors.selection_foreground
+
+-- if functions.color_diff(colors.syntax.comments, selection_background_color) < 60 then
+--   colors.syntax.comments = term_colors.colors.selection_foreground
+-- end
 
 ---syntax colors
 colors.syntax.variable = colors.editor.fg
