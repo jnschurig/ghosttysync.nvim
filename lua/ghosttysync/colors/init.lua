@@ -21,8 +21,31 @@ local pure_gray   = "#808080"
 -- if vim.g.ghosttysync_style == "secondary" then
 -- 	palette_index = 9
 -- end
+local default_term_colors = {
+  name = "pure_dark",
+  colors = {
+    palette = {
+      pure_black,
+      pure_red,
+      pure_green,
+      pure_yellow,
+      pure_blue,
+      pure_purple,
+      pure_cyan,
+      pure_white,
+    },
+    background = pure_black,
+    foreground = pure_white,
+    cursor_color = pure_white,
+    cursor_text = pure_black,
+    selection_foreground = pure_black,
+    selection_background = pure_white,
+  },
+}
 
-local term_colors, error_message = termcolor.get_theme_info()
+local initial_term_colors, error_message = termcolor.get_theme_info()
+
+local term_colors = vim.tbl_deep_extend("keep", initial_term_colors, default_term_colors)
 
 print("Testing ----")
 if term_colors.name ~= nil then
@@ -42,28 +65,8 @@ print("End Testing ----")
 if error_message then
   print("Error fetching theme info: " .. error_message)
   print("Setting pure_dark theme.")
-  term_colors = {
-    name = "pure_dark",
-    colors = {
-      palette = {
-        pure_black,
-        pure_red,
-        pure_green,
-        pure_yellow,
-        pure_blue,
-        pure_purple,
-        pure_cyan,
-        pure_white,
-      },
-      background = pure_black,
-      foreground = pure_white,
-      cursor_color = pure_white,
-      cursor_text = pure_black,
-      selection_foreground = pure_black,
-      selection_background = pure_white,
-    },
-  }
 end
+
 
 local background_match = functions.closest_color_match(term_colors.colors.background, {pure_black, pure_white})
 local color_mod_direction = -1
