@@ -207,13 +207,13 @@ function M.get_theme_info()
 	-- Execute the CLI command
 	local output, err = M.execute_show_config()
 	if not output then
-		return nil, "Failed to execute Ghostty CLI: " .. (err or "unknown error")
+		return {}, "Failed to execute Ghostty CLI: " .. (err or "unknown error")
 	end
 
 	-- Parse the CLI output
 	local config, parse_err = M.parse_config_output(output)
 	if not config then
-		return nil, "Failed to parse Ghostty configuration: " .. (parse_err or "unknown error")
+		return {}, "Failed to parse Ghostty configuration: " .. (parse_err or "unknown error")
 	end
 
 	-- Extract theme information
