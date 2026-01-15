@@ -285,7 +285,7 @@ M.main_highlights.editor = function()
         ColorColumn      = { fg = m.none, bg = e.active },
         Conceal          = { fg = e.disabled },
         -- Cursor           = { fg = e.bg_alt, bg = e.cursor }, -- TODO: the bg_alt color here is often a bad color if using a non-standard cursor color
-        Cursor           = { fg = e.cursor_fg, bg = e.cursor }, -- TODO: the bg_alt color here is often a bad color if using a non-standard cursor color
+        Cursor           = { fg = e.cursor_fg, bg = e.cursor },
         TermCursor       = { link = "Cursor" }, -- cursor for the terminal
         CursorIM         = { link = "Cursor" }, -- like Cursor, but used when in IME mode
         ErrorMsg         = { fg = l.error },

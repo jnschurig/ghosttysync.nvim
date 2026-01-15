@@ -211,6 +211,7 @@ colors.backgrounds.bg_blend = colors.editor.bg
 colors.backgrounds.cursor_line = colors.editor.active
 
 -- adjustments as needed
+print("comments vs cursor_line diff: " .. functions.color_diff(colors.syntax.comments, colors.backgrounds.cursor_line))
 if functions.color_diff(colors.syntax.comments, colors.backgrounds.cursor_line) < 100 then
   colors.backgrounds.cursor_line = functions.adjust_color_value(colors.backgrounds.cursor_line, 1 + (value_adjustment_scale * 2 * color_mod_direction * -1))
 end
