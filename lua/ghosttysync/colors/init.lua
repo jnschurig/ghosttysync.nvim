@@ -213,8 +213,10 @@ colors.backgrounds.cursor_line = colors.editor.active
 -- adjustments as needed
 local cursor_line_comment_color_diff = functions.color_diff(colors.syntax.comments, colors.backgrounds.cursor_line)
 print("comments vs cursor_line diff: " .. cursor_line_comment_color_diff)
+print("original cursor line: " .. colors.backgrounds.cursor_line)
 if cursor_line_comment_color_diff < 50 then
   colors.backgrounds.cursor_line = functions.adjust_color_value(colors.backgrounds.cursor_line, 1 + (cursor_line_comment_color_diff / 50 * color_mod_direction * -1))
+  print("new cursor line: " .. colors.backgrounds.cursor_line)
 end
 
 return colors
