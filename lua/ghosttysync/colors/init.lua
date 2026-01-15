@@ -220,7 +220,8 @@ local selection_lum = functions.relative_luminance(colors.editor.selection)
 local fg_lum = functions.relative_luminance(colors.editor.fg)
 
 if selection_comment_contrast_ratio < 2.0 then
-  colors.editor.selection = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction * -1))
+  print("Adjusting cursor line")
+  colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction * -1))
 end
 
 print("selection: " .. colors.editor.selection .. " | luminance: " .. comment_lum)
