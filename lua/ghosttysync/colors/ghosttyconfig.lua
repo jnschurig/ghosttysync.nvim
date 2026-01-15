@@ -133,7 +133,7 @@ function M.extract_theme_info(config)
 
 	-- Extract and normalize basic colors (only the specified ones)
 	local background = config.background
-	local foreground = config.foreground
+	local foreground = config.foreground or "#ffffff" -- Some themes don't set this correctly.
 
 	if background then
 		theme_info.colors.background = background

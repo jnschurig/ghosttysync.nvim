@@ -22,7 +22,33 @@ local pure_gray   = "#808080"
 -- 	palette_index = 9
 -- end
 
-local term_colors, _ = termcolor.get_theme_info()
+local term_colors, error_message = termcolor.get_theme_info()
+
+if error_message then
+  print("Error fetching theme info: " .. error_message)
+  print("Setting pure_dark theme.")
+  term_colors = {
+    name = "pure_dark",
+    colors = {
+      palette = {
+        pure_black,
+        pure_red,
+        pure_green,
+        pure_yellow,
+        pure_blue,
+        pure_purple,
+        pure_cyan,
+        pure_white,
+      },
+      background = pure_black,
+      foreground = pure_white,
+      cursor_color = pure_white,
+      cursor_text = pure_black,
+      selection_foreground = pure_black,
+      selection_background = pure_white,
+    },
+  }
+end
 
 local background_match = functions.closest_color_match(term_colors.colors.background, {pure_black, pure_white})
 local color_mod_direction = -1
@@ -39,6 +65,8 @@ local selection_background_diff = functions.color_diff(term_colors.colors.foregr
 
 local selection_adjustment_ratio = 1 - ((selection_benchmark_value - selection_background_diff) / 255 * color_mod_direction * -1)
 local selection_background_color = functions.adjust_color_value(term_colors.colors.selection_background, selection_adjustment_ratio)
+-- TODO: this value here, foreground, is coming up as nil... Yet somehow we are doing math on it?
+-- It's broken for the "Desert" theme in particular. Do some nil checking maybe?
 print("color: fg vs selection_bg | fg: " .. term_colors.colors.foreground .. " | selection_bg: " .. selection_background_color .. " | diff: " .. selection_background_diff)
 ---colors table
 local colors = {
