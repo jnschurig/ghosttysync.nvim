@@ -92,14 +92,14 @@ end
 -- end
 -- print("new cyan: " .. colors.main.cyan)
 
-colors.main.darkred     = functions.adjust_color_value(colors.main.red   , 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkgreen   = functions.adjust_color_value(colors.main.green , 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkyellow  = functions.adjust_color_value(colors.main.yellow, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkblue    = functions.adjust_color_value(colors.main.blue  , 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkcyan    = functions.adjust_color_value(colors.main.cyan  , 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkpurple  = functions.adjust_color_value(colors.main.purple, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkorange  = functions.adjust_color_value(colors.main.orange, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.paleblue    = functions.adjust_color_value(colors.main.blue  , 1 + (value_adjustment_scale * color_mod_direction * -1))
+colors.main.darkred    = functions.adjust_color_value(colors.main.red   , 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkgreen  = functions.adjust_color_value(colors.main.green , 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkyellow = functions.adjust_color_value(colors.main.yellow, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkblue   = functions.adjust_color_value(colors.main.blue  , 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkcyan   = functions.adjust_color_value(colors.main.cyan  , 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkpurple = functions.adjust_color_value(colors.main.purple, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkorange = functions.adjust_color_value(colors.main.orange, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.paleblue   = functions.adjust_color_value(colors.main.blue  , 1 + (value_adjustment_scale * color_mod_direction * -1))
 
 -- print("red: " .. colors.main.red)
 -- print("green: " .. colors.main.green)
@@ -124,13 +124,9 @@ term_colors.colors.palette[20] = term_colors.colors.cursor_text
 term_colors.colors.palette[21] = term_colors.colors.selection_background
 term_colors.colors.palette[22] = term_colors.colors.selection_foreground
 
-colors.main.gray     = functions.closest_color_match(pure_gray , term_colors.colors.palette)
-colors.main.white    = functions.closest_color_match(pure_white, term_colors.colors.palette)
-colors.main.black    = functions.closest_color_match(pure_black, term_colors.colors.palette)
-
-if functions.color_diff(colors.main.gray, selection_background_color) < 60 then
-  colors.syntax.comments = functions.adjust_color_value(selection_background_color, 1 + (value_adjustment_scale * color_mod_direction * -1))
-end
+colors.main.gray  = functions.closest_color_match(pure_gray , term_colors.colors.palette)
+colors.main.white = functions.closest_color_match(pure_white, term_colors.colors.palette)
+colors.main.black = functions.closest_color_match(pure_black, term_colors.colors.palette)
 
 	---colors applied to the editor
 colors.editor = {
@@ -213,5 +209,10 @@ colors.backgrounds.floating_windows = colors.editor.bg
 colors.backgrounds.non_current_windows = colors.editor.bg
 colors.backgrounds.bg_blend = colors.editor.bg
 colors.backgrounds.cursor_line = colors.editor.active
+
+-- adjustments as needed
+if functions.color_diff(colors.main.gray, selection_background_color) < 60 then
+  colors.editor.selection = functions.adjust_color_value(selection_background_color, 1 + (value_adjustment_scale * color_mod_direction * -1))
+end
 
 return colors
