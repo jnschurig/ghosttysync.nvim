@@ -211,8 +211,8 @@ colors.backgrounds.bg_blend = colors.editor.bg
 colors.backgrounds.cursor_line = colors.editor.active
 
 -- adjustments as needed
-if functions.color_diff(colors.main.gray, selection_background_color) < 60 then
-  colors.editor.selection = functions.adjust_color_value(selection_background_color, 1 + (value_adjustment_scale * 2 * color_mod_direction * -1))
+if functions.color_diff(colors.syntax.comments, colors.backgrounds.cursor_line) < 60 then
+  colors.backgrounds.cursor_line = functions.adjust_color_value(colors.backgrounds.cursor_line, 1 + (value_adjustment_scale * 2 * color_mod_direction * -1))
 end
 
 return colors
