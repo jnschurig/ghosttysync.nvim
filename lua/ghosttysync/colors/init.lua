@@ -212,11 +212,17 @@ colors.backgrounds.cursor_line = colors.editor.active
 
 -- adjustments as needed
 local cursor_line_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.backgrounds.cursor_line)
+local foreground_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.editor.fg)
+local cursor_line_foreground_contrast_ratio = functions.contrast_ratio(colors.editor.fg, colors.backgrounds.cursor_line)
 local comment_lum = functions.relative_luminance(colors.syntax.comments)
 local cursor_line_lum = functions.relative_luminance(colors.backgrounds.cursor_line)
-print("comments vs cursor_line contrast ratio: " .. cursor_line_comment_contrast_ratio)
+local fg_lum = functions.relative_luminance(colors.editor.fg)
 print("original cursor line: " .. colors.backgrounds.cursor_line .. " | luminance: " .. comment_lum)
 print("original comment: " .. colors.syntax.comments .. " | luminance: " .. cursor_line_lum)
+print("original fg: " .. colors.editor.fg .. " | luminance: " .. fg_lum)
+print("comments vs cursor_line contrast ratio: " .. cursor_line_comment_contrast_ratio)
+print("comments vs foreground contrast ratio: " .. foreground_comment_contrast_ratio)
+print("comments vs cursor_line contrast ratio: " .. cursor_line_foreground_contrast_ratio)
 
 
 -- if cursor_line_comment_color_diff < 50 then
