@@ -58,9 +58,7 @@ local selection_background_diff = functions.color_diff(term_colors.colors.foregr
 
 local selection_adjustment_ratio = 1 - ((selection_benchmark_value - selection_background_diff) / 255 * color_mod_direction * -1)
 local selection_background_color = functions.adjust_color_value(term_colors.colors.selection_background, selection_adjustment_ratio)
--- TODO: this value here, foreground, is coming up as nil... Yet somehow we are doing math on it?
--- It's broken for the "Desert" theme in particular. Do some nil checking maybe?
-print("color: fg vs selection_bg | fg: " .. term_colors.colors.foreground .. " | selection_bg: " .. selection_background_color .. " | diff: " .. selection_background_diff)
+
 ---colors table
 local colors = {
 	---main colors
@@ -130,6 +128,10 @@ colors.main.gray     = functions.closest_color_match(pure_gray , term_colors.col
 colors.main.white    = functions.closest_color_match(pure_white, term_colors.colors.palette)
 colors.main.black    = functions.closest_color_match(pure_black, term_colors.colors.palette)
 
+if functions.color_diff(colors.main.gray, selection_background_color) < 60 then
+  colors.syntax.comments = functions.adjust_color_value(selection_background_color, 1 + (value_adjustment_scale * color_mod_direction * -1))
+end
+
 	---colors applied to the editor
 colors.editor = {
   link = colors.main.cyan,
@@ -183,10 +185,6 @@ colors.editor.accent = colors.main.purple
 colors.editor.none = "NONE"
 colors.syntax.comments = colors.main.gray -- use main.gray
 -- colors.syntax.comments = term_colors.colors.selection_foreground
-
-if functions.color_diff(colors.syntax.comments, selection_background_color) < 60 then
-  colors.syntax.comments = functions.adjust_color_value(colors.main.gray, 1 + (value_adjustment_scale * 2 * color_mod_direction * -1))
-end
 
 ---syntax colors
 colors.syntax.variable = colors.editor.fg
