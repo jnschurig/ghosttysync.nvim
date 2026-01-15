@@ -208,7 +208,7 @@ colors.backgrounds.sidebars = colors.editor.bg
 colors.backgrounds.floating_windows = colors.editor.bg
 colors.backgrounds.non_current_windows = colors.editor.bg
 colors.backgrounds.bg_blend = colors.editor.bg
-colors.backgrounds.cursor_line = colors.editor.active
+-- colors.backgrounds.cursor_line = colors.editor.active
 -- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
 
 -- adjustments as needed
@@ -219,13 +219,13 @@ local comment_lum = functions.relative_luminance(colors.syntax.comments)
 local selection_lum = functions.relative_luminance(colors.editor.selection)
 local fg_lum = functions.relative_luminance(colors.editor.fg)
 
-if selection_comment_contrast_ratio < 2.0 then
-  print("Adjusting cursor line")
-  colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction * -1))
-end
+-- if selection_comment_contrast_ratio < 2.0 then
+--   print("Adjusting cursor line")
+--   colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction * -1))
+-- end
 -- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction * -1))
--- colors.backgrounds.cursor_line = pure_black
-colors.editor.selection = pure_black
+colors.backgrounds.cursor_line = pure_black
+-- colors.editor.selection = pure_black
 
 print("selection: " .. colors.editor.selection .. " | luminance: " .. comment_lum)
 print("comment: " .. colors.syntax.comments .. " | luminance: " .. selection_lum)
