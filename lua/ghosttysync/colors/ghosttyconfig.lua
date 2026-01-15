@@ -219,7 +219,7 @@ function M.get_theme_info()
 	-- Extract theme information
 	local theme_info, extract_err = M.extract_theme_info(config)
 	if not theme_info then
-		return nil, "Failed to extract theme information: " .. (extract_err or "unknown error")
+		return {}, "Failed to extract theme information: " .. (extract_err or "unknown error")
 	end
 
 	return theme_info, nil
