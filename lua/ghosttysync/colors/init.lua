@@ -208,7 +208,8 @@ colors.backgrounds.sidebars = colors.editor.bg
 colors.backgrounds.floating_windows = colors.editor.bg
 colors.backgrounds.non_current_windows = colors.editor.bg
 colors.backgrounds.bg_blend = colors.editor.bg
-colors.backgrounds.cursor_line = colors.editor.active
+-- colors.backgrounds.cursor_line = colors.editor.active
+colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.active, 1 + (value_adjustment_scale * color_mod_direction * -1))
 
 -- adjustments as needed
 local cursor_line_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.backgrounds.cursor_line)
