@@ -211,7 +211,6 @@ colors.backgrounds.bg_blend = colors.editor.bg
 colors.backgrounds.cursor_line = colors.editor.active
 -- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
 
-colors.editor.selection = selection_background_color
 -- adjustments as needed
 local selection_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.editor.selection)
 local foreground_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.Comments, colors.editor.fg)
@@ -219,9 +218,14 @@ local selection_foreground_contrast_ratio = functions.contrast_ratio(colors.edit
 local comment_lum = functions.relative_luminance(colors.syntax.comments)
 local selection_lum = functions.relative_luminance(colors.editor.selection)
 local fg_lum = functions.relative_luminance(colors.editor.fg)
-print("original selection: " .. colors.editor.selection .. " | luminance: " .. comment_lum)
-print("original comment: " .. colors.syntax.comments .. " | luminance: " .. selection_lum)
-print("original fg: " .. colors.editor.fg .. " | luminance: " .. fg_lum)
+
+if selection_comment_contrast_ratio < 2.0 then
+  colors.editor.selection = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction * -1))
+end
+
+print("selection: " .. colors.editor.selection .. " | luminance: " .. comment_lum)
+print("comment: " .. colors.syntax.comments .. " | luminance: " .. selection_lum)
+print("fg: " .. colors.editor.fg .. " | luminance: " .. fg_lum)
 print("comments vs selection contrast ratio: " .. selection_comment_contrast_ratio)
 print("comments vs foreground contrast ratio: " .. foreground_comment_contrast_ratio)
 print("comments vs selection contrast ratio: " .. selection_foreground_contrast_ratio)
