@@ -24,6 +24,12 @@ local pure_gray   = "#808080"
 
 local term_colors, error_message = termcolor.get_theme_info()
 
+print("Testing ----")
+for key, value in pairs(term_colors) do
+  print("key: " .. key)
+end
+print("End Testing ----")
+
 if error_message then
   print("Error fetching theme info: " .. error_message)
   print("Setting pure_dark theme.")
