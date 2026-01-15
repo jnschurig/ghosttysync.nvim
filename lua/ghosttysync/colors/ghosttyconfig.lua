@@ -132,8 +132,8 @@ function M.extract_theme_info(config)
 	theme_info.name = config.theme or "unknown"
 
 	-- Extract and normalize basic colors (only the specified ones)
-	local background = config.background
-	local foreground = config.foreground or "#ffffff" -- Some themes don't set this correctly.
+	-- local background = config.background
+	-- local foreground = config.foreground or "#ffffff" -- Some themes don't set this correctly.
 
 	-- if background then
 	-- 	theme_info.colors.background = background
@@ -141,8 +141,29 @@ function M.extract_theme_info(config)
 	-- if foreground then
 	-- 	theme_info.colors.foreground = foreground
 	-- end
-	theme_info.colors.background = background
-	theme_info.colors.foreground = foreground
+	-- Extract selection colors if available
+	-- local selection_bg = (config.selection_background or config["selection-background"])
+	-- local selection_fg = (config.selection_foreground or config["selection-foreground"])
+
+	-- if selection_bg then
+	-- 	theme_info.colors.selection_background = selection_bg
+	-- end
+	-- if selection_fg then
+	-- 	theme_info.colors.selection_foreground = selection_fg
+	-- end
+	-- local cursor_color = config["cursor-color"]
+	-- local cursor_text  = config["cursor-text"]
+
+	theme_info.colors.background = config.background or config["background"] or "#000000"
+	theme_info.colors.foreground = config.foreground or config["foreground"] or "#ffffff"
+
+	theme_info.colors.selection_bg = (config.selection_background or config["selection-background"])
+	theme_info.colors.selection_fg = (config.selection_foreground or config["selection-foreground"])
+
+	theme_info.colors.cursor_color = config["cursor-color"]
+	theme_info.colors.cursor_text = config["cursor-text"]
+	-- theme_info.colors.cursor_color = cursor_color
+	-- theme_info.colors.cursor_text = cursor_text
 
 	-- Extract terminal color palette (ONLY colors 0-15)
 	-- Ghostty uses format: palette = N=#color
@@ -171,25 +192,9 @@ function M.extract_theme_info(config)
 		theme_info.colors.palette = palette
 	end
 
-	-- Extract selection colors if available
-	local selection_bg = (config.selection_background or config["selection-background"])
-	local selection_fg = (config.selection_foreground or config["selection-foreground"])
-
-	if selection_bg then
-		theme_info.colors.selection_background = selection_bg
-	end
-	if selection_fg then
-		theme_info.colors.selection_foreground = selection_fg
-	end
-
-	local cursor_color = config["cursor-color"]
-	local cursor_text = config["cursor-text"]
-
-	theme_info.colors.cursor_color = cursor_color
-	theme_info.colors.cursor_text = cursor_text
-
 	-- Validate that we have at least basic colors
-	if not theme_info.colors.background and not theme_info.colors.foreground then
+	-- if not theme_info.colors.background and not theme_info.colors.foreground then
+	if not theme_info.name then
 		return nil, "No basic color information found in configuration"
 	end
 
