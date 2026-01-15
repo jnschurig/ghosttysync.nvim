@@ -223,6 +223,7 @@ if selection_comment_contrast_ratio < 2.0 then
   print("Adjusting cursor line")
   colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction * -1))
 end
+colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction * -1))
 
 print("selection: " .. colors.editor.selection .. " | luminance: " .. comment_lum)
 print("comment: " .. colors.syntax.comments .. " | luminance: " .. selection_lum)
