@@ -77,6 +77,15 @@ local function hex_color_diff(color1, color2)
 	return diff_score
 end
 
+local function linearize_rgb(floating_point_value)
+	-- Standard liniarization formula.
+	-- See: https://www.w3.org/WAI/GL/wiki/Relative_luminance
+	if floating_point_value <= 0.04045 then
+		return floating_point_value * 12.92
+	end
+	return ((floating_point_value + 0.055) / 1.055) ^ 2.4
+end
+
 M.color_diff = function(color1, color2)
 	return hex_color_diff(color1, color2)
 end
@@ -97,6 +106,25 @@ M.closest_color_match = function(spec_color, colors_table)
 		end
 	end
 	return closest_color
+end
+
+M.relative_luminance = function(color)
+	-- Standard luminance calculation.
+	-- See: https://www.w3.org/WAI/GL/wiki/Relative_luminance
+	local rgb_max = 255
+	local rgb = hex_to_rgb(color)
+	local r = linearize_rgb(rgb[1] / rgb_max) * 0.2126
+	local g = linearize_rgb(rgb[2] / rgb_max) * 0.7152
+	local b = linearize_rgb(rgb[3] / rgb_max) * 0.0722
+
+	return r + g + b
+end
+
+M.contrast_ratio = function(color1, color2)
+	local c1_luminance = M.relative_luminance(color1)
+	local c2_luminance = M.relative_luminance(color2)
+
+	return (math.max(c1_luminance, c2_luminance) + 0.05) / (math.min(c1_luminance, c2_luminance) + 0.05)
 end
 
 M.adjust_color_value = function(starting_color, adjustment_factor)
