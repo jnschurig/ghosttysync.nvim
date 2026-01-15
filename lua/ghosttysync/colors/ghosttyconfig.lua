@@ -193,16 +193,7 @@ function M.extract_theme_info(config)
 		theme_info.colors.palette = palette
 	end
 
-	print("ghostty test")
-	for key, value in pairs(theme_info.colors) do
-		if key ~= "palette" then
-			print("key: " .. key .. " | value: " .. value)
-		end
-	end
-	print("ghostty test end")
-
 	-- Validate that we have at least basic colors
-	-- if not theme_info.colors.background and not theme_info.colors.foreground then
 	if not theme_info.name then
 		return nil, "No basic color information found in configuration"
 	end
