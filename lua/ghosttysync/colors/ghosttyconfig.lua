@@ -135,12 +135,14 @@ function M.extract_theme_info(config)
 	local background = config.background
 	local foreground = config.foreground or "#ffffff" -- Some themes don't set this correctly.
 
-	if background then
-		theme_info.colors.background = background
-	end
-	if foreground then
-		theme_info.colors.foreground = foreground
-	end
+	-- if background then
+	-- 	theme_info.colors.background = background
+	-- end
+	-- if foreground then
+	-- 	theme_info.colors.foreground = foreground
+	-- end
+	theme_info.colors.background = background
+	theme_info.colors.foreground = foreground
 
 	-- Extract terminal color palette (ONLY colors 0-15)
 	-- Ghostty uses format: palette = N=#color
