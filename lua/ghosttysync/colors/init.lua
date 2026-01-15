@@ -222,9 +222,9 @@ local fg_lum = functions.relative_luminance(colors.editor.fg)
 print("original selection: " .. colors.editor.selection .. " | luminance: " .. comment_lum)
 print("original comment: " .. colors.syntax.comments .. " | luminance: " .. selection_lum)
 print("original fg: " .. colors.editor.fg .. " | luminance: " .. fg_lum)
-print("comments vs selection contrast ratio: " .. cursor_line_comment_contrast_ratio)
+print("comments vs selection contrast ratio: " .. selection_comment_contrast_ratio)
 print("comments vs foreground contrast ratio: " .. foreground_comment_contrast_ratio)
-print("comments vs selection contrast ratio: " .. cursor_line_foreground_contrast_ratio)
+print("comments vs selection contrast ratio: " .. selection_foreground_contrast_ratio)
 
 
 -- if cursor_line_comment_color_diff < 50 then
