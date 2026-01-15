@@ -185,7 +185,7 @@ colors.syntax.comments = colors.main.gray -- use main.gray
 -- colors.syntax.comments = term_colors.colors.selection_foreground
 
 if functions.color_diff(colors.syntax.comments, selection_background_color) < 60 then
-  colors.syntax.comments = functions.adjust_color_value(colors.main.gray, 1 + (value_adjustment_scale * color_mod_direction * -1))
+  colors.syntax.comments = functions.adjust_color_value(colors.main.gray, 1 + (value_adjustment_scale * 2 * color_mod_direction * -1))
 end
 
 ---syntax colors
