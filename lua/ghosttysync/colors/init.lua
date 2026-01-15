@@ -25,8 +25,17 @@ local pure_gray   = "#808080"
 local term_colors, error_message = termcolor.get_theme_info()
 
 print("Testing ----")
+if term_colors.name ~= nil then
+  print("term_colors.name: " .. term_colors.name)
+end
 for key, value in pairs(term_colors) do
   print("key: " .. key)
+end
+if term_colors.colors ~= nil then
+  print("term_colors.colors")
+  for key, value in pairs(term_colors.colors) do
+    print("key: ", key)
+  end
 end
 print("End Testing ----")
 
