@@ -1,0 +1,9 @@
+ghosttysync-configuration	ghosttysync.nvim.txt	/*ghosttysync-configuration*
+ghosttysync-examples	ghosttysync.nvim.txt	/*ghosttysync-examples*
+ghosttysync-features	ghosttysync.nvim.txt	/*ghosttysync-features*
+ghosttysync-functions	ghosttysync.nvim.txt	/*ghosttysync-functions*
+ghosttysync-lualine-setup	ghosttysync.nvim.txt	/*ghosttysync-lualine-setup*
+ghosttysync-mappings	ghosttysync.nvim.txt	/*ghosttysync-mappings*
+ghosttysync-styles	ghosttysync.nvim.txt	/*ghosttysync-styles*
+ghosttysync-usage	ghosttysync.nvim.txt	/*ghosttysync-usage*
+ghosttysync.nvim	ghosttysync.nvim.txt	/*ghosttysync.nvim*

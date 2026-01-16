@@ -1,0 +1,298 @@
+================================================================================
+                                                                 *ghosttysync.nvim*
+
+ghosttysync.nvim is a colorscheme for NeoVim written in Lua with built in support
+for native LSP, TreeSitter and many more plugins.
+
+Adapted from the material.nvim theme: https://github.com/marko-cerovac/material.nvim
+
+Many Thanks to Marko Cerovac for providing such an excellent source theme.
+
+================================================================================
+CONTENTS
+
+    1. Features ................. |ghosttysync-features|
+    2. Usage .................... |ghosttysync-usage|
+    3. Configuration ............ |ghosttysync-configuration|
+    4. Examples ................. |ghosttysync-examples|
+    5. Lualine setup ............ |ghosttysync-lualine-setup|
+    6. Functions ................ |ghosttysync-functions|
+    7. Mappings ................. |ghosttysync-mappings|
+
+================================================================================
+1. Features                                             *ghosttysync-features*
+
+    + A wide array of supported plugins like: -TreeSitter
+                                              -LSP Diagnostics
+                                              -LSP Saga
+                                              -LSP Trouble
+                                              -Nvim-Compe
+                                              -Git Gutter
+                                              -Git Messenger
+                                              -Git Signs
+                                              -Telescope.nvim
+                                              -Nvim-Tree.lua
+                                              -NERDTree
+                                              -Indent-Blankline.nvim
+                                              -Vim-Which-Key
+                                              -WhichKey.nvim
+                                              -Dashboard
+                                              -BufferLine
+                                              -Lualine
+                                              -Neogit
+                                              -Vim-Sneak
+                                              -Nvim-Dap
+                                              -Vim-Illuminate
+
+    + Asynchronous highlight loading which makes the theme extremely fast
+
+================================================================================
+2. Usage                                                   *ghosttysync-usage*
+
+    To use the default settings, just apply the theme
+
+    If you are using Vim-Script:
+        colorscheme ghosttysync
+
+    If you are using Lua:
+        vim.cmd 'colorscheme ghosttysync'
+
+
+================================================================================
+3. Configuration                                   *ghosttysync-configuration*
+
+What sets ghosttysync.nvim apart from most Vim/NeoVim themes is the wide array
+of options for customising the theme.
+
+In order for these settings to take effect, they should be placed in your
+init.vim/init.lua before applying the colorscheme
+
+Options:
+
+All other options are passed to a setup function
+
+    + require('ghosttysync').setup()
+
+This is an example of the setup function with the default values:
+
+    require('ghosttysync').setup({
+        contrast = {
+            terminal = false,
+            sidebars = false,
+            cursor_line = false,
+            floating_windows = false,
+            lsp_virtual_text = false,
+            non_current_windows = false,
+            filetypes = {}
+        },
+        styles = {
+            comments = {},
+            strings = {},
+            keywords = {},
+            functions = {},
+            variables = {},
+            operators = {},
+            types = {},
+        },
+        plugins = {},
+        disable = {
+            colored_cursor = false,
+            borders = false,
+            background = false,
+            term_colors = false,
+            eob_lines = false
+        },
+        lualine_style = "default",
+        async_loading = true,
+    })
+
+    + contrast {table}
+          Make sidebars (like nvim-tree or troubl.nvim), floating windows,
+          terminal, cursor line, non current windows
+          or specific filetypes have a different background.
+          Varable names are: - sidebars
+                             - floating_windows
+                             - cursor_line
+                             - lsp_virtual_text
+                             - non_current_windows
+                             - filetype
+        These can be set to true or false
+
+    + style  {table}
+          Apply styles to syntax objects: -comments
+                                          -strings
+                                          -keywords
+                                          -functions
+                                          -variables
+         Set the desired value to true to make it italic
+
+    + disable  {table}
+          This table allows you to disable the theme from setting
+          the cursor color, borders, background, terminal colors and
+          end-of-buffer lines
+
+    + lualine_style {string}
+          Choose between two styles for lualine. can be "default" or "stealth"
+
+    + async_loading  {bool}
+          Load parts of the theme asyncronously for faster startup
+          (turned on by default)
+    
+    + plugins  {table}
+          To apply the theme to a plugin, set it in this table
+          Available plugins:
+            - blink
+            - coc
+            - colorful-winsep
+            - dap
+            - dashboard
+            - eyeliner
+            - fidget
+            - flash
+            - gitsigns
+            - harpoon
+            - hop
+            - illuminate
+            - indent-blankline
+            - lspsaga
+            - mini
+            - neogit
+            - neotest
+            - neo-tree
+            - neorg
+            - noice
+            - nvim-cmp
+            - nvim-navic
+            - nvim-tree
+            - nvim-web-devicons
+            - rainbow-delimiters
+            - sneak
+            - telescope
+            - trouble
+            - which-key
+            - nvim-notify
+
+================================================================================
+4. Examples                                         *ghosttysync-examples*
+
+Example config in Lua:
+
+    -- Theme style
+    vim.g.ghosttysync_style = 'deep ocean'
+
+    -- Colorscheme settings
+    require('ghosttysync').setup({
+        contrast = {
+            sidebars = true,
+            floating_windows = false,
+            cursor_line = true,
+            popup_menu = false,
+            filetypes = {
+                "qf",
+                "packer",
+                "dapui_breakpoints",
+            }
+        },
+        plugins = {
+           "dap",
+           "gitsigns",
+           "indent-blankline",
+           "neogit",
+           "nvim-cmp",
+           "nvim-tree",
+           "nvim-web-devicons",
+           "telescope",
+           "which-key",
+        },
+        styles = {
+            comments = { italic = true },
+            functions = { italic = true },
+        },
+        disable = {
+            borders = true,
+            background = false,
+            term_colors = false,
+            eob_lines = false
+        },
+        lualine_style = 'stealth'
+    })
+
+    -- Apply the colorscheme
+    vim.cmd 'colorscheme ghosttysync'
+
+================================================================================
+5. Lualine setup                                   *ghosttysync-lualine-setup*
+
+    To enable the lualine themes, first set the theme
+    in your lualine settings to `auto` or `ghosttysync`
+
+        require('lualine').setup {~
+          options = {~
+            -- ... your lualine config
+            theme = 'auto'~
+            or
+            theme = 'ghosttysync'~
+            -- ... your lualine config
+          }~
+        }~
+
+    Then, choose the style trough a variable called lualine_style
+    in the theme setup function
+
+    require('ghosttysync').setup({~
+        lualine_style = 'default' -- the default style
+        or
+        lualine_style = 'stealth' -- the stealth style
+    })~
+
+    If the theme, doesn't look right, it's probably because ghosttysync.nvim
+    is being loaded before lualine, causing the other ghosttysync theme
+    that comes built-in to lualine to be used.
+    To fix this, either load ghosttysync.nvim after lualine (preferred way)
+    or set the lualine theme to one of these two values in your lualine settings
+
+    require('lualine').setup {~
+      options = {~
+        -- ... your lualine config
+        theme = 'ghosttysync-nvim' -- the default style
+        or
+        theme = 'ghosttysync-stealth' -- the stealth style
+        -- ... your lualine config
+      }~
+    }~
+
+================================================================================
+6. Functions                                           *ghosttysync-functions*
+
+Material.nvim has built in functions that you can call or bind to a key
+
+    + Use telescope.nvim to switch to a style
+          :lua require("ghosttysync.functions").find_style()~
+
+    + Switch to a specific style
+          Call the function for switching and pass in the name of the style
+          that you want to switch to:
+          :lua require('ghosttysync.functions').change_style('palenight')~
+
+    + Toggle the end of buffer lines
+          Call this function if you want to toggle the visibility of the lines at the end of
+          the buffer: 
+          :lua require('ghosttysync.functions').toggle_eob()~
+
+================================================================================
+7. Mappings                                             *ghosttysync-mappings*
+
+You can map the built-in functions to keys
+This will allow you to change the style and toggle the end-of-buffer lines
+at keypress
+
+Example:
+
+nnoremap <leader>tf :lua require('ghosttysync.functions').find_style()<CR>
+
+nnoremap <leader>tm :lua require('ghosttysync.functions').toggle_style()<CR>
+
+nnoremap <leader>te :lua require('ghosttysync.functions').toggle_eob()<CR>
+
+================================================================================
+vim:tw=78:ts=4:ft=help:norl:
