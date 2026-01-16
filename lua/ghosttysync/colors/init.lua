@@ -228,27 +228,27 @@ colors.backgrounds.bg_blend = colors.editor.bg
 colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 0.75)
 
 -- adjustments as needed
-local selection_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.editor.selection)
-local foreground_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.Comments, colors.editor.fg)
-local selection_foreground_contrast_ratio = functions.contrast_ratio(colors.editor.fg, colors.editor.selection)
-local comment_lum = functions.relative_luminance(colors.syntax.comments)
-local selection_lum = functions.relative_luminance(colors.editor.selection)
-local fg_lum = functions.relative_luminance(colors.editor.fg)
+-- local selection_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.editor.selection)
+-- local foreground_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.Comments, colors.editor.fg)
+-- local selection_foreground_contrast_ratio = functions.contrast_ratio(colors.editor.fg, colors.editor.selection)
+-- local comment_lum = functions.relative_luminance(colors.syntax.comments)
+-- local selection_lum = functions.relative_luminance(colors.editor.selection)
+-- local fg_lum = functions.relative_luminance(colors.editor.fg)
 
 -- if selection_comment_contrast_ratio < 2.0 then
 --   print("Adjusting cursor line")
 --   colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction * -1))
 -- end
 -- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction * -1))
-colors.backgrounds.cursor_line = pure_black
+-- colors.backgrounds.cursor_line = pure_black
 -- colors.editor.selection = pure_black
 
-print("selection: " .. colors.editor.selection .. " | luminance: " .. comment_lum)
-print("comment: " .. colors.syntax.comments .. " | luminance: " .. selection_lum)
-print("fg: " .. colors.editor.fg .. " | luminance: " .. fg_lum)
-print("comments vs selection contrast ratio: " .. selection_comment_contrast_ratio)
-print("comments vs foreground contrast ratio: " .. foreground_comment_contrast_ratio)
-print("foreground vs selection contrast ratio: " .. selection_foreground_contrast_ratio)
+-- print("selection: " .. colors.editor.selection .. " | luminance: " .. comment_lum)
+-- print("comment: " .. colors.syntax.comments .. " | luminance: " .. selection_lum)
+-- print("fg: " .. colors.editor.fg .. " | luminance: " .. fg_lum)
+-- print("comments vs selection contrast ratio: " .. selection_comment_contrast_ratio)
+-- print("comments vs foreground contrast ratio: " .. foreground_comment_contrast_ratio)
+-- print("foreground vs selection contrast ratio: " .. selection_foreground_contrast_ratio)
 
 -- if cursor_line_comment_color_diff < 50 then
 --   -- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.backgrounds.cursor_line, 1 + (cursor_line_comment_color_diff / 50 * color_mod_direction * -1))
