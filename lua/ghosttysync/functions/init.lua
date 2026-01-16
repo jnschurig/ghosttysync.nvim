@@ -42,6 +42,9 @@ M.find_style = function()
 end
 
 local rgb_to_hex = function(r, g, b)
+	r = math.min(r, 255)
+	g = math.min(g, 255)
+	b = math.min(b, 255)
 	return string.format("#%02x%02x%02x", r, g, b)
 end
 
