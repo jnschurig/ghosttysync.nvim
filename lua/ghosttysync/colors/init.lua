@@ -48,6 +48,7 @@ if term_colors and term_colors.colors then
 end
 
 term_colors = vim.tbl_deep_extend("keep", term_colors or {}, default_term_colors)
+local palette = term_colors.colors.palette
 
 local background_match = functions.closest_color_match(term_colors.colors.background, { pure_black, pure_white })
 local color_mod_direction = -1
@@ -85,13 +86,13 @@ local standard_invert_adjustment = 1 + (value_adjustment_scale * color_mod_direc
 local colors = {
 	---main colors
 	main = {
-		red = functions.closest_color_match(pure_red, term_colors.colors.palette),
-		green = functions.closest_color_match(pure_green, term_colors.colors.palette),
-		yellow = functions.closest_color_match(pure_yellow, term_colors.colors.palette),
-		blue = functions.closest_color_match(pure_blue, term_colors.colors.palette),
-		purple = functions.closest_color_match(pure_purple, term_colors.colors.palette),
-		cyan = functions.closest_color_match(pure_cyan, term_colors.colors.palette),
-		orange = functions.closest_color_match(pure_orange, term_colors.colors.palette),
+		red = functions.closest_color_match(pure_red, palette),
+		green = functions.closest_color_match(pure_green, palette),
+		yellow = functions.closest_color_match(pure_yellow, palette),
+		blue = functions.closest_color_match(pure_blue, palette),
+		purple = functions.closest_color_match(pure_purple, palette),
+		cyan = functions.closest_color_match(pure_cyan, palette),
+		orange = functions.closest_color_match(pure_orange, palette),
 	},
 }
 
@@ -146,7 +147,7 @@ colors.main.paleblue = functions.adjust_color_value(colors.main.blue, standard_i
 -- term_colors.colors.palette.insert(term_colors.colors.selection_bg)
 -- term_colors.colors.palette.insert(term_colors.colors.selection_fg)
 --
-term_colors.colors.palette = vim.tbl_extend(
+palette = vim.tbl_extend(
   "keep",
   term_colors.colors.palette,
   {
@@ -159,9 +160,9 @@ term_colors.colors.palette = vim.tbl_extend(
   }
 )
 
-colors.main.gray = functions.closest_color_match(pure_gray, term_colors.colors.palette)
-colors.main.white = functions.closest_color_match(pure_white, term_colors.colors.palette)
-colors.main.black = functions.closest_color_match(pure_black, term_colors.colors.palette)
+colors.main.gray = functions.closest_color_match(pure_gray, palette)
+colors.main.white = functions.closest_color_match(pure_white, palette)
+colors.main.black = functions.closest_color_match(pure_black, palette)
 
 ---colors applied to the editor
 colors.editor = {
@@ -271,6 +272,8 @@ colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 
 --   print("new cursor line: " .. colors.backgrounds.cursor_line)
 --   print("new comment: " .. colors.syntax.comments)
 -- end
+
+term_colors.colors.palette = palette
 
 print("--- term_colors.colors ---")
 functions.print_colors(term_colors.colors)
