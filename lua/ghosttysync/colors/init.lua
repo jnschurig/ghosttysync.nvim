@@ -5,17 +5,17 @@ local termcolor = require("ghosttysync.colors.ghosttyconfig")
 -- local adjust_color_value = require("ghosttysync.functions.functions.adjust_color_value")
 local functions = require("ghosttysync.functions")
 
-local pure_red    = "#ff0000"
-local pure_green  = "#00ff00"
-local pure_blue   = "#0000ff"
-local pure_cyan   = "#00ffff"
+local pure_red = "#ff0000"
+local pure_green = "#00ff00"
+local pure_blue = "#0000ff"
+local pure_cyan = "#00ffff"
 local pure_yellow = "#ffff00"
 local pure_purple = "#8000ff"
 local pure_orange = "#ff8000"
 -- local pure_pink   = "#ff00ff"
-local pure_white  = "#ffffff"
-local pure_black  = "#000000"
-local pure_gray   = "#808080"
+local pure_white = "#ffffff"
+local pure_black = "#000000"
+local pure_gray = "#808080"
 
 local default_term_colors = {
 	name = "pure_dark",
@@ -30,16 +30,25 @@ local default_term_colors = {
 			pure_cyan,
 			pure_white,
 		},
-		background   = pure_black,
-		foreground   = pure_white,
+		background = pure_black,
+		foreground = pure_white,
 		cursor_color = pure_white,
-		cursor_text  = pure_black,
+		cursor_text = pure_black,
 		selection_foreground = pure_black,
 		selection_background = pure_gray,
 	},
 }
 
-local term_colors, _ = termcolor.get_theme_info()
+local term_colors, term_color_error = termcolor.get_theme_info()
+
+if term_color_error then
+	print("Error: " .. term_color_error)
+	term_colors = default_term_colors
+end
+
+if term_colors and term_colors.colors then
+	term_colors.colors = functions.check_colors(term_colors.colors)
+end
 
 term_colors = vim.tbl_deep_extend("keep", term_colors or {}, default_term_colors)
 
@@ -74,12 +83,12 @@ local value_adjustment_scale = 0.25
 local colors = {
 	---main colors
 	main = {
-		red    = functions.closest_color_match(pure_red   , term_colors.colors.palette),
-		green  = functions.closest_color_match(pure_green , term_colors.colors.palette),
+		red = functions.closest_color_match(pure_red, term_colors.colors.palette),
+		green = functions.closest_color_match(pure_green, term_colors.colors.palette),
 		yellow = functions.closest_color_match(pure_yellow, term_colors.colors.palette),
-		blue   = functions.closest_color_match(pure_blue  , term_colors.colors.palette),
+		blue = functions.closest_color_match(pure_blue, term_colors.colors.palette),
 		purple = functions.closest_color_match(pure_purple, term_colors.colors.palette),
-		cyan   = functions.closest_color_match(pure_cyan  , term_colors.colors.palette),
+		cyan = functions.closest_color_match(pure_cyan, term_colors.colors.palette),
 		orange = functions.closest_color_match(pure_orange, term_colors.colors.palette),
 	},
 }
@@ -103,14 +112,21 @@ end
 -- end
 -- print("new cyan: " .. colors.main.cyan)
 
-colors.main.darkred    = functions.adjust_color_value(colors.main.red   , 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkgreen  = functions.adjust_color_value(colors.main.green , 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkyellow = functions.adjust_color_value(colors.main.yellow, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkblue   = functions.adjust_color_value(colors.main.blue  , 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkcyan   = functions.adjust_color_value(colors.main.cyan  , 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkpurple = functions.adjust_color_value(colors.main.purple, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkorange = functions.adjust_color_value(colors.main.orange, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.paleblue   = functions.adjust_color_value(colors.main.blue  , 1 + (value_adjustment_scale * color_mod_direction * -1))
+colors.main.darkred = functions.adjust_color_value(colors.main.red, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkgreen =
+	functions.adjust_color_value(colors.main.green, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkyellow =
+	functions.adjust_color_value(colors.main.yellow, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkblue =
+	functions.adjust_color_value(colors.main.blue, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkcyan =
+	functions.adjust_color_value(colors.main.cyan, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkpurple =
+	functions.adjust_color_value(colors.main.purple, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkorange =
+	functions.adjust_color_value(colors.main.orange, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.paleblue =
+	functions.adjust_color_value(colors.main.blue, 1 + (value_adjustment_scale * color_mod_direction * -1))
 
 -- print("red: " .. colors.main.red)
 -- print("green: " .. colors.main.green)
@@ -149,10 +165,10 @@ colors.editor = {
 
 ---lsp colors
 colors.lsp = {
-	error   = colors.main.red,
-  warning = colors.main.yellow,
-  info    = colors.main.paleblue,
-  hint    = colors.main.purple,
+	error = colors.main.red,
+	warning = colors.main.yellow,
+	info = colors.main.paleblue,
+	hint = colors.main.purple,
 }
 
 colors.syntax = {}
@@ -177,36 +193,40 @@ colors.backgrounds = {}
 -- }
 
 ---editor colors
-colors.editor.bg           = term_colors.colors.background
-colors.editor.bg_alt       = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
-colors.editor.fg           = term_colors.colors.foreground
-colors.editor.fg_dark      = functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
-colors.editor.selection    = term_colors.colors.selection_background
+colors.editor.bg = term_colors.colors.background
+colors.editor.bg_alt =
+	functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
+colors.editor.fg = term_colors.colors.foreground
+colors.editor.fg_dark =
+	functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
+colors.editor.selection = term_colors.colors.selection_background
 -- colors.editor.selection    = selection_background_color
-colors.editor.contrast     = functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
-colors.editor.active       = colors.editor.selection -- similar to selection
-colors.editor.border       = functions.adjust_color_value(colors.editor.selection, 0.75) -- slightly darker than active
+colors.editor.contrast =
+	functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
+colors.editor.active = colors.editor.selection -- similar to selection
+colors.editor.border = functions.adjust_color_value(colors.editor.selection, 0.75) -- slightly darker than active
 colors.editor.line_numbers = colors.editor.border -- about the same as border
-colors.editor.highlight    = colors.editor.selection
-colors.editor.disabled     = functions.adjust_color_value(colors.editor.highlight, 1 + (value_adjustment_scale * color_mod_direction * -1)) -- lighter than highlight
-colors.editor.accent       = colors.main.purple
-colors.editor.none         = "NONE"
+colors.editor.highlight = colors.editor.selection
+colors.editor.disabled =
+	functions.adjust_color_value(colors.editor.highlight, 1 + (value_adjustment_scale * color_mod_direction * -1)) -- lighter than highlight
+colors.editor.accent = colors.main.purple
+colors.editor.none = "NONE"
 
 ---syntax colors
-colors.syntax.comments  = colors.main.gray
-colors.syntax.variable  = colors.editor.fg
-colors.syntax.field     = colors.editor.fg
-colors.syntax.keyword   = colors.main.purple
-colors.syntax.value     = colors.main.orange
-colors.syntax.operator  = colors.main.cyan
-colors.syntax.fn        = colors.main.blue
+colors.syntax.comments = colors.main.gray
+colors.syntax.variable = colors.editor.fg
+colors.syntax.field = colors.editor.fg
+colors.syntax.keyword = colors.main.purple
+colors.syntax.value = colors.main.orange
+colors.syntax.operator = colors.main.cyan
+colors.syntax.fn = colors.main.blue
 colors.syntax.parameter = colors.main.paleblue
-colors.syntax.string    = colors.main.green
-colors.syntax.type      = colors.main.purple
+colors.syntax.string = colors.main.green
+colors.syntax.type = colors.main.purple
 
 ---git colors
-colors.git.added    = colors.main.green
-colors.git.removed  = colors.main.red
+colors.git.added = colors.main.green
+colors.git.removed = colors.main.red
 colors.git.modified = colors.main.yellow
 
 ---contrasted backgrounds
@@ -214,7 +234,8 @@ colors.backgrounds.sidebars = colors.editor.bg
 colors.backgrounds.floating_windows = colors.editor.bg
 colors.backgrounds.non_current_windows = colors.editor.bg
 colors.backgrounds.bg_blend = colors.editor.bg
-colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
+colors.backgrounds.cursor_line =
+	functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
 
 -- adjustments as needed
 -- local selection_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.editor.selection)

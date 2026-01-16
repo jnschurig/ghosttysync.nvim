@@ -86,6 +86,19 @@ local function linearize_rgb(floating_point_value)
 	return ((floating_point_value + 0.055) / 1.055) ^ 2.4
 end
 
+local function invert_hue(rgb_number)
+	return (1 - (rgb_number / 255)) * 255
+end
+
+local function invert_color(color)
+	local rgb = hex_to_rgb(color)
+	local r = invert_hue(rgb[1])
+	local g = invert_hue(rgb[2])
+	local b = invert_hue(rgb[3])
+
+	return rgb_to_hex(r, g, b)
+end
+
 M.color_diff = function(color1, color2)
 	return hex_color_diff(color1, color2)
 end
@@ -163,6 +176,28 @@ end
 
 M.darken = function(color, amount, bg)
 	return M.blend(color, bg or "#000000", amount)
+end
+
+M.check_colors = function(color_table)
+	if color_table.background == nil and color_table.foreground ~= nil then
+		color_table.background = invert_color(color_table.foreground)
+	end
+	if color_table.background ~= nil and color_table.foreground == nil then
+		color_table.foreground = invert_color(color_table.background)
+	end
+	if color_table.selection_background == nil and color_table.selection_foreground ~= nil then
+		color_table.selection_background = invert_color(color_table.selection_foreground)
+	end
+	if color_table.selection_background ~= nil and color_table.selection_foreground == nil then
+		color_table.selection_foreground = invert_color(color_table.selection_background)
+	end
+	if color_table.cursor_color == nil and color_table.cursor_text ~= nil then
+		color_table.cursor_color = invert_color(color_table.cursor_text)
+	end
+	if color_table.cursor_color ~= nil and color_table.cursor_text == nil then
+		color_table.cursor_text = invert_color(color_table.cursor_color)
+	end
+	return color_table
 end
 
 return M
