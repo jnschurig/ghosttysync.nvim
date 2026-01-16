@@ -75,11 +75,11 @@ local value_adjustment_scale = 0.25
 -- local selection_benchmark_value = 50 -- 30 to 40 is pretty much perfect.
 
 local selection_contrast = functions.contrast_ratio(term_colors.colors.selection_background, term_colors.colors.background)
-print("selection_background: " .. term_colors.colors.selection_background)
-print("lum selection_background: " .. functions.relative_luminance(term_colors.colors.selection_background))
-print("background: " .. term_colors.colors.background)
-print("lum background: " .. functions.relative_luminance(term_colors.colors.background))
-print("contrast ratio: " .. selection_contrast)
+-- print("selection_background: " .. term_colors.colors.selection_background)
+-- print("lum selection_background: " .. functions.relative_luminance(term_colors.colors.selection_background))
+-- print("background: " .. term_colors.colors.background)
+-- print("lum background: " .. functions.relative_luminance(term_colors.colors.background))
+-- print("contrast ratio: " .. selection_contrast)
 
 local selection_benchmark_value = 170
 
