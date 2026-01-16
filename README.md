@@ -8,7 +8,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
-  "your-username/ghosttysync",
+  "jnschurig/ghosttysync.nvim",
   config = function()
     require("ghosttysync").setup()
   end
@@ -18,16 +18,28 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 ## Configuration
 
 ```lua
-require("ghosttysync").setup({
-  -- Enable automatic theme sync on startup (default: true)
-  auto_sync = true,
-  
-  -- Cache timeout in seconds (default: 30)
-  cache_timeout = 30,
-  
-  -- Enable debug logging (default: false)
-  debug = false,
-})
+return {
+  "jnschurig/ghosttysync.nvim",
+  branch = "v0.1",
+  lazy = false,
+  priority = 1001,
+  config = function()
+    require("ghosttysync").setup({
+      disable = {
+        background = false,
+      },
+      plugins = {
+        -- "neo-tree",
+      },
+      styles = {
+        comments = {},
+        functions = { bold = true },
+        strings = { italic = true },
+      },
+    })
+    vim.cmd.colorscheme("ghosttysync")
+  end,
+}
 ```
 
 ## Usage
