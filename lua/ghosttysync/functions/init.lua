@@ -233,8 +233,13 @@ M.raise_contrast = function(color, reference_color, contrast_threshold)
 		else
 			adjustment_factor = 1 / contrast_ratio
 		end
-
-		return M.adjust_luminance(color, adjustment_factor)
+		-- this is recursive now...
+		local new_color = M.adjust_luminance(color, adjustment_factor)
+		if M.contrast_ratio(color, new_color) < contrast_threshold then
+			new_color = M.raise_contrast(new_color, reference_color, contrast_threshold)
+		end
+		-- return M.adjust_luminance(color, adjustment_factor)
+		return new_color
 	end
 
 	return color
