@@ -206,9 +206,8 @@ colors.backgrounds.sidebars = colors.editor.bg
 colors.backgrounds.floating_windows = colors.editor.bg
 colors.backgrounds.non_current_windows = colors.editor.bg
 colors.backgrounds.bg_blend = colors.editor.bg
-colors.backgrounds.cursor_line = pure_black
 -- colors.backgrounds.cursor_line = colors.editor.active
--- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
+colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
 -- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 0.75)
 
 -- adjustments as needed
