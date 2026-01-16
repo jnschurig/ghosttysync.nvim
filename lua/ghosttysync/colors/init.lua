@@ -74,22 +74,22 @@ end
 local value_adjustment_scale = 0.25
 -- local selection_benchmark_value = 50 -- 30 to 40 is pretty much perfect.
 
-local selection_contrast = functions.contrast_ratio(term_colors.colors.selection_background, term_colors.colors.background)
+-- local selection_contrast = functions.contrast_ratio(term_colors.colors.selection_background, term_colors.colors.background)
 -- print("selection_background: " .. term_colors.colors.selection_background)
 -- print("lum selection_background: " .. functions.relative_luminance(term_colors.colors.selection_background))
 -- print("background: " .. term_colors.colors.background)
 -- print("lum background: " .. functions.relative_luminance(term_colors.colors.background))
 -- print("contrast ratio: " .. selection_contrast)
 
-local selection_benchmark_value = 170
-
-local selection_background_diff =
-	functions.color_diff(term_colors.colors.foreground, term_colors.colors.selection_background)
-
-local selection_adjustment_ratio = 1
-	- ((selection_benchmark_value - selection_background_diff) / 255 * color_mod_direction * -1)
-local selection_background_color =
-	functions.adjust_color_value(term_colors.colors.selection_background, selection_adjustment_ratio)
+-- local selection_benchmark_value = 170
+--
+-- local selection_background_diff =
+-- 	functions.color_diff(term_colors.colors.foreground, term_colors.colors.selection_background)
+--
+-- local selection_adjustment_ratio = 1
+-- 	- ((selection_benchmark_value - selection_background_diff) / 255 * color_mod_direction * -1)
+-- local selection_background_color =
+-- 	functions.adjust_color_value(term_colors.colors.selection_background, selection_adjustment_ratio)
 
 ---colors table
 local colors = {
