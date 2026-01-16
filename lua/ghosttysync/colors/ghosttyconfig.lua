@@ -137,9 +137,9 @@ end
 
 -- Extract theme information from parsed configuration
 function M.extract_theme_info(config)
-	-- if not config or type(config) ~= "table" then
-	--   return nil, "Invalid or empty configuration provided"
-	-- end
+	if not config or type(config) ~= "table" then
+	  return nil, "Invalid or empty configuration provided"
+	end
 
 	local theme_info = {
     name = config["theme"],
@@ -159,47 +159,7 @@ function M.extract_theme_info(config)
     },
 	}
 
-	-- Extract theme name
-
-	-- Extract and normalize basic colors (only the specified ones)
-	-- local background = config.background
-	-- local foreground = config.foreground or "#ffffff" -- Some themes don't set this correctly.
-
-	-- if background then
-	-- 	theme_info.colors.background = background
-	-- end
-	-- if foreground then
-	-- 	theme_info.colors.foreground = foreground
-	-- end
-	-- Extract selection colors if available
-	-- local selection_bg = (config.selection_background or config["selection-background"])
-	-- local selection_fg = (config.selection_foreground or config["selection-foreground"])
-
-	-- if selection_bg then
-	-- 	theme_info.colors.selection_background = selection_bg
-	-- end
-	-- if selection_fg then
-	-- 	theme_info.colors.selection_foreground = selection_fg
-	-- end
-	-- local cursor_color = config["cursor-color"]
-	-- local cursor_text  = config["cursor-text"]
-
-	-- theme_info.colors.cursor_color = cursor_color
-	-- theme_info.colors.cursor_text = cursor_text
-	-- theme_info.name = config["theme"]
-	--
-	-- theme_info.colors.background = config["background"]
-	-- theme_info.colors.foreground = config["foreground"]
-	--
-	-- theme_info.colors.selection_bg = config["selection-background"]
-	-- theme_info.colors.selection_fg = config["selection-foreground"]
-	--
-	-- theme_info.colors.cursor_color = config["cursor-color"]
-	-- theme_info.colors.cursor_text  = config["cursor-text"]
-
-	-- Extract terminal color palette (ONLY colors 0-15)
 	-- Ghostty uses format: palette = N=#color
-
 	-- Process palette entries from the special palette_entries array
 	if config.palette_entries then
 		for idx, color in ipairs(config.palette_entries) do
@@ -207,30 +167,9 @@ function M.extract_theme_info(config)
 				theme_info.colors.palette[idx] = color
 			end
 		end
-
-		-- for _, entry in ipairs(config.palette_entries) do
-		-- 	local color_num, color_value = entry:match("^(%d+)=(.+)$")
-		-- 	if color_num and color_value then
-		-- 		local num = tonumber(color_num)
-		-- 		-- ONLY extract standard terminal colors (0-15), ignore 256-color palette
-		-- 		if num and num >= 0 and num <= 15 then
-		-- 			local normalized = color_value
-		-- 			if normalized then
-		-- 				palette[num] = normalized
-		-- 			end
-		-- 		end
-		-- 		-- Explicitly ignore colors 16-255
-		-- 	end
-		-- end
 	end
 
-	-- If we have palette colors, add them to theme info
-	-- if next(palette) then
-	-- if #palette > 0 then
-	-- 	theme_info.colors.palette = palette
-	-- end
-
-	-- Validate that we have at least basic colors
+	-- Validate that we have detected the theme name at least.
 	if not theme_info.name then
 		return nil, "No basic color information found in configuration"
 	end

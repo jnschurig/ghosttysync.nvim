@@ -11,14 +11,12 @@
 --        \/__/         \/__/
 --
 -- Colorscheme name:        ghosttysync.nvim
--- Description:             Colorscheme for NeoVim based on the ghosttysync pallete
--- Author:                  Marko Cerovac -> marko.cerovac16@gmail.com
--- Website:                 https://github.com/marko-cerovac/ghosttysync.nvim
+-- Description:             Dynamic colorscheme for NeoVim based on the current Ghostty terminal theme
+-- Author:                  James Schurig -> jnschurig@gmail.com
+-- Website:                 https://github.com/jnschurig/ghosttysync.nvim
 
 local M = {}
 
 M.setup = require("ghosttysync.util.config").setup
-
--- M = vim.tbl_extend("keep", M, require "ghosttysync.functions")
 
 return M

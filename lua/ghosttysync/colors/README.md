@@ -37,3 +37,8 @@ files:
  Used for applying colors that depend on the user config.
  Also, this is the module that goes trough the contrast table
  and applies the darker backgrounds.
+
+ ## ghosttyconfig.lua
+ Used for fetching terminal colors as reported by the Ghostty api command
+ `ghostty +show-config`. This command runs in other terminal emulators as well,
+ so long as Ghostty is installed, configured, and is in the active Path.
