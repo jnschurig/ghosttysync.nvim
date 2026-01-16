@@ -224,6 +224,8 @@ if active_contrast_ratio >= 5 then
   colors.editor.active = functions.adjust_luminace(colors.editor.active, active_adjustment)
 end
 
+print("active: " .. (colors.editor.active or "none"))
+
 -- local selection_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.editor.selection)
 -- local foreground_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.Comments, colors.editor.fg)
 -- local selection_fg_contrast_ratio = functions.contrast_ratio(colors.editor.fg, colors.editor.selection)
