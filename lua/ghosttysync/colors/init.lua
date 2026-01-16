@@ -34,8 +34,8 @@ local default_term_colors = {
 		foreground = pure_white,
 		cursor_color = pure_white,
 		cursor_text = pure_black,
-		selection_foreground = pure_black,
-		selection_background = pure_gray,
+		selection_fg = pure_black,
+		selection_bg = pure_gray,
 	},
 }
 
@@ -64,22 +64,22 @@ end
 local value_adjustment_scale = 0.25
 -- local selection_benchmark_value = 50 -- 30 to 40 is pretty much perfect.
 
--- local selection_contrast = functions.contrast_ratio(term_colors.colors.selection_background, term_colors.colors.background)
--- print("selection_background: " .. term_colors.colors.selection_background)
--- print("lum selection_background: " .. functions.relative_luminance(term_colors.colors.selection_background))
+-- local selection_contrast = functions.contrast_ratio(term_colors.colors.selection_bg, term_colors.colors.background)
+-- print("selection_bg: " .. term_colors.colors.selection_bg)
+-- print("lum selection_bg: " .. functions.relative_luminance(term_colors.colors.selection_bg))
 -- print("background: " .. term_colors.colors.background)
 -- print("lum background: " .. functions.relative_luminance(term_colors.colors.background))
 -- print("contrast ratio: " .. selection_contrast)
 
 -- local selection_benchmark_value = 170
 --
--- local selection_background_diff =
--- 	functions.color_diff(term_colors.colors.foreground, term_colors.colors.selection_background)
+-- local selection_bg_diff =
+-- 	functions.color_diff(term_colors.colors.foreground, term_colors.colors.selection_bg)
 --
 -- local selection_adjustment_ratio = 1
--- 	- ((selection_benchmark_value - selection_background_diff) / 255 * color_mod_direction * -1)
--- local selection_background_color =
--- 	functions.adjust_color_value(term_colors.colors.selection_background, selection_adjustment_ratio)
+-- 	- ((selection_benchmark_value - selection_bg_diff) / 255 * color_mod_direction * -1)
+-- local selection_bg_color =
+-- 	functions.adjust_color_value(term_colors.colors.selection_bg, selection_adjustment_ratio)
 
 ---colors table
 local colors = {
@@ -150,8 +150,8 @@ term_colors.colors.palette[17] = term_colors.colors.foreground
 term_colors.colors.palette[18] = term_colors.colors.background
 term_colors.colors.palette[19] = term_colors.colors.cursor_color
 term_colors.colors.palette[20] = term_colors.colors.cursor_text
-term_colors.colors.palette[21] = term_colors.colors.selection_background
-term_colors.colors.palette[22] = term_colors.colors.selection_foreground
+term_colors.colors.palette[21] = term_colors.colors.selection_bg
+term_colors.colors.palette[22] = term_colors.colors.selection_fg
 
 colors.main.gray = functions.closest_color_match(pure_gray, term_colors.colors.palette)
 colors.main.white = functions.closest_color_match(pure_white, term_colors.colors.palette)
@@ -183,8 +183,8 @@ colors.backgrounds = {}
 --     background = "#1c1c1c",
 --     cursor_color = "#eeeeee",
 --     cursor_text = "#1c1c1c",
---     selection_background = "#444444",
---     selection_foreground = "#ffffff",
+--     selection_bg = "#444444",
+--     selection_fg = "#ffffff",
 --   },
 --   palette = {
 --     "#000000", "#cd3131", "#0dbc79", "#e5e510",
@@ -201,8 +201,8 @@ colors.editor.bg_alt =
 colors.editor.fg = term_colors.colors.foreground
 colors.editor.fg_dark =
 	functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
-colors.editor.selection = term_colors.colors.selection_background
--- colors.editor.selection    = selection_background_color
+colors.editor.selection = term_colors.colors.selection_bg
+-- colors.editor.selection    = selection_bg_color
 colors.editor.contrast =
 	functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
 colors.editor.active = colors.editor.selection -- similar to selection
@@ -242,7 +242,7 @@ colors.backgrounds.cursor_line =
 -- adjustments as needed
 -- local selection_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.editor.selection)
 -- local foreground_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.Comments, colors.editor.fg)
--- local selection_foreground_contrast_ratio = functions.contrast_ratio(colors.editor.fg, colors.editor.selection)
+-- local selection_fg_contrast_ratio = functions.contrast_ratio(colors.editor.fg, colors.editor.selection)
 -- local comment_lum = functions.relative_luminance(colors.syntax.comments)
 -- local selection_lum = functions.relative_luminance(colors.editor.selection)
 -- local fg_lum = functions.relative_luminance(colors.editor.fg)
@@ -260,7 +260,7 @@ colors.backgrounds.cursor_line =
 -- print("fg: " .. colors.editor.fg .. " | luminance: " .. fg_lum)
 -- print("comments vs selection contrast ratio: " .. selection_comment_contrast_ratio)
 -- print("comments vs foreground contrast ratio: " .. foreground_comment_contrast_ratio)
--- print("foreground vs selection contrast ratio: " .. selection_foreground_contrast_ratio)
+-- print("foreground vs selection contrast ratio: " .. selection_fg_contrast_ratio)
 
 -- if cursor_line_comment_color_diff < 50 then
 --   -- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.backgrounds.cursor_line, 1 + (cursor_line_comment_color_diff / 50 * color_mod_direction * -1))

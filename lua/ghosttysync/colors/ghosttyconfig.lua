@@ -147,8 +147,8 @@ function M.extract_theme_info(config)
       background = config["background"],
       foreground = config["foreground"],
 
-      selection_background = config["selection-background"],
-      selection_foreground = config["selection-foreground"],
+      selection_bg = config["selection-background"],
+      selection_fg = config["selection-foreground"],
 
       cursor_color = config["cursor-color"],
       cursor_text  = config["cursor-text"],
