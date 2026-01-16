@@ -216,8 +216,6 @@ colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 
 
 -- adjustments as needed
 
-print("active: " .. colors.editor.active)
-
 -- local selection_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.editor.selection)
 -- local foreground_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.Comments, colors.editor.fg)
 -- local selection_fg_contrast_ratio = functions.contrast_ratio(colors.editor.fg, colors.editor.selection)
