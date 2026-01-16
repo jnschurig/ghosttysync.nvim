@@ -52,6 +52,14 @@ end
 
 local value_adjustment_scale = 0.25
 -- local selection_benchmark_value = 50 -- 30 to 40 is pretty much perfect.
+
+local selection_contrast = functions.contrast_ratio(term_colors.colors.selection_background, term_colors.colors.background)
+print("selection_background: " .. term_colors.colors.selection_background)
+print("lum selection_background: " .. functions.relative_luminance(term_colors.colors.selection_background))
+print("background: " .. term_colors.colors.background)
+print("lum background: " .. functions.relative_luminance(term_colors.colors.background))
+print("selection_contrast: " .. selection_contrast)
+
 local selection_benchmark_value = 170
 
 local selection_background_diff =
@@ -169,36 +177,36 @@ colors.backgrounds = {}
 -- }
 
 ---editor colors
-colors.editor.bg = term_colors.colors.background
-colors.editor.bg_alt = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
-colors.editor.fg = term_colors.colors.foreground
-colors.editor.fg_dark = functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
--- colors.editor.selection = term_colors.colors.selection_background
-colors.editor.selection = selection_background_color
-colors.editor.contrast = functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
-colors.editor.active = colors.editor.selection -- similar to selection
-colors.editor.border = functions.adjust_color_value(colors.editor.selection, 0.75) -- slightly darker than active
+colors.editor.bg           = term_colors.colors.background
+colors.editor.bg_alt       = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
+colors.editor.fg           = term_colors.colors.foreground
+colors.editor.fg_dark      = functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
+-- colors.editor.selection    = term_colors.colors.selection_background
+colors.editor.selection    = selection_background_color
+colors.editor.contrast     = functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
+colors.editor.active       = colors.editor.selection -- similar to selection
+colors.editor.border       = functions.adjust_color_value(colors.editor.selection, 0.75) -- slightly darker than active
 colors.editor.line_numbers = colors.editor.border -- about the same as border
-colors.editor.highlight = colors.editor.selection
-colors.editor.disabled = functions.adjust_color_value(colors.editor.highlight, 1 + (value_adjustment_scale * color_mod_direction * -1)) -- lighter than highlight
-colors.editor.accent = colors.main.purple
-colors.editor.none = "NONE"
+colors.editor.highlight    = colors.editor.selection
+colors.editor.disabled     = functions.adjust_color_value(colors.editor.highlight, 1 + (value_adjustment_scale * color_mod_direction * -1)) -- lighter than highlight
+colors.editor.accent       = colors.main.purple
+colors.editor.none         = "NONE"
 
 ---syntax colors
-colors.syntax.comments = colors.main.gray
-colors.syntax.variable = colors.editor.fg
-colors.syntax.field = colors.editor.fg
-colors.syntax.keyword = colors.main.purple
-colors.syntax.value = colors.main.orange
-colors.syntax.operator = colors.main.cyan
-colors.syntax.fn = colors.main.blue
+colors.syntax.comments  = colors.main.gray
+colors.syntax.variable  = colors.editor.fg
+colors.syntax.field     = colors.editor.fg
+colors.syntax.keyword   = colors.main.purple
+colors.syntax.value     = colors.main.orange
+colors.syntax.operator  = colors.main.cyan
+colors.syntax.fn        = colors.main.blue
 colors.syntax.parameter = colors.main.paleblue
-colors.syntax.string = colors.main.green
-colors.syntax.type = colors.main.purple
+colors.syntax.string    = colors.main.green
+colors.syntax.type      = colors.main.purple
 
 ---git colors
-colors.git.added = colors.main.green
-colors.git.removed = colors.main.red
+colors.git.added    = colors.main.green
+colors.git.removed  = colors.main.red
 colors.git.modified = colors.main.yellow
 
 ---contrasted backgrounds
@@ -206,10 +214,7 @@ colors.backgrounds.sidebars = colors.editor.bg
 colors.backgrounds.floating_windows = colors.editor.bg
 colors.backgrounds.non_current_windows = colors.editor.bg
 colors.backgrounds.bg_blend = colors.editor.bg
--- colors.backgrounds.cursor_line = colors.editor.active
--- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
-colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 - value_adjustment_scale)
--- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 0.75)
+colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
 
 -- adjustments as needed
 -- local selection_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.editor.selection)
