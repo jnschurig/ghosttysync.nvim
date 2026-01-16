@@ -81,27 +81,45 @@ function M.parse_config_output(output)
 	for _, line in ipairs(lines) do
 		-- Skip empty lines and comments
 		line = trim_string(line)
-		if line ~= "" and not line:match("^#") and not line:match("^%s*$") then
-			-- Parse key = value format
-			local key, value = line:match("^([^=]+)%s*=%s*(.*)$")
-			if key and value then
-				key = trim_string(key)
-				value = trim_string(value)
+		local line_parts = split_string(line, " = ")
+		local key = line_parts[1]
+		local value = line_parts[2]
 
-				-- Remove quotes from values if present
-				value = value:gsub("^[\"'](.+)[\"']$", "%1")
+		if key == "palette" then
+			local color_parts = split_string(value, "=")
+			local color_idx = tonumber(color_parts[1])
+			local color_str = color_parts[2]
 
-				-- Only add non-empty values
-				if value ~= "" then
-					-- Special handling for palette entries
-					if key == "palette" then
-						table.insert(palette_entries, value)
-					else
-						config[key] = value
-					end
-				end
+			if color_str ~= nil and color_idx ~= nil then
+				palette_entries[color_idx] = color_str
+			end
+		else
+			if key ~= nil and value ~= nil then
+				config[key] = value
 			end
 		end
+
+		-- if line ~= "" and not line:match("^#") and not line:match("^%s*$") then
+		-- 	-- Parse key = value format
+		-- 	local key, value = line:match("^([^=]+)%s*=%s*(.*)$")
+		-- 	if key and value then
+		-- 		key = trim_string(key)
+		-- 		value = trim_string(value)
+		--
+		-- 		-- Remove quotes from values if present
+		-- 		value = value:gsub("^[\"'](.+)[\"']$", "%1")
+		--
+		-- 		-- Only add non-empty values
+		-- 		if value ~= "" then
+		-- 			-- Special handling for palette entries
+		-- 			if key == "palette" then
+		-- 				table.insert(palette_entries, value)
+		-- 			else
+		-- 				config[key] = value
+		-- 			end
+		-- 		end
+		-- 	end
+		-- end
 	end
 
 	-- Add palette entries to config
@@ -124,12 +142,22 @@ function M.extract_theme_info(config)
 	-- end
 
 	local theme_info = {
-		name = nil,
-		colors = {},
+    name = config["theme"],
+		colors = {
+      background = config["background"],
+      foreground = config["foreground"],
+
+      selection_bg = config["selection-background"],
+      selection_fg = config["selection-foreground"],
+
+      cursor_color = config["cursor-color"],
+      cursor_text  = config["cursor-text"],
+
+      palette = {},
+    },
 	}
 
 	-- Extract theme name
-	theme_info.name = config.theme or "unknown"
 
 	-- Extract and normalize basic colors (only the specified ones)
 	-- local background = config.background
@@ -156,42 +184,49 @@ function M.extract_theme_info(config)
 
 	-- theme_info.colors.cursor_color = cursor_color
 	-- theme_info.colors.cursor_text = cursor_text
-
-	theme_info.colors.background = config.background or config["background"]
-	theme_info.colors.foreground = config.foreground or config["foreground"]
-
-	theme_info.colors.selection_bg = (config.selection_background or config["selection-background"])
-	theme_info.colors.selection_fg = (config.selection_foreground or config["selection-foreground"])
-
-	theme_info.colors.cursor_color = config["cursor-color"]
-	theme_info.colors.cursor_text = config["cursor-text"]
+	-- theme_info.name = config["theme"]
+	--
+	-- theme_info.colors.background = config["background"]
+	-- theme_info.colors.foreground = config["foreground"]
+	--
+	-- theme_info.colors.selection_bg = config["selection-background"]
+	-- theme_info.colors.selection_fg = config["selection-foreground"]
+	--
+	-- theme_info.colors.cursor_color = config["cursor-color"]
+	-- theme_info.colors.cursor_text  = config["cursor-text"]
 
 	-- Extract terminal color palette (ONLY colors 0-15)
 	-- Ghostty uses format: palette = N=#color
-	local palette = {}
 
 	-- Process palette entries from the special palette_entries array
 	if config.palette_entries then
-		for _, entry in ipairs(config.palette_entries) do
-			local color_num, color_value = entry:match("^(%d+)=(.+)$")
-			if color_num and color_value then
-				local num = tonumber(color_num)
-				-- ONLY extract standard terminal colors (0-15), ignore 256-color palette
-				if num and num >= 0 and num <= 15 then
-					local normalized = color_value
-					if normalized then
-						palette[num] = normalized
-					end
-				end
-				-- Explicitly ignore colors 16-255
+		for idx, color in ipairs(config.palette_entries) do
+			if idx < 16 and color ~= nil then
+				theme_info.colors.palette[idx] = color
 			end
 		end
+
+		-- for _, entry in ipairs(config.palette_entries) do
+		-- 	local color_num, color_value = entry:match("^(%d+)=(.+)$")
+		-- 	if color_num and color_value then
+		-- 		local num = tonumber(color_num)
+		-- 		-- ONLY extract standard terminal colors (0-15), ignore 256-color palette
+		-- 		if num and num >= 0 and num <= 15 then
+		-- 			local normalized = color_value
+		-- 			if normalized then
+		-- 				palette[num] = normalized
+		-- 			end
+		-- 		end
+		-- 		-- Explicitly ignore colors 16-255
+		-- 	end
+		-- end
 	end
 
 	-- If we have palette colors, add them to theme info
-	if next(palette) then
-		theme_info.colors.palette = palette
-	end
+	-- if next(palette) then
+	-- if #palette > 0 then
+	-- 	theme_info.colors.palette = palette
+	-- end
 
 	-- Validate that we have at least basic colors
 	if not theme_info.name then
