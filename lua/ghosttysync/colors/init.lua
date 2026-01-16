@@ -181,13 +181,13 @@ colors.editor.selection = term_colors.colors.selection_bg
 colors.editor.selection_fg = term_colors.colors.selection_fg
 -- colors.editor.selection    = selection_bg_color
 -- colors.editor.contrast = functions.adjust_color_value(colors.editor.selection, standard_adjustment) -- darker than selection
-colors.editor.active = functions.adjust_luminance_for_contrast(colors.editor.selection, colors.editor.bg, 5) -- similar to selection
+colors.editor.active = functions.lower_contrast(colors.editor.selection, colors.editor.bg, 5) -- similar to selection
 colors.editor.border = functions.adjust_color_value(colors.editor.selection, 0.75)
 colors.editor.line_numbers = colors.editor.border -- about the same as border
 colors.editor.highlight = colors.editor.selection
 colors.editor.disabled = functions.adjust_color_value(colors.editor.highlight, standard_invert_adjustment) -- lighter than highlight
 colors.editor.accent = colors.main.purple
-colors.editor.contrast = functions.adjust_luminance_for_contrast(functions.invert_color(colors.editor.accent), colors.main.accent, 5)
+colors.editor.contrast = functions.raise_contrast(functions.adjust_color_value(colors.editor.accent, standard_adjustment), colors.main.accent, 5)
 colors.editor.none = "NONE"
 
 ---syntax colors
