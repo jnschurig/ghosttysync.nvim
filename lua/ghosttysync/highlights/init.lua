@@ -352,7 +352,8 @@ M.async_highlights.editor = function()
     healthError   = { fg = l.error },
     healthSuccess = { fg = m.green },
     healthWarning = { fg = m.yellow },
-    Visual        = { fg = m.none, bg = e.selection },
+    -- Visual        = { fg = m.none, bg = e.selection },
+    Visual        = { fg = e.selection_fg, bg = e.selection },
     VisualNOS     = { link = "Visual" }, -- Visual mode selection when vim is "Not Owning the Selection".
     Directory     = { fg = m.blue },
     MatchParen    = { fg = m.yellow, bold = true },

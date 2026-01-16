@@ -202,6 +202,7 @@ colors.editor.fg = term_colors.colors.foreground
 colors.editor.fg_dark =
 	functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
 colors.editor.selection = term_colors.colors.selection_bg
+colors.editor.selection_fg = term_colors.colors.selection_fg
 -- colors.editor.selection    = selection_bg_color
 colors.editor.contrast =
 	functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
