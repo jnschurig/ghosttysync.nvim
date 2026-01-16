@@ -365,8 +365,7 @@ M.async_highlights.editor = function()
         CurSearch     = { fg = e.bg, bg = m.yellow, bold = true },
         MoreMsg       = { fg = e.accent },
         Pmenu         = { fg = e.fg, bg = e.border }, -- popup menu
-        -- PmenuSel      = { fg = e.contrast, bg = e.accent }, -- Popup menu: selected item.
-        PmenuSel      = { fg = e.contrast, bg = functions.adjust_color_value(e.bg, 0.75) }, -- Popup menu: selected item.
+        PmenuSel      = { fg = e.contrast, bg = e.accent }, -- Popup menu: selected item.
         PmenuSbar     = { bg = e.active },
         PmenuThumb    = { fg = e.fg },
         WildMenu      = { fg = m.orange, bold = true }, -- current match in 'wildmenu' completion
