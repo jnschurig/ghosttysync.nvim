@@ -134,16 +134,17 @@ colors.main.black = functions.closest_color_match(pure_black, term_colors.colors
 ---colors applied to the editor
 colors.editor = {
 	link = colors.main.cyan,
-	-- cursor = colors.main.yellow,
-	-- cursor_fg = term_colors.colors.selection_foreground,
-	-- TODO: adjust these to be nicer. They work now.
 	cursor = term_colors.colors.cursor_color,
 	cursor_fg = term_colors.colors.cursor_text,
 	title = term_colors.colors.foreground,
 }
 
+---lsp colors
 colors.lsp = {
-	error = colors.main.red,
+	error   = colors.main.red,
+  warning = colors.main.yellow,
+  info    = colors.main.paleblue,
+  hint    = colors.main.purple,
 }
 
 colors.syntax = {}
@@ -179,14 +180,12 @@ colors.editor.active = colors.editor.selection -- similar to selection
 colors.editor.border = functions.adjust_color_value(colors.editor.selection, 0.75) -- slightly darker than active
 colors.editor.line_numbers = colors.editor.border -- about the same as border
 colors.editor.highlight = colors.editor.selection
-colors.editor.disabled =
-	functions.adjust_color_value(colors.editor.highlight, 1 + (value_adjustment_scale * color_mod_direction * -1)) -- lighter than highlight
+colors.editor.disabled = functions.adjust_color_value(colors.editor.highlight, 1 + (value_adjustment_scale * color_mod_direction * -1)) -- lighter than highlight
 colors.editor.accent = colors.main.purple
 colors.editor.none = "NONE"
-colors.syntax.comments = colors.main.gray -- use main.gray
--- colors.syntax.comments = term_colors.colors.selection_foreground
 
 ---syntax colors
+colors.syntax.comments = colors.main.gray
 colors.syntax.variable = colors.editor.fg
 colors.syntax.field = colors.editor.fg
 colors.syntax.keyword = colors.main.purple
@@ -202,18 +201,13 @@ colors.git.added = colors.main.green
 colors.git.removed = colors.main.red
 colors.git.modified = colors.main.yellow
 
----lsp colors
-colors.lsp.warning = colors.main.yellow
-colors.lsp.info = colors.main.paleblue
-colors.lsp.hint = colors.main.purple
-
 ---contrasted backgrounds
 colors.backgrounds.sidebars = colors.editor.bg
 colors.backgrounds.floating_windows = colors.editor.bg
 colors.backgrounds.non_current_windows = colors.editor.bg
 colors.backgrounds.bg_blend = colors.editor.bg
+colors.backgrounds.cursor_line = pure_black
 -- colors.backgrounds.cursor_line = colors.editor.active
--- colors.backgrounds.cursor_line = pure_black
 -- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
 -- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 0.75)
 
