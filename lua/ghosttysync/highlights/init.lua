@@ -480,6 +480,7 @@ M.async_highlights.load_lsp = function()
 end
 
 ---function for setting the terminal colors
+-- TODO: Set index colors in the colors table and use those here. It's ridiculous that we are coming up with these again...
 M.load_terminal = function()
   vim.g.terminal_color_0 = m.black
   vim.g.terminal_color_1 = m.darkred
