@@ -160,7 +160,7 @@ M.adjust_luminace = function(color, adjustment_factor)
 	local g = delinearize_rgb(g_lum / 0.7152) * rgb_max
 	local b = delinearize_rgb(b_lum / 0.0722) * rgb_max
 
-	return r + g + b
+	return rgb_to_hex(r, g, b)
 end
 
 M.contrast_ratio = function(color1, color2)

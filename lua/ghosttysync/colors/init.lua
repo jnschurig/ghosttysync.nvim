@@ -257,6 +257,7 @@ print("active: " .. (colors.editor.active or "none"))
 
 term_colors.colors.palette = palette
 
+-- useful for debugging
 -- print("--- term_colors.colors ---")
 -- functions.print_colors(term_colors.colors)
 -- print("--- colors.main ---")
