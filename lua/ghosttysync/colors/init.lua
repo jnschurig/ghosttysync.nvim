@@ -140,12 +140,12 @@ colors.main.paleblue = functions.adjust_color_value(colors.main.blue, standard_i
 -- print("darkorange: " .. colors.main.darkorange)
 -- print("paleblue: " .. colors.main.paleblue)
 
-term_colors.colors.palette[16] = term_colors.colors.foreground
-term_colors.colors.palette[17] = term_colors.colors.background
-term_colors.colors.palette[18] = term_colors.colors.cursor_color
-term_colors.colors.palette[19] = term_colors.colors.cursor_text
-term_colors.colors.palette[20] = term_colors.colors.selection_bg
-term_colors.colors.palette[21] = term_colors.colors.selection_fg
+palette[16] = term_colors.colors.foreground
+palette[17] = term_colors.colors.background
+palette[18] = term_colors.colors.cursor_color
+palette[19] = term_colors.colors.cursor_text
+palette[20] = term_colors.colors.selection_bg
+palette[21] = term_colors.colors.selection_fg
 
 -- palette = vim.tbl_extend(
 --   "keep",
