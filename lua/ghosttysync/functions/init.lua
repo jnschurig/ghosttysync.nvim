@@ -238,7 +238,7 @@ end
 --
 -- 	local contrast_ratio = M.contrast_ratio(color, reference_color)
 -- 	local reference_is_dark = true
--- 	if M.closest_color_match(reference_color, { "#000000", "#ffffff" }) == "#ffffff" then
+-- 	if M.closest_color_match(reference_color, { "#404040", "#ffffff" }) == "#ffffff" then
 -- 		reference_is_dark = false
 -- 	end
 --
