@@ -30,12 +30,12 @@ local default_term_colors = {
 			pure_cyan,
 			pure_white,
 		},
-		background = pure_black,
-		foreground = pure_white,
+		background   = pure_black,
+		foreground   = pure_white,
 		cursor_color = pure_white,
-		cursor_text = pure_black,
+		cursor_text  = pure_black,
 		selection_foreground = pure_black,
-		selection_background = pure_white,
+		selection_background = pure_gray,
 	},
 }
 
@@ -58,7 +58,7 @@ print("selection_background: " .. term_colors.colors.selection_background)
 print("lum selection_background: " .. functions.relative_luminance(term_colors.colors.selection_background))
 print("background: " .. term_colors.colors.background)
 print("lum background: " .. functions.relative_luminance(term_colors.colors.background))
-print("selection_contrast: " .. selection_contrast)
+print("contrast ratio: " .. selection_contrast)
 
 local selection_benchmark_value = 170
 
