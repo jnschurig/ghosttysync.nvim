@@ -115,20 +115,13 @@ end
 -- print("new cyan: " .. colors.main.cyan)
 
 colors.main.darkred = functions.adjust_color_value(colors.main.red, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkgreen =
-	functions.adjust_color_value(colors.main.green, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkyellow =
-	functions.adjust_color_value(colors.main.yellow, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkblue =
-	functions.adjust_color_value(colors.main.blue, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkcyan =
-	functions.adjust_color_value(colors.main.cyan, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkpurple =
-	functions.adjust_color_value(colors.main.purple, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkorange =
-	functions.adjust_color_value(colors.main.orange, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.paleblue =
-	functions.adjust_color_value(colors.main.blue, 1 + (value_adjustment_scale * color_mod_direction * -1))
+colors.main.darkgreen = functions.adjust_color_value(colors.main.green, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkyellow = functions.adjust_color_value(colors.main.yellow, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkblue = functions.adjust_color_value(colors.main.blue, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkcyan = functions.adjust_color_value(colors.main.cyan, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkpurple = functions.adjust_color_value(colors.main.purple, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkorange = functions.adjust_color_value(colors.main.orange, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.paleblue = functions.adjust_color_value(colors.main.blue, 1 + (value_adjustment_scale * color_mod_direction * -1))
 
 -- print("red: " .. colors.main.red)
 -- print("green: " .. colors.main.green)
@@ -196,22 +189,19 @@ colors.backgrounds = {}
 
 ---editor colors
 colors.editor.bg = term_colors.colors.background
-colors.editor.bg_alt =
-	functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
+colors.editor.bg_alt = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
 colors.editor.fg = term_colors.colors.foreground
-colors.editor.fg_dark =
-	functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
+colors.editor.fg_dark = functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
 colors.editor.selection = term_colors.colors.selection_bg
 colors.editor.selection_fg = term_colors.colors.selection_fg
 -- colors.editor.selection    = selection_bg_color
-colors.editor.contrast =
-	functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
+colors.editor.contrast = functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
+-- TODO: fix this active thing. We need to use clever color and contrast adjustment. It is WAY too close to text color.
 colors.editor.active = colors.editor.selection -- similar to selection
 colors.editor.border = functions.adjust_color_value(colors.editor.selection, 0.75) -- slightly darker than active
 colors.editor.line_numbers = colors.editor.border -- about the same as border
 colors.editor.highlight = colors.editor.selection
-colors.editor.disabled =
-	functions.adjust_color_value(colors.editor.highlight, 1 + (value_adjustment_scale * color_mod_direction * -1)) -- lighter than highlight
+colors.editor.disabled = functions.adjust_color_value(colors.editor.highlight, 1 + (value_adjustment_scale * color_mod_direction * -1)) -- lighter than highlight
 colors.editor.accent = colors.main.purple
 colors.editor.none = "NONE"
 
