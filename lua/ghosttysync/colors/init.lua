@@ -124,41 +124,12 @@ colors.main.darkpurple = functions.adjust_color_value(colors.main.purple, standa
 colors.main.darkorange = functions.adjust_color_value(colors.main.orange, standard_adjustment)
 colors.main.paleblue = functions.adjust_color_value(colors.main.blue, standard_invert_adjustment)
 
--- print("red: " .. colors.main.red)
--- print("green: " .. colors.main.green)
--- print("yellow: " .. colors.main.yellow)
--- print("blue: " .. colors.main.blue)
--- print("purple: " .. colors.main.purple)
--- print("cyan: " .. colors.main.cyan)
--- print("orange: " .. colors.main.orange)
--- print("darkred: " .. colors.main.darkred)
--- print("darkgreen: "  .. colors.main.darkgreen)
--- print("darkyellow: " .. colors.main.darkyellow)
--- print("darkblue: "   .. colors.main.darkblue)
--- print("darkpurple: " .. colors.main.darkpurple)
--- print("darkcyan: "   .. colors.main.darkcyan)
--- print("darkorange: " .. colors.main.darkorange)
--- print("paleblue: " .. colors.main.paleblue)
-
 palette[16] = term_colors.colors.foreground
 palette[17] = term_colors.colors.background
 palette[18] = term_colors.colors.cursor_color
 palette[19] = term_colors.colors.cursor_text
 palette[20] = term_colors.colors.selection_bg
 palette[21] = term_colors.colors.selection_fg
-
--- palette = vim.tbl_extend(
---   "keep",
---   term_colors.colors.palette,
---   {
---     term_colors.colors.foreground,
---     term_colors.colors.background,
---     term_colors.colors.cursor_color,
---     term_colors.colors.cursor_text,
---     term_colors.colors.selection_bg,
---     term_colors.colors.selection_fg,
---   }
--- )
 
 colors.main.gray = functions.closest_color_match(pure_gray, palette)
 colors.main.white = functions.closest_color_match(pure_white, palette)
@@ -244,6 +215,15 @@ colors.backgrounds.bg_blend = colors.editor.bg
 colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, standard_adjustment)
 
 -- adjustments as needed
+local active_contrast_ratio = functions.contrast_ratio(colors.editor.active, colors.editor.bg)
+if active_contrast_ratio >= 5 then
+  local active_adjustment = active_contrast_ratio
+  if color_mod_direction == -1 then
+    active_adjustment = 1 / active_adjustment
+  end
+  colors.editor.active = functions.adjust_luminace(colors.editor.active, active_adjustment)
+end
+
 -- local selection_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.editor.selection)
 -- local foreground_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.Comments, colors.editor.fg)
 -- local selection_fg_contrast_ratio = functions.contrast_ratio(colors.editor.fg, colors.editor.selection)

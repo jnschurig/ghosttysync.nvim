@@ -153,6 +153,8 @@ function M.extract_theme_info(config)
       cursor_color = config["cursor-color"],
       cursor_text  = config["cursor-text"],
 
+      --TODO: Extract the background opacity.
+
       palette = {},
     },
 	}

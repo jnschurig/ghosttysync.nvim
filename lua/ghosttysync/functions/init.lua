@@ -86,6 +86,14 @@ local function linearize_rgb(floating_point_value)
 	return ((floating_point_value + 0.055) / 1.055) ^ 2.4
 end
 
+local function delinearize_rgb(linear_value)
+	-- The undo of the linearize_rgb function
+	if linear_value <= 0.0031308 then
+		return linear_value * 12.92
+	end
+	return 1.055 * (linear_value ^ (1 / 2.4)) - 0.055
+end
+
 local function invert_hue(rgb_number)
 	return (1 - (rgb_number / 255)) * 255
 end
@@ -97,6 +105,17 @@ local function invert_color(color)
 	local b = invert_hue(rgb[3])
 
 	return rgb_to_hex(r, g, b)
+end
+
+local function rgb_luminance(color)
+	-- Standard luminance calculation.
+	-- See: https://www.w3.org/WAI/GL/wiki/Relative_luminance
+	local rgb_max = 255
+	local rgb = hex_to_rgb(color)
+	local r = linearize_rgb(rgb[1] / rgb_max) * 0.2126
+	local g = linearize_rgb(rgb[2] / rgb_max) * 0.7152
+	local b = linearize_rgb(rgb[3] / rgb_max) * 0.0722
+	return { r, g, b }
 end
 
 M.color_diff = function(color1, color2)
@@ -122,13 +141,24 @@ M.closest_color_match = function(spec_color, colors_table)
 end
 
 M.relative_luminance = function(color)
-	-- Standard luminance calculation.
-	-- See: https://www.w3.org/WAI/GL/wiki/Relative_luminance
+	local rgb = rgb_luminance(color)
+	local r = rgb[1]
+	local g = rgb[2]
+	local b = rgb[3]
+
+	return r + g + b
+end
+
+M.adjust_luminace = function(color, adjustment_factor)
+	local rgb = rgb_luminance(color)
+	local r_lum = rgb[1] * adjustment_factor
+	local g_lum = rgb[2] * adjustment_factor
+	local b_lum = rgb[3] * adjustment_factor
+
 	local rgb_max = 255
-	local rgb = hex_to_rgb(color)
-	local r = linearize_rgb(rgb[1] / rgb_max) * 0.2126
-	local g = linearize_rgb(rgb[2] / rgb_max) * 0.7152
-	local b = linearize_rgb(rgb[3] / rgb_max) * 0.0722
+	local r = delinearize_rgb(r_lum / 0.2126) * rgb_max
+	local g = delinearize_rgb(g_lum / 0.7152) * rgb_max
+	local b = delinearize_rgb(b_lum / 0.0722) * rgb_max
 
 	return r + g + b
 end
@@ -149,6 +179,19 @@ M.adjust_color_value = function(starting_color, adjustment_factor)
 	local g = math.min(math.floor(rgb[2] * adjustment_factor), 255)
 	local b = math.min(math.floor(rgb[3] * adjustment_factor), 255)
 	return rgb_to_hex(r, g, b)
+end
+
+M.adjust_value_for_contrast = function(color, reference_color, contrast_threshold)
+	if contrast_threshold == nil then
+		contrast_threshold = 2
+	end
+
+	local contrast_ratio = M.contrast_ratio(color, reference_color)
+
+	if contrast_ratio > contrast_threshold then
+	end
+
+	return color
 end
 
 M.round = function(val)
