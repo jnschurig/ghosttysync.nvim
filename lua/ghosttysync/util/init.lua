@@ -50,13 +50,6 @@ local prepare_environment = function()
 		vim.cmd("syntax reset")
 	end
 
-  -- TODO: Remove these comments after thorough testing and acceptance.
-	-- if vim.g.ghosttysync_style == "lighter" then
-	-- 	vim.opt.background = "light"
-	-- else
-	-- 	vim.opt.background = "dark"
-	-- end
-
 	if not settings.disable.colored_cursor then
 		vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20,a:Cursor/Cursor"
 		local exit_group = vim.api.nvim_create_augroup("MaterialExit", { clear = true })

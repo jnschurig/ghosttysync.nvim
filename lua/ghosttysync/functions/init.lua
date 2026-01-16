@@ -14,8 +14,7 @@ local set_lualine = function()
 	end
 end
 
----switch to a given style
----@param style string name of the style to switch to
+---switch to a given style @param style string name of the style to switch to
 M.change_style = function(style)
 	set_lualine()
 	vim.g.ghosttysync_style = style

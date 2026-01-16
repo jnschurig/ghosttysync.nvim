@@ -2,6 +2,33 @@
 
 A Neovim plugin that automatically synchronizes Ghostty terminal themes with Neovim colorschemes.
 
+Adapted from the [material.nvim](https://github.com/marko-cerovac/material.nvim) color theme.
+
+Many thanks to Marko Cerovac who is the original author of material.nvim and whose code
+is the foundation of this work.
+
+This colorscheme plugin is designed to be an out-of-the-box solution which adapts your existing
+theme from the Ghostty terminal emulator and applies it to nvim. As such, this project adopts
+the following design philosophies:
+
+1. If possible, colors should move straight across from the terminal theme.
+2. Minimal configuration and customization.
+3. If additional colors are needed, they should be adapted from original colors.
+
+This is why so much customization has been removed from the source theme, and why there will
+be even more options removed in the future.
+
+## FAQ
+
+* Why Ghostty?
+A: Ghostty has a great api command which returns information from the configuration,
+including information about the terminal colors and palette.
+
+* Why not just get the colors directly from the terminal?
+A: I tried this approach, but couldn't get a satisfactory solution. If there is a
+reasonable solution out there, I'd be happy to see it. It would be great if this
+colorscheme was terminal emulator agnostic.
+
 ## Installation
 
 Using [lazy.nvim](https://github.com/folke/lazy.nvim):
@@ -18,6 +45,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 ## Configuration
 
 ```lua
+-- In a dedicated setup file (ie ghosttysync.lua).
 return {
   "jnschurig/ghosttysync.nvim",
   branch = "v0.1",
@@ -47,7 +75,7 @@ return {
 The plugin automatically syncs your Ghostty theme with Neovim on startup. You can also manually trigger synchronization:
 
 ```vim
-:GhosttySyncTheme
+:colorscheme ghosttysync
 ```
 
 ## Requirements

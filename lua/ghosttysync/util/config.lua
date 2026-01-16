@@ -11,6 +11,7 @@ local defaults = {
 		non_current_windows = false,
 		filetypes = {},
 	},
+	-- TODO: Deprecate styles.
 	styles = {
 		comments = {},
 		strings = {},
@@ -20,6 +21,7 @@ local defaults = {
 		operators = {},
 		types = {},
 	},
+	-- TODO: remove disable settings that don't make sense or don't align with the mission
 	disable = {
 		colored_cursor = false,
 		borders = false,
