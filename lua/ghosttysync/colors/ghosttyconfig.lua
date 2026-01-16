@@ -6,10 +6,10 @@ local M = {}
 -- Execute `ghostty +show-config` command and return output
 function M.execute_show_config()
 	-- function execute_show_config()
-	-- Check if we're in a test environment
+	-- Check if we are being run from a vim environment.
 	if not vim or not vim.fn or not vim.fn.executable then
 		print("Not executable")
-		return nil, "Test environment: Ghostty CLI not available"
+		return nil, "Not running in vim: Ghostty CLI not available"
 	end
 
 	-- Check if ghostty command is available
@@ -99,27 +99,6 @@ function M.parse_config_output(output)
 			end
 		end
 
-		-- if line ~= "" and not line:match("^#") and not line:match("^%s*$") then
-		-- 	-- Parse key = value format
-		-- 	local key, value = line:match("^([^=]+)%s*=%s*(.*)$")
-		-- 	if key and value then
-		-- 		key = trim_string(key)
-		-- 		value = trim_string(value)
-		--
-		-- 		-- Remove quotes from values if present
-		-- 		value = value:gsub("^[\"'](.+)[\"']$", "%1")
-		--
-		-- 		-- Only add non-empty values
-		-- 		if value ~= "" then
-		-- 			-- Special handling for palette entries
-		-- 			if key == "palette" then
-		-- 				table.insert(palette_entries, value)
-		-- 			else
-		-- 				config[key] = value
-		-- 			end
-		-- 		end
-		-- 	end
-		-- end
 	end
 
 	-- Add palette entries to config
