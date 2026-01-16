@@ -215,7 +215,7 @@ colors.backgrounds.bg_blend = colors.editor.bg
 -- colors.backgrounds.cursor_line = colors.editor.active
 -- colors.backgrounds.cursor_line = pure_black
 -- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
-colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 0.75)
+-- colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, 0.75)
 
 -- adjustments as needed
 -- local selection_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.editor.selection)
