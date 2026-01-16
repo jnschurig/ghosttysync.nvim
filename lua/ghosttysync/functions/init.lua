@@ -220,9 +220,9 @@ M.raise_contrast = function(color, reference_color, contrast_threshold)
 	local adjustment_factor = nil
 	if contrast_ratio < contrast_threshold then
 		if reference_is_dark then
-			adjustment_factor = 1 / contrast_ratio
-		else
 			adjustment_factor = contrast_ratio
+		else
+			adjustment_factor = 1 / contrast_ratio
 		end
 
 		return M.adjust_luminance(color, adjustment_factor)
