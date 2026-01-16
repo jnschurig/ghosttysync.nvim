@@ -240,31 +240,6 @@ M.raise_contrast = function(color, reference_color, contrast_threshold)
 	return color
 end
 
--- M.adjust_luminance_for_contrast = function(color, reference_color, contrast_threshold)
--- 	if contrast_threshold == nil then
--- 		contrast_threshold = 4
--- 	end
---
--- 	local contrast_ratio = M.contrast_ratio(color, reference_color)
--- 	local reference_is_dark = true
--- 	if M.closest_color_match(reference_color, { "#404040", "#ffffff" }) == "#ffffff" then
--- 		reference_is_dark = false
--- 	end
---
--- 	local adjustment_factor = nil
--- 	if contrast_ratio > contrast_threshold then
--- 		if reference_is_dark then
--- 			adjustment_factor = 1 / contrast_ratio
--- 		else
--- 			adjustment_factor = contrast_ratio
--- 		end
---
--- 		return M.adjust_luminance(color, adjustment_factor)
--- 	end
---
--- 	return color
--- end
-
 M.round = function(val)
 	return math.floor(val + 0.5)
 end
