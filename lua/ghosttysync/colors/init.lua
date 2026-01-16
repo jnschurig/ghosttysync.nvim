@@ -17,27 +17,6 @@ local pure_white  = "#ffffff"
 local pure_black  = "#000000"
 local pure_gray   = "#808080"
 
--- local default_term_colors = {
--- 	name = "pure_dark",
--- 	colors = {
--- 		palette = {
--- 			pure_black,
--- 			pure_red,
--- 			pure_green,
--- 			pure_yellow,
--- 			pure_blue,
--- 			pure_purple,
--- 			pure_cyan,
--- 			pure_white,
--- 		},
--- 		background   = pure_black,
--- 		foreground   = pure_white,
--- 		cursor_color = pure_white,
--- 		cursor_text  = pure_black,
--- 		selection_foreground = pure_black,
--- 		selection_background = pure_gray,
--- 	},
--- }
 local default_term_colors = {
 	name = "pure_dark",
 	colors = {
@@ -56,7 +35,7 @@ local default_term_colors = {
 		cursor_color = pure_white,
 		cursor_text  = pure_black,
 		selection_foreground = pure_black,
-		selection_background = "NONE",
+		selection_background = pure_gray,
 	},
 }
 
