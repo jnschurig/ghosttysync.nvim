@@ -187,7 +187,7 @@ colors.editor.line_numbers = colors.editor.border -- about the same as border
 colors.editor.highlight = colors.editor.selection
 colors.editor.disabled = functions.adjust_color_value(colors.editor.highlight, standard_invert_adjustment) -- lighter than highlight
 colors.editor.accent = colors.main.purple
-colors.editor.contrast = functions.raise_contrast(functions.adjust_color_value(colors.editor.accent, standard_adjustment), colors.main.accent, 5)
+colors.editor.contrast = functions.raise_contrast(functions.adjust_color_value(colors.editor.accent, standard_adjustment), colors.main.accent, 10)
 colors.editor.none = "NONE"
 
 ---syntax colors
