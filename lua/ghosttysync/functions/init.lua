@@ -203,10 +203,10 @@ end
 M.print_colors = function(color_table)
 	for key, value in pairs(color_table) do
 		if type(value) ~= "table" then
-			print(key .. ": " .. value)
+			print(key .. ": " .. value .. " | lum: " .. M.relative_luminance(value))
 		else
 			for idx, member in ipairs(value) do
-				print(key .. ": " .. idx .. ": " .. member)
+				print(key .. ": " .. idx .. ": " .. member .. " | lum: " .. M.relative_luminance(member))
 			end
 		end
 	end

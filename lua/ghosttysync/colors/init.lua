@@ -269,8 +269,9 @@ colors.backgrounds.cursor_line =
 --   print("new comment: " .. colors.syntax.comments)
 -- end
 
+print("term_colors.colors")
 functions.print_colors(term_colors.colors)
+print("colors.main")
 functions.print_colors(colors.main)
--- TODO: also print out the colors.main object and see how accurate they ended up being.
 
 return colors

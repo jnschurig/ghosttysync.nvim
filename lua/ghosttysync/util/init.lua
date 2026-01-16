@@ -50,6 +50,7 @@ local prepare_environment = function()
 		vim.cmd("syntax reset")
 	end
 
+  -- TODO: Remove these comments after thorough testing and acceptance.
 	-- if vim.g.ghosttysync_style == "lighter" then
 	-- 	vim.opt.background = "light"
 	-- else
