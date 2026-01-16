@@ -364,7 +364,7 @@ M.async_highlights.editor = function()
     IncSearch     = { fg = e.bg, bg = e.title, bold = true },
     CurSearch     = { fg = e.bg, bg = m.yellow, bold = true },
     MoreMsg       = { fg = e.accent },
-    Pmenu         = { fg = e.fg, bg = e.border }, -- popup menu
+    Pmenu         = { fg = e.selection_fg, bg = e.selection }, -- popup menu
     PmenuSel      = { fg = e.contrast, bg = e.accent }, -- Popup menu: selected item.
     PmenuSbar     = { bg = e.active },
     PmenuThumb    = { fg = e.fg },
@@ -424,7 +424,7 @@ M.async_highlights.load_lsp = function()
     DiagnosticSignHint         = { link = "DiagnosticHint" },
     DiagnosticUnderlineHint    = { undercurl = true, sp = l.hint },
     DiagnosticUnderlineOk      = { undercurl = true, sp = m.green },
-    LspReferenceText           = { fg = e.fg, bg = e.selection }, -- used for highlighting "text" references
+    LspReferenceText           = { bg = e.selection }, -- used for highlighting "text" references
     LspReferenceRead           = { link = "LspReferenceText" }, -- used for highlighting "read" references
     LspReferenceWrite          = { link = "LspReferenceText" }, -- used for highlighting "write" references
     LspCodeLens                = { italic = true, fg = l.hint, sp = l.hint },

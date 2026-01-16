@@ -181,9 +181,8 @@ colors.editor.selection = term_colors.colors.selection_bg
 colors.editor.selection_fg = term_colors.colors.selection_fg
 -- colors.editor.selection    = selection_bg_color
 colors.editor.contrast = functions.adjust_color_value(colors.editor.selection, standard_adjustment) -- darker than selection
--- TODO: fix this active thing. We need to use clever color and contrast adjustment. It is WAY too close to text color.
 colors.editor.active = functions.adjust_luminance_for_contrast(colors.editor.selection, colors.editor.bg, 5) -- similar to selection
-colors.editor.border = functions.adjust_color_value(colors.editor.selection, 0.75) -- slightly darker than active
+colors.editor.border = functions.adjust_color_value(colors.editor.selection, 0.75)
 colors.editor.line_numbers = colors.editor.border -- about the same as border
 colors.editor.highlight = colors.editor.selection
 colors.editor.disabled = functions.adjust_color_value(colors.editor.highlight, standard_invert_adjustment) -- lighter than highlight
