@@ -1,8 +1,5 @@
 -- local high_visibility = require "ghosttysync.util.config".settings.high_visibility
--- local termcolor = require("ghosttysync.colors.termcolor3")
 local termcolor = require("ghosttysync.colors.ghosttyconfig")
--- local closest_color_match = require("ghosttysync.functions.functions.closest_color_match")
--- local adjust_color_value = require("ghosttysync.functions.functions.adjust_color_value")
 local functions = require("ghosttysync.functions")
 
 local pure_red = "#ff0000"
@@ -52,14 +49,14 @@ end
 
 term_colors = vim.tbl_deep_extend("keep", term_colors or {}, default_term_colors)
 
-functions.print_colors(term_colors.colors)
--- TODO: also print out the colors.main object and see how accurate they ended up being.
-
 local background_match = functions.closest_color_match(term_colors.colors.background, { pure_black, pure_white })
 local color_mod_direction = -1
 
 if background_match == pure_white then
 	color_mod_direction = 1
+	vim.opt.background = "light"
+else
+	vim.opt.background = "dark"
 end
 
 local value_adjustment_scale = 0.25
@@ -116,13 +113,20 @@ end
 -- print("new cyan: " .. colors.main.cyan)
 
 colors.main.darkred = functions.adjust_color_value(colors.main.red, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkgreen = functions.adjust_color_value(colors.main.green, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkyellow = functions.adjust_color_value(colors.main.yellow, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkblue = functions.adjust_color_value(colors.main.blue, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkcyan = functions.adjust_color_value(colors.main.cyan, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkpurple = functions.adjust_color_value(colors.main.purple, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.darkorange = functions.adjust_color_value(colors.main.orange, 1 + (value_adjustment_scale * color_mod_direction))
-colors.main.paleblue = functions.adjust_color_value(colors.main.blue, 1 + (value_adjustment_scale * color_mod_direction * -1))
+colors.main.darkgreen =
+	functions.adjust_color_value(colors.main.green, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkyellow =
+	functions.adjust_color_value(colors.main.yellow, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkblue =
+	functions.adjust_color_value(colors.main.blue, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkcyan =
+	functions.adjust_color_value(colors.main.cyan, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkpurple =
+	functions.adjust_color_value(colors.main.purple, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.darkorange =
+	functions.adjust_color_value(colors.main.orange, 1 + (value_adjustment_scale * color_mod_direction))
+colors.main.paleblue =
+	functions.adjust_color_value(colors.main.blue, 1 + (value_adjustment_scale * color_mod_direction * -1))
 
 -- print("red: " .. colors.main.red)
 -- print("green: " .. colors.main.green)
@@ -190,19 +194,23 @@ colors.backgrounds = {}
 
 ---editor colors
 colors.editor.bg = term_colors.colors.background
-colors.editor.bg_alt = functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
+colors.editor.bg_alt =
+	functions.adjust_color_value(colors.editor.bg, 1 + (value_adjustment_scale * color_mod_direction))
 colors.editor.fg = term_colors.colors.foreground
-colors.editor.fg_dark = functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
+colors.editor.fg_dark =
+	functions.adjust_color_value(colors.editor.fg, 1 + (value_adjustment_scale * color_mod_direction))
 colors.editor.selection = term_colors.colors.selection_bg
 colors.editor.selection_fg = term_colors.colors.selection_fg
 -- colors.editor.selection    = selection_bg_color
-colors.editor.contrast = functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
+colors.editor.contrast =
+	functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
 -- TODO: fix this active thing. We need to use clever color and contrast adjustment. It is WAY too close to text color.
 colors.editor.active = colors.editor.selection -- similar to selection
 colors.editor.border = functions.adjust_color_value(colors.editor.selection, 0.75) -- slightly darker than active
 colors.editor.line_numbers = colors.editor.border -- about the same as border
 colors.editor.highlight = colors.editor.selection
-colors.editor.disabled = functions.adjust_color_value(colors.editor.highlight, 1 + (value_adjustment_scale * color_mod_direction * -1)) -- lighter than highlight
+colors.editor.disabled =
+	functions.adjust_color_value(colors.editor.highlight, 1 + (value_adjustment_scale * color_mod_direction * -1)) -- lighter than highlight
 colors.editor.accent = colors.main.purple
 colors.editor.none = "NONE"
 
@@ -260,5 +268,9 @@ colors.backgrounds.cursor_line =
 --   print("new cursor line: " .. colors.backgrounds.cursor_line)
 --   print("new comment: " .. colors.syntax.comments)
 -- end
+
+functions.print_colors(term_colors.colors)
+functions.print_colors(colors.main)
+-- TODO: also print out the colors.main object and see how accurate they ended up being.
 
 return colors
