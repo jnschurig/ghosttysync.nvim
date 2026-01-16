@@ -200,4 +200,16 @@ M.check_colors = function(color_table)
 	return color_table
 end
 
+M.print_colors = function(color_table)
+	for key, value in pairs(color_table) do
+		if type(value) ~= "table" then
+			print(key .. ": " .. value)
+		else
+			for idx, member in ipairs(value) do
+				print(key .. ": " .. idx .. ": " .. member)
+			end
+		end
+	end
+end
+
 return M

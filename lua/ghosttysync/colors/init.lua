@@ -52,6 +52,8 @@ end
 
 term_colors = vim.tbl_deep_extend("keep", term_colors or {}, default_term_colors)
 
+functions.print_colors(term_colors.colors)
+
 local background_match = functions.closest_color_match(term_colors.colors.background, { pure_black, pure_white })
 local color_mod_direction = -1
 
