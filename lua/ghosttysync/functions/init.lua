@@ -210,6 +210,7 @@ M.print_colors = function(color_table)
 			end
 		end
 	end
+	print("")
 end
 
 return M
