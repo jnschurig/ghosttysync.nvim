@@ -269,9 +269,11 @@ colors.backgrounds.cursor_line =
 --   print("new comment: " .. colors.syntax.comments)
 -- end
 
-print("term_colors.colors")
+print("--- term_colors.colors ---")
 functions.print_colors(term_colors.colors)
-print("colors.main")
+print("--- colors.main ---")
 functions.print_colors(colors.main)
+print("--- default_term_colors.colors ---")
+functions.print_colors(default_term_colors.colors)
 
 return colors
