@@ -190,6 +190,9 @@ M.lower_contrast = function(color, reference_color, contrast_threshold)
 	end
 
 	local contrast_ratio = M.contrast_ratio(color, reference_color)
+	if contrast_ratio == 1 then
+		contrast_ratio = 1.0001
+	end
 	local reference_is_dark = true
 	if M.closest_color_match(reference_color, { "#000000", "#ffffff" }) == "#ffffff" then
 		reference_is_dark = false
@@ -215,8 +218,8 @@ M.raise_contrast = function(color, reference_color, contrast_threshold)
 	end
 
 	local contrast_ratio = M.contrast_ratio(color, reference_color)
-	if contrast_ratio == 0 then
-		contrast_ratio = 0.0001
+	if contrast_ratio == 1 then
+		contrast_ratio = 1.0001
 	end
 	local reference_is_dark = true
 	if M.closest_color_match(reference_color, { "#000000", "#ffffff" }) == "#ffffff" then
