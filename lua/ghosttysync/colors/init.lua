@@ -186,7 +186,7 @@ colors.editor.selection = selection_background_color
 colors.editor.contrast =
 	functions.adjust_color_value(colors.editor.selection, 1 + (value_adjustment_scale * color_mod_direction)) -- darker than selection
 colors.editor.active = colors.editor.selection -- similar to selection
-colors.editor.border = colors.editor.selection -- slightly darker than active
+colors.editor.border = functions.adjust_color_value(colors.editor.selection, 0.5) -- slightly darker than active
 colors.editor.line_numbers = colors.editor.border -- about the same as border
 colors.editor.highlight = colors.editor.selection
 colors.editor.disabled =
