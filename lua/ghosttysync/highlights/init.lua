@@ -311,7 +311,8 @@ M.main_highlights.editor = function()
         Title            = { fg = m.cyan, bold = true },
         WarningMsg       = { fg = m.yellow },
         Whitespace       = { fg = e.disabled },
-        CursorLine       = { bg = b.cursor_line },
+        -- CursorLine       = { bg = b.cursor_line },
+        CursorLine       = { bg = functions.adjust_color_value(e.bg, 0.75),
         -- CursorLine       = { bg = m.black }, -- TODO: WTF? This comes out green when I use the blue theme
         CursorColumn     = { link = "CursorLine" },
         Todo             = { fg = m.yellow, bold = true },
