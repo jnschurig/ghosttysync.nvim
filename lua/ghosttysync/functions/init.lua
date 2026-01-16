@@ -149,7 +149,7 @@ M.relative_luminance = function(color)
 	return r + g + b
 end
 
-M.adjust_luminace = function(color, adjustment_factor)
+M.adjust_luminance = function(color, adjustment_factor)
 	local rgb = rgb_luminance(color)
 	local r_lum = rgb[1] * adjustment_factor
 	local g_lum = rgb[2] * adjustment_factor
@@ -181,14 +181,26 @@ M.adjust_color_value = function(starting_color, adjustment_factor)
 	return rgb_to_hex(r, g, b)
 end
 
-M.adjust_value_for_contrast = function(color, reference_color, contrast_threshold)
+M.adjust_luminance_for_contrast = function(color, reference_color, contrast_threshold)
 	if contrast_threshold == nil then
-		contrast_threshold = 2
+		contrast_threshold = 4
 	end
 
 	local contrast_ratio = M.contrast_ratio(color, reference_color)
+	local reference_is_dark = true
+	if M.closest_color_match(reference_color, { "#000000", "#ffffff" }) == "#ffffff" then
+		reference_is_dark = false
+	end
 
+	local adjustment_factor = nil
 	if contrast_ratio > contrast_threshold then
+		if reference_is_dark then
+			adjustment_factor = 1 / contrast_ratio
+		else
+			adjustment_factor = contrast_ratio
+		end
+
+		return M.adjust_luminance(color, adjustment_factor)
 	end
 
 	return color

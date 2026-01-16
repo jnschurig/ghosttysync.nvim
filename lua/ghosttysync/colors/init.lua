@@ -182,7 +182,7 @@ colors.editor.selection_fg = term_colors.colors.selection_fg
 -- colors.editor.selection    = selection_bg_color
 colors.editor.contrast = functions.adjust_color_value(colors.editor.selection, standard_adjustment) -- darker than selection
 -- TODO: fix this active thing. We need to use clever color and contrast adjustment. It is WAY too close to text color.
-colors.editor.active = colors.editor.selection -- similar to selection
+colors.editor.active = functions.adjust_luminance_for_contrast(colors.editor.selection, colors.editor.bg, 5) -- similar to selection
 colors.editor.border = functions.adjust_color_value(colors.editor.selection, 0.75) -- slightly darker than active
 colors.editor.line_numbers = colors.editor.border -- about the same as border
 colors.editor.highlight = colors.editor.selection
@@ -215,16 +215,8 @@ colors.backgrounds.bg_blend = colors.editor.bg
 colors.backgrounds.cursor_line = functions.adjust_color_value(colors.editor.bg, standard_adjustment)
 
 -- adjustments as needed
-local active_contrast_ratio = functions.contrast_ratio(colors.editor.active, colors.editor.bg)
-if active_contrast_ratio >= 5 then
-  local active_adjustment = active_contrast_ratio
-  if color_mod_direction == -1 then
-    active_adjustment = 1 / active_adjustment
-  end
-  colors.editor.active = functions.adjust_luminace(colors.editor.active, active_adjustment)
-end
 
-print("active: " .. (colors.editor.active or "none"))
+print("active: " .. colors.editor.active)
 
 -- local selection_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.comments, colors.editor.selection)
 -- local foreground_comment_contrast_ratio = functions.contrast_ratio(colors.syntax.Comments, colors.editor.fg)
