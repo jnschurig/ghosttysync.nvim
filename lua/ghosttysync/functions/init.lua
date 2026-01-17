@@ -228,17 +228,17 @@ M.raise_contrast = function(color, reference_color, contrast_threshold)
 	local adjustment_factor = nil
 	if contrast_ratio < contrast_threshold then
 		if reference_is_dark then
-			adjustment_factor = contrast_ratio
+			adjustment_factor = contrast_ratio * contrast_ratio
 		else
 			adjustment_factor = 1 / contrast_ratio
 		end
 		-- this is recursive now...
-		local new_color = M.adjust_luminance(color, adjustment_factor)
-		if M.contrast_ratio(color, new_color) < contrast_threshold then
-			new_color = M.raise_contrast(new_color, reference_color, contrast_threshold)
-		end
-		-- return M.adjust_luminance(color, adjustment_factor)
-		return new_color
+		-- local new_color = M.adjust_luminance(color, adjustment_factor)
+		-- if M.contrast_ratio(color, new_color) < contrast_threshold then
+		-- 	new_color = M.raise_contrast(new_color, reference_color, contrast_threshold)
+		-- end
+		-- return new_color
+		return M.adjust_luminance(color, adjustment_factor)
 	end
 
 	return color
