@@ -230,7 +230,7 @@ M.raise_contrast = function(color, reference_color, contrast_threshold)
 		if reference_is_dark then
 			adjustment_factor = contrast_ratio * contrast_ratio
 		else
-			adjustment_factor = 1 / contrast_ratio
+			adjustment_factor = 1 / contrast_ratio / contrast_ratio
 		end
 		-- this is recursive now...
 		-- local new_color = M.adjust_luminance(color, adjustment_factor)
