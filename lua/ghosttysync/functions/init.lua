@@ -183,66 +183,78 @@ M.adjust_color_value = function(starting_color, adjustment_factor)
 	return rgb_to_hex(r, g, b)
 end
 
-M.lower_contrast = function(color, reference_color, contrast_threshold)
-	if contrast_threshold == nil then
-		contrast_threshold = 4
-	end
-
-	local contrast_ratio = M.contrast_ratio(color, reference_color)
-	if contrast_ratio == 1 then
-		contrast_ratio = 1.0001
-	end
-	local reference_is_dark = true
-	if M.closest_color_match(reference_color, { "#404040", "#ffffff" }) == "#ffffff" then
-		reference_is_dark = false
-	end
-
-	local adjustment_factor = nil
-	if contrast_ratio > contrast_threshold then
-		if reference_is_dark then
-			adjustment_factor = 1 / contrast_ratio
-		else
-			adjustment_factor = contrast_ratio
-		end
-
-		return M.adjust_luminance(color, adjustment_factor)
-	end
-
-	return color
-end
-
 M.raise_contrast = function(color, reference_color, contrast_threshold)
-	if contrast_threshold == nil then
-		contrast_threshold = 4
-	end
+  local contrast = M.contrast_ratio(color,reference_color)
+  if contrast < contrast_threshold then
+    local color_lum = M.relative_luminance(color)
+    local reference_lum = M.relative_luminance(reference_color)
 
-	local contrast_ratio = M.contrast_ratio(color, reference_color)
-	if contrast_ratio == 1 then
-		contrast_ratio = 1.0001
-	end
-	local reference_is_dark = true
-	if M.closest_color_match(reference_color, { "#404040", "#ffffff" }) == "#ffffff" then
-		reference_is_dark = false
-	end
-
-	local adjustment_factor = nil
-	if contrast_ratio < contrast_threshold then
-		if reference_is_dark then
-			adjustment_factor = contrast_ratio * contrast_ratio
-		else
-			adjustment_factor = 1 / contrast_ratio / contrast_ratio
-		end
-		-- this is recursive now...
-		-- local new_color = M.adjust_luminance(color, adjustment_factor)
-		-- if M.contrast_ratio(color, new_color) < contrast_threshold then
-		-- 	new_color = M.raise_contrast(new_color, reference_color, contrast_threshold)
-		-- end
-		-- return new_color
-		return M.adjust_luminance(color, adjustment_factor)
-	end
-
-	return color
+    local factor = math.max(color_lum, 0.0001) / math.max(reference_lum, 0.0001) * contrast_threshold
+    color = M.adjust_luminance(color, factor)
+  end
+  return color
 end
+
+-- M.lower_contrast = function(color, reference_color, contrast_threshold)
+-- 	if contrast_threshold == nil then
+-- 		contrast_threshold = 4
+-- 	end
+--
+-- 	local contrast_ratio = M.contrast_ratio(color, reference_color)
+-- 	if contrast_ratio == 1 then
+-- 		contrast_ratio = 1.0001
+-- 	end
+-- 	local reference_is_dark = true
+-- 	if M.closest_color_match(reference_color, { "#404040", "#ffffff" }) == "#ffffff" then
+-- 		reference_is_dark = false
+-- 	end
+--
+-- 	local adjustment_factor = nil
+-- 	if contrast_ratio > contrast_threshold then
+-- 		if reference_is_dark then
+-- 			adjustment_factor = 1 / contrast_ratio
+-- 		else
+-- 			adjustment_factor = contrast_ratio
+-- 		end
+--
+-- 		return M.adjust_luminance(color, adjustment_factor)
+-- 	end
+--
+-- 	return color
+-- end
+--
+-- M.raise_contrast = function(color, reference_color, contrast_threshold)
+-- 	if contrast_threshold == nil then
+-- 		contrast_threshold = 4
+-- 	end
+--
+-- 	local contrast_ratio = M.contrast_ratio(color, reference_color)
+-- 	if contrast_ratio == 1 then
+-- 		contrast_ratio = 1.0001
+-- 	end
+-- 	local reference_is_dark = true
+-- 	if M.closest_color_match(reference_color, { "#404040", "#ffffff" }) == "#ffffff" then
+-- 		reference_is_dark = false
+-- 	end
+--
+-- 	local adjustment_factor = nil
+-- 	if contrast_ratio < contrast_threshold then
+-- 		if reference_is_dark then
+-- 			adjustment_factor = contrast_ratio * contrast_ratio
+-- 		else
+-- 			adjustment_factor = 1 / contrast_ratio / contrast_ratio
+-- 		end
+-- 		-- this is recursive now...
+-- 		-- local new_color = M.adjust_luminance(color, adjustment_factor)
+-- 		-- if M.contrast_ratio(color, new_color) < contrast_threshold then
+-- 		-- 	new_color = M.raise_contrast(new_color, reference_color, contrast_threshold)
+-- 		-- end
+-- 		-- return new_color
+-- 		return M.adjust_luminance(color, adjustment_factor)
+-- 	end
+--
+-- 	return color
+-- end
 
 M.round = function(val)
 	return math.floor(val + 0.5)
