@@ -195,6 +195,18 @@ M.raise_contrast = function(color, reference_color, contrast_threshold)
   return color
 end
 
+M.lower_contrast = function(color, reference_color, contrast_threshold)
+  local contrast = M.contrast_ratio(color,reference_color)
+  if contrast > contrast_threshold then
+    local color_lum = M.relative_luminance(color)
+    local reference_lum = M.relative_luminance(reference_color)
+
+    local factor = math.max(color_lum, 0.0001) / math.max(reference_lum, 0.0001) / contrast_threshold
+    color = M.adjust_luminance(color, factor)
+  end
+  return color
+end
+
 -- M.lower_contrast = function(color, reference_color, contrast_threshold)
 -- 	if contrast_threshold == nil then
 -- 		contrast_threshold = 4

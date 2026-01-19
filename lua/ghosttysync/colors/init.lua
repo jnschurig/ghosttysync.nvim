@@ -137,19 +137,26 @@ colors.editor.bg           = term_colors.colors.background
 colors.editor.bg_alt       = functions.adjust_color_value(colors.editor.bg, standard_adjustment)
 colors.editor.fg           = term_colors.colors.foreground
 colors.editor.fg_dark      = functions.adjust_color_value(colors.editor.fg, standard_adjustment)
-colors.editor.selection    = functions.raise_contrast(term_colors.colors.selection_bg, term_colors.colors.selection_fg, 5)
--- colors.editor.selection    = term_colors.colors.selection_bg
+colors.editor.selection    = term_colors.colors.selection_bg
 colors.editor.selection_fg = term_colors.colors.selection_fg
--- colors.editor.active       = functions.lower_contrast(colors.editor.selection, colors.editor.bg, 5) -- similar to selection
-colors.editor.active       = functions.adjust_color_value(colors.editor.selection, standard_adjustment * 2) -- similar to selection
-colors.editor.border       = functions.adjust_color_value(colors.editor.selection, standard_adjustment * 1.5)
-colors.editor.line_numbers = functions.raise_contrast(colors.editor.border, colors.editor.bg, 20)
+colors.editor.active       = functions.lower_contrast(colors.editor.selection, colors.editor.bg, 5) -- similar to selection
+-- colors.editor.active       = functions.adjust_color_value(colors.editor.selection, standard_adjustment * 2) -- similar to selection
+-- colors.editor.border       = functions.adjust_color_value(colors.editor.selection, standard_adjustment * 1.5)
+colors.editor.border       = functions.adjust_color_value(colors.editor.selection, standard_adjustment)
+colors.editor.line_numbers = colors.editor.border
+-- colors.editor.line_numbers = functions.raise_contrast(colors.editor.border, colors.editor.bg, 20)
 -- colors.editor.line_numbers = functions.adjust_color_value(colors.editor.border, standard_invert_adjustment)
 colors.editor.highlight    = colors.editor.selection
 colors.editor.disabled     = functions.adjust_color_value(colors.editor.highlight, standard_invert_adjustment) -- lighter than highlight
 colors.editor.accent       = colors.main.purple
 colors.editor.contrast     = functions.adjust_color_value(colors.editor.accent, standard_adjustment * 2)
 colors.editor.none         = "NONE"
+
+-- colors.editor.highlight    = colors.editor.selection
+-- colors.editor.disabled     = functions.adjust_color_value(colors.editor.highlight, standard_invert_adjustment) -- lighter than highlight
+-- colors.editor.accent       = colors.main.purple
+-- colors.editor.contrast     = functions.raise_contrast(functions.adjust_color_value(colors.editor.accent, standard_adjustment), colors.main.accent, 10)
+-- colors.editor.none         = "NONE"
 
 ---syntax colors
 colors.syntax.comments  = colors.main.gray
