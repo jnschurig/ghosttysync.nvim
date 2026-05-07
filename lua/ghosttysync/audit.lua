@@ -74,9 +74,9 @@ function M.run()
 	local fails = 0
 	for _, name in ipairs(names) do
 		local fg, bg = resolve_hl(name, normal_bg)
-		if fg and bg and fg ~= bg then
+		local cls = fg and bg and classify(name, T)
+		if cls and fg ~= bg then
 			local ratio = contrast.wcag_ratio(fg, bg)
-			local cls = classify(name, T)
 			if ratio < cls.threshold then
 				fails = fails + 1
 				table.insert(lines, string.format("%-36s %-8s fg=%s bg=%s %.2f < %.2f",
