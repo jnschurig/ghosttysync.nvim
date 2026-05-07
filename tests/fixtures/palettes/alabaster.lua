@@ -1,0 +1,17 @@
+return {
+	name = "Alabaster",
+	colors = {
+		palette = {
+			"#000000", "#aa3731", "#448c27", "#cb9000",
+			"#325cc0", "#7a3e9d", "#0083b2", "#b7b7b7",
+			"#777777", "#f05050", "#60cb00", "#f2af50",
+			"#007acc", "#e64ce6", "#00aacb", "#f7f7f7",
+		},
+		background   = "#f7f7f7",
+		foreground   = "#000000",
+		cursor_color = "#007acc",
+		cursor_text  = "#bfdbfe",
+		selection_bg = "#bfdbfe",
+		selection_fg = "#000000",
+	},
+}
