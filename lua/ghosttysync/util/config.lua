@@ -36,7 +36,7 @@ local defaults = {
 	-- lualine theme untouched.
 	lualine_theme = "ghosttysync",
 	plugins = {},
-	async_loading = true,
+	async_loading = false,
 	-- Contrast thresholds for the readability pipeline.
 	-- See lua/ghosttysync/colors/contrast.lua for defaults and meaning.
 	contrast_thresholds = {},
