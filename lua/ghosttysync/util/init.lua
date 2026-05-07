@@ -126,6 +126,18 @@ local load_async = function()
 	end
 end
 
+---Reapply every highlight group ghosttysync owns. Used by the post-VeryLazy
+---reapplication so plugins that set their own highlights via ColorScheme
+---autocmds don't get the last word over our overrides.
+local function apply_all_highlights()
+	for _, fn in pairs(highlights.main_highlights) do
+		apply_highlights(fn())
+	end
+	for _, fn in pairs(highlights.async_highlights) do
+		apply_highlights(fn())
+	end
+end
+
 ---loads the theme and applies the highlights
 M.load = function()
 	prepare_environment()
@@ -150,6 +162,19 @@ M.load = function()
 
 	-- Apply configured lualine theme so our contrast-fitted theme is used by default.
 	functions.apply_lualine_theme()
+
+	-- After Lazy reports VeryLazy, plugins have registered their ColorScheme
+	-- autocmds and applied their own highlights. Reapply ours so our overrides
+	-- in highlights/plugins/*.lua take precedence.
+	if vim.v.vim_did_enter == 1 then
+		vim.schedule(apply_all_highlights)
+	else
+		vim.api.nvim_create_autocmd("User", {
+			pattern = "VeryLazy",
+			once = true,
+			callback = apply_all_highlights,
+		})
+	end
 end
 
 return M
