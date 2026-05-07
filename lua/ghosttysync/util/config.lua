@@ -32,6 +32,9 @@ local defaults = {
 	lualine_style = "default",
 	plugins = {},
 	async_loading = true,
+	-- Contrast thresholds for the readability pipeline.
+	-- See lua/ghosttysync/colors/contrast.lua for defaults and meaning.
+	contrast_thresholds = {},
 }
 
 M.settings = defaults

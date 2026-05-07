@@ -2,7 +2,14 @@ local colors    = require "ghosttysync.colors"
 local settings  = require "ghosttysync.util.config".settings
 local plugins   = require "ghosttysync.highlights.plugins"
 local functions = require "ghosttysync.functions"
+local contrast  = require "ghosttysync.colors.contrast"
+local T         = contrast.thresholds()
 local styles    = settings.styles
+
+-- Shorthand for ensure_contrast: returns the fg adjusted for readability against `bg`.
+local function fit(fg, bg, threshold)
+	return contrast.ensure_contrast(fg, bg, threshold)
+end
 
 -- apply conditional colors
 colors = require "ghosttysync.colors.conditionals"
@@ -87,10 +94,10 @@ M.main_highlights.treesitter = function()
 
       ["@comment"]          = { link = "Comment" },
       ["@comment.todo"]     = { link = "Comment" },
-      ["@comment.error"]    = { fg = s.comments, bg = l.error },
-      ["@comment.warning"]  = { fg = s.comments, bg = l.warning },
-      ["@comment.hint"]     = { fg = s.comments, bg = l.hint },
-      ["@comment.note"]     = { fg = s.comments, bg = l.info },
+      ["@comment.error"]    = { fg = e.bg, bg = l.error },
+      ["@comment.warning"]  = { fg = e.bg, bg = l.warning },
+      ["@comment.hint"]     = { fg = e.bg, bg = l.hint },
+      ["@comment.note"]     = { fg = e.bg, bg = l.info },
 
       ["@type"]             = { fg = s.type },
       ["@type.builtin"]     = { fg = s.type },
@@ -180,7 +187,7 @@ M.main_highlights.treesitter = function()
       ["@keyword.directive.define"] = { link = "@keyword.directive" },
       ["@operator"]                  = { link = "Operator" },
       TreesitterContext              = { bg = e.contrast },
-      TreesitterContextLineNumber    = { fg = e.line_numbers, bg = e.contrast },
+      TreesitterContextLineNumber    = { fg = fit(e.line_numbers, e.contrast, T.UI_MIN), bg = e.contrast },
 
       ["@boolean"]                = { link = "Boolean" },
       ["@number"]                 = { link = "Number" },
@@ -288,7 +295,7 @@ M.main_highlights.editor = function()
     TermCursor       = { link = "Cursor" }, -- cursor for the terminal
     CursorIM         = { link = "Cursor" }, -- like Cursor, but used when in IME mode
     ErrorMsg         = { fg = l.error },
-    Folded           = { fg = e.disabled, bg = e.bg_alt, italic = true },
+    Folded           = { fg = fit(e.fg_dark, e.bg_alt, T.TEXT_MIN), bg = e.bg_alt, italic = true },
     FoldColumn       = { fg = m.blue },
     LineNr           = { fg = e.line_numbers },
     CursorLineNr     = { fg = e.accent },
@@ -300,14 +307,16 @@ M.main_highlights.editor = function()
     NonText          = { fg = e.disabled },
     SignColumn       = { fg = e.fg },
     SpecialKey       = { fg = m.purple },
-    StatusLine       = { fg = e.fg, bg = e.active },
-    StatusLineNC     = { fg = e.disabled, bg = e.bg },
-    StatusLineTerm   = { fg = e.fg, bg = e.active },
-    StatusLineTermNC = { fg = e.disabled, bg = e.bg },
+    StatusLine       = { fg = fit(e.fg, e.active, T.TEXT_MIN), bg = e.active },
+    StatusLineNC     = { fg = fit(e.fg_dark, e.bg, T.TEXT_MIN), bg = e.bg },
+    StatusLineTerm   = { fg = fit(e.fg, e.active, T.TEXT_MIN), bg = e.active },
+    StatusLineTermNC = { fg = fit(e.fg_dark, e.bg, T.UI_MIN), bg = e.bg },
     TabLineFill      = { fg = e.fg },
-    TabLineSel       = { fg = e.bg, bg = e.accent },
+    TabLineSel       = { fg = fit(e.bg, e.accent, T.TEXT_MIN), bg = e.accent },
     TabLine          = { fg = e.fg },
-    Title            = { fg = m.cyan, bold = true },
+    Title            = { fg = fit(m.cyan, e.bg, T.TEXT_MIN), bold = true },
+    FloatTitle       = { fg = fit(m.cyan, e.bg, T.TEXT_MIN), bg = e.bg, bold = true },
+    FloatFooter      = { fg = fit(m.cyan, e.bg, T.TEXT_MIN), bg = e.bg },
     WarningMsg       = { fg = m.yellow },
     Whitespace       = { fg = e.disabled },
     CursorLine       = { bg = b.cursor_line },
@@ -357,15 +366,15 @@ M.async_highlights.editor = function()
     Directory     = { fg = m.blue },
     MatchParen    = { fg = m.yellow, bold = true },
     Question      = { fg = m.yellow }, -- |hit-enter| prompt and yes/no questions
-    QuickFixLine  = { fg = e.highlight, bg = e.title, reverse = true },
+    QuickFixLine  = { fg = fit(e.fg, e.selection, T.TEXT_MIN), bg = e.selection },
     -- Search        = { fg = e.title, bg = e.selection, bold = true },
     -- IncSearch     = { fg = e.title, bg = e.selection, underline = true },
-    Search        = { fg = e.bg, bg = e.title },
-    IncSearch     = { fg = e.bg, bg = e.title, bold = true },
-    CurSearch     = { fg = e.bg, bg = m.yellow, bold = true },
+    Search        = { fg = fit(e.bg, e.title, T.TEXT_MIN), bg = e.title },
+    IncSearch     = { fg = fit(e.bg, e.title, T.TEXT_MIN), bg = e.title, bold = true },
+    CurSearch     = { fg = fit(e.bg, m.yellow, T.TEXT_MIN), bg = m.yellow, bold = true },
     MoreMsg       = { fg = e.accent },
-    Pmenu         = { fg = e.selection_fg, bg = e.selection }, -- popup menu
-    PmenuSel      = { fg = e.contrast, bg = e.accent }, -- Popup menu: selected item.
+    Pmenu         = { fg = fit(e.selection_fg, e.selection, T.TEXT_MIN), bg = e.selection }, -- popup menu
+    PmenuSel      = { fg = fit(e.bg, e.accent, T.TEXT_MIN), bg = e.accent }, -- Popup menu: selected item.
     PmenuSbar     = { bg = e.active },
     PmenuThumb    = { fg = e.fg },
     WildMenu      = { fg = m.orange, bold = true }, -- current match in 'wildmenu' completion

@@ -1,9 +1,23 @@
-local colors = require("ghosttysync.colors")
-local style = require("ghosttysync.util.config").settings.lualine_style
+local colors   = require("ghosttysync.colors")
+local style    = require("ghosttysync.util.config").settings.lualine_style
+local contrast = require("ghosttysync.colors.contrast")
+local T        = contrast.thresholds()
 
 local m = colors.main
 local e = colors.editor
 local s = colors.syntax
+
+-- Ensure each section's `fg` meets TEXT_MIN against its `bg`.
+local function fit_sections(theme)
+	for _, mode in pairs(theme) do
+		for _, section in pairs(mode) do
+			if section.fg and section.bg and section.bg ~= "NONE" then
+				section.fg = contrast.ensure_contrast(section.fg, section.bg, T.TEXT_MIN)
+			end
+		end
+	end
+	return theme
+end
 
 local M = {}
 
@@ -73,4 +87,4 @@ else
 	}
 end
 
-return M
+return fit_sections(M)

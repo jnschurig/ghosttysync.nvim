@@ -14,6 +14,10 @@ the following design philosophies:
 1. If possible, colors should move straight across from the terminal theme.
 2. Minimal configuration and customization.
 3. If additional colors are needed, they should be adapted from original colors.
+4. Highlights are checked for WCAG contrast against their background and adjusted
+   along OKLCH lightness when needed — hue is preserved so the theme's character
+   stays intact. See `lua/ghosttysync/colors/README.md` for the readability
+   pipeline and `:GhosttysyncAudit` for live inspection.
 
 This is why so much customization has been removed from the source theme, and why there will
 be even more options removed in the future.

@@ -1,4 +1,5 @@
 local settings = require("ghosttysync.util.config").settings
+local oklch = require("ghosttysync.colors.oklch")
 
 local M = {}
 
@@ -88,14 +89,6 @@ local function linearize_rgb(floating_point_value)
 	return ((floating_point_value + 0.055) / 1.055) ^ 2.4
 end
 
-local function delinearize_rgb(linear_value)
-	-- The undo of the linearize_rgb function
-	if linear_value <= 0.0031308 then
-		return linear_value * 12.92
-	end
-	return 1.055 * (linear_value ^ (1 / 2.4)) - 0.055
-end
-
 local function invert_hue(rgb_number)
 	return (1 - (rgb_number / 255)) * 255
 end
@@ -142,47 +135,31 @@ M.closest_color_match = function(spec_color, colors_table)
 	return closest_color
 end
 
+-- WCAG relative luminance (scalar).
 M.relative_luminance = function(color)
 	local rgb = rgb_luminance(color)
-	local r = rgb[1]
-	local g = rgb[2]
-	local b = rgb[3]
-
-	return r + g + b
-end
-
-M.adjust_luminance = function(color, adjustment_factor)
-	local rgb = rgb_luminance(color)
-	local r_lum = rgb[1] * adjustment_factor
-	local g_lum = rgb[2] * adjustment_factor
-	local b_lum = rgb[3] * adjustment_factor
-
-	local rgb_max = 255
-	local r = delinearize_rgb(r_lum / 0.2126) * rgb_max
-	local g = delinearize_rgb(g_lum / 0.7152) * rgb_max
-	local b = delinearize_rgb(b_lum / 0.0722) * rgb_max
-
-	return rgb_to_hex(r, g, b)
+	return rgb[1] + rgb[2] + rgb[3]
 end
 
 M.contrast_ratio = function(color1, color2)
-	local c1_luminance = M.relative_luminance(color1)
-	local c2_luminance = M.relative_luminance(color2)
-
-	return (math.max(c1_luminance, c2_luminance) + 0.05) / (math.min(c1_luminance, c2_luminance) + 0.05)
+	local l1 = M.relative_luminance(color1)
+	local l2 = M.relative_luminance(color2)
+	return (math.max(l1, l2) + 0.05) / (math.min(l1, l2) + 0.05)
 end
 
-M.adjust_color_value = function(starting_color, adjustment_factor)
-	if adjustment_factor < 0 then
-		return starting_color
-	end
-	local rgb = hex_to_rgb(starting_color)
-	local r = math.min(math.floor(rgb[1] * adjustment_factor), 255)
-	local g = math.min(math.floor(rgb[2] * adjustment_factor), 255)
-	local b = math.min(math.floor(rgb[3] * adjustment_factor), 255)
-	return rgb_to_hex(r, g, b)
+-- Scale OKLCH lightness by `factor` (preserves hue and chroma).
+-- Negative factor returns the input unchanged (legacy guard).
+M.adjust_luminance = function(color, factor)
+	if factor < 0 then return color end
+	local lch = oklch.hex_to_oklch(color)
+	lch.L = math.min(math.max(lch.L * factor, 0), 1)
+	return oklch.oklch_to_hex(lch)
 end
 
+-- Hue-preserving lighten/darken. Alias of adjust_luminance — kept for call-site clarity.
+M.adjust_color_value = M.adjust_luminance
+
+-- DEPRECATED: prefer ghosttysync.colors.contrast.ensure_contrast (Step 3+).
 M.lower_contrast = function(color, reference_color, contrast_threshold)
 	if contrast_threshold == nil then
 		contrast_threshold = 4
@@ -211,6 +188,7 @@ M.lower_contrast = function(color, reference_color, contrast_threshold)
 	return color
 end
 
+-- DEPRECATED: prefer ghosttysync.colors.contrast.ensure_contrast (Step 3+).
 M.raise_contrast = function(color, reference_color, contrast_threshold)
 	if contrast_threshold == nil then
 		contrast_threshold = 4

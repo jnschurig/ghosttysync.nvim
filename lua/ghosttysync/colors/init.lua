@@ -1,5 +1,7 @@
 local termcolor = require("ghosttysync.colors.ghosttyconfig")
 local functions = require("ghosttysync.functions")
+local contrast  = require("ghosttysync.colors.contrast")
+local T         = contrast.thresholds()
 
 local pure_red    = "#ff0000"
 local pure_green  = "#00ff00"
@@ -77,16 +79,11 @@ local colors = {
 	},
 }
 
--- Ajdust color if it is the same as the background/foreground
+-- Ensure each main color has minimum contrast against the editor background.
+-- Hue is preserved (OKLCH); only lightness is adjusted.
+local _editor_bg = term_colors.colors.background
 for color_name, color in pairs(colors.main) do
-	if color == term_colors.colors.background or color == term_colors.colors.foreground then
-		for new_name, _ in pairs(colors.main) do
-			if color_name ~= new_name then
-				colors.main[color_name] = colors.main[new_name]
-				break
-			end
-		end
-	end
+	colors.main[color_name] = contrast.ensure_contrast(color, _editor_bg, T.UI_MIN)
 end
 
 -- darker colors
@@ -148,10 +145,19 @@ colors.editor.accent       = colors.main.purple
 colors.editor.contrast     = functions.raise_contrast(functions.adjust_color_value(colors.editor.accent, standard_adjustment), colors.main.accent, 10)
 colors.editor.none         = "NONE"
 
+-- Ensure text/UI roles in editor.* meet readability thresholds.
+colors.editor.fg           = contrast.ensure_contrast(colors.editor.fg,           colors.editor.bg, T.TEXT_MIN)
+colors.editor.fg_dark      = contrast.ensure_contrast(colors.editor.fg_dark,      colors.editor.bg, T.TEXT_MIN)
+colors.editor.line_numbers = contrast.ensure_contrast(colors.editor.line_numbers, colors.editor.bg, T.UI_MIN)
+colors.editor.border       = contrast.ensure_contrast(colors.editor.border,       colors.editor.bg, T.UI_MIN)
+colors.editor.disabled     = contrast.ensure_contrast(colors.editor.disabled,     colors.editor.bg, T.UI_MIN)
+colors.editor.contrast     = contrast.ensure_contrast(colors.editor.contrast,     colors.editor.bg, T.UI_MIN)
+colors.editor.title        = colors.editor.fg
+
 ---syntax colors
-colors.syntax.comments  = colors.main.gray
+colors.syntax.comments  = contrast.ensure_contrast(colors.main.gray, colors.editor.bg, T.COMMENT_MIN)
 colors.syntax.variable  = colors.editor.fg
-colors.syntax.field     = colors.editor.fg
+colors.syntax.field     = colors.editor.fg_dark
 colors.syntax.keyword   = colors.main.purple
 colors.syntax.value     = colors.main.orange
 colors.syntax.operator  = colors.main.cyan
@@ -159,6 +165,24 @@ colors.syntax.fn        = colors.main.blue
 colors.syntax.parameter = colors.main.paleblue
 colors.syntax.string    = colors.main.green
 colors.syntax.type      = colors.main.purple
+
+-- Adjacent-role distinguishability: nudge the second member of each pair.
+do
+	local pairs_to_check = {
+		{ "keyword",   "type" },
+		{ "fn",        "parameter" },
+		{ "string",    "value" },
+		{ "operator",  "fn" },
+		{ "variable",  "field" },
+	}
+	for _, p in ipairs(pairs_to_check) do
+		local a, b = colors.syntax[p[1]], colors.syntax[p[2]]
+		if a and b then
+			colors.syntax[p[2]] = contrast.nudge_apart(a, b, colors.editor.bg,
+				T.MIN_ROLE_DISTANCE, T.UI_MIN)
+		end
+	end
+end
 
 ---git colors
 colors.git.added    = colors.main.green
