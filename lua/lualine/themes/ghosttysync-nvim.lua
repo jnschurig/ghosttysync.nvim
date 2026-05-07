@@ -18,30 +18,35 @@ end
 
 local M = {}
 
+local mb = colors.lualine_mode_bgs
 M.normal = {
-	a = { fg = e.bg, bg = e.accent, gui = "bold" },
+	a = { fg = e.bg, bg = mb.normal, gui = "bold" },
 	b = { fg = e.title, bg = e.bg_alt },
-	-- c = { fg = e.fg, bg = e.selection },
-	c = { fg = e.fg, bg = e.active }, -- formerly e.selection
+	c = { fg = e.fg, bg = e.active },
 }
 
 M.insert = {
-	a = { fg = e.bg, bg = m.green, gui = "bold" },
+	a = { fg = e.bg, bg = mb.insert, gui = "bold" },
 	b = { fg = e.title, bg = e.bg_alt },
 }
 
 M.visual = {
-	a = { fg = e.bg, bg = m.purple, gui = "bold" },
+	a = { fg = e.bg, bg = mb.visual, gui = "bold" },
 	b = { fg = e.title, bg = e.bg_alt },
 }
 
 M.replace = {
-	a = { fg = e.bg, bg = m.red, gui = "bold" },
+	a = { fg = e.bg, bg = mb.replace, gui = "bold" },
 	b = { fg = e.title, bg = e.bg_alt },
 }
 
 M.command = {
-	a = { fg = e.bg, bg = m.yellow, gui = "bold" },
+	a = { fg = e.bg, bg = mb.command, gui = "bold" },
+	b = { fg = e.title, bg = e.bg_alt },
+}
+
+M.terminal = {
+	a = { fg = e.bg, bg = mb.terminal, gui = "bold" },
 	b = { fg = e.title, bg = e.bg_alt },
 }
 

@@ -145,6 +145,26 @@ colors.editor.accent       = colors.main.purple
 colors.editor.contrast     = functions.raise_contrast(functions.adjust_color_value(colors.editor.accent, standard_adjustment), colors.main.accent, 10)
 colors.editor.none         = "NONE"
 
+-- Panel bg role: shifted from editor.bg by 1.5x PANEL_BG_OFFSET in the
+-- direction that increases ΔE from Normal bg (lighter on dark bg, darker on
+-- light bg). 1.5x gives slack above the audit threshold for hue drift.
+do
+    local oklch = require("ghosttysync.colors.oklch")
+    local lch = oklch.hex_to_oklch(colors.editor.bg)
+    if lch then
+        local dir = (color_mod_direction == 1) and -1 or 1
+        lch.L = math.max(0, math.min(1, lch.L + dir * T.PANEL_BG_OFFSET * 1.5))
+        colors.editor.panel_bg = oklch.oklch_to_hex(lch)
+    else
+        colors.editor.panel_bg = colors.editor.bg_alt
+    end
+end
+
+-- Stronger border role: ensure floating-panel borders are always visible
+-- against the panel bg they're rendered on (panel_bg, not editor.bg).
+colors.editor.border_strong = contrast.ensure_contrast(
+    colors.editor.border, colors.editor.panel_bg, T.UI_MIN)
+
 -- Ensure text/UI roles in editor.* meet readability thresholds.
 colors.editor.fg           = contrast.ensure_contrast(colors.editor.fg,           colors.editor.bg, T.TEXT_MIN)
 colors.editor.fg_dark      = contrast.ensure_contrast(colors.editor.fg_dark,      colors.editor.bg, T.TEXT_MIN)
@@ -195,6 +215,74 @@ colors.backgrounds.floating_windows    = colors.editor.bg
 colors.backgrounds.non_current_windows = colors.editor.bg
 colors.backgrounds.bg_blend            = colors.editor.bg
 colors.backgrounds.cursor_line         = functions.adjust_color_value(colors.editor.bg, standard_adjustment)
+
+-- Lualine mode-bg distinct selection (F4).
+-- Each mode prefers a short list of semantic palette colors. We walk modes in
+-- priority order, picking the first preference that (a) is not yet taken and
+-- (b) yields TEXT_MIN against the mode's text fg. Falls back to the unused
+-- semantic with greatest perceptual distance from already-picked bgs.
+do
+	local m = colors.main
+	local text_fg = colors.editor.bg -- mode `a` sections use bg-tinted text
+	local prefs = {
+		normal   = { m.blue,   m.cyan   },
+		insert   = { m.green,  m.cyan   },
+		visual   = { m.purple, m.yellow },
+		replace  = { m.red,    m.purple },
+		command  = { m.yellow, m.green  },
+		terminal = { m.cyan,   m.blue   },
+	}
+	local order = { "normal", "insert", "visual", "replace", "command", "terminal" }
+	local all_semantics = { m.red, m.green, m.yellow, m.blue, m.purple, m.cyan, m.orange }
+
+	local picked = {}
+	local taken = {}
+	for _, mode in ipairs(order) do
+		local chosen
+		for _, cand in ipairs(prefs[mode] or {}) do
+			if cand and not taken[cand]
+				and contrast.wcag_ratio(text_fg, cand) >= T.TEXT_MIN then
+				chosen = cand
+				break
+			end
+		end
+		if not chosen then
+			-- Fallback: pick the candidate (from semantics) with greatest
+			-- distance from already-picked bgs. Prefer unused; if all are
+			-- already taken (e.g. palette has fewer distinct hue families
+			-- than modes), accept reuse but pick the farthest. Text fg may
+			-- need ensure_contrast downstream.
+			local best, best_dist = nil, -1
+			local function score(cand)
+				local min_d = math.huge
+				for c, _ in pairs(taken) do
+					local d = contrast.oklch_distance(cand, c)
+					if d < min_d then min_d = d end
+				end
+				return min_d
+			end
+			for _, cand in ipairs(all_semantics) do
+				if cand and not taken[cand] then
+					local d = score(cand)
+					if d > best_dist then best, best_dist = cand, d end
+				end
+			end
+			if not best then
+				best_dist = -1
+				for _, cand in ipairs(all_semantics) do
+					if cand then
+						local d = score(cand)
+						if d > best_dist then best, best_dist = cand, d end
+					end
+				end
+			end
+			chosen = best or prefs[mode][1]
+		end
+		picked[mode] = chosen
+		if chosen then taken[chosen] = true end
+	end
+	colors.lualine_mode_bgs = picked
+end
 
 term_colors.colors.palette = palette
 

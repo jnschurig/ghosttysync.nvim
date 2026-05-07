@@ -287,7 +287,7 @@ end
 M.main_highlights.editor = function()
   local editor_hls = {
     Normal           = { fg = e.fg, bg = e.bg },
-    NormalFloat      = { fg = e.fg, bg = b.floating_windows },
+    NormalFloat      = { fg = e.fg, bg = e.panel_bg },
     NormalContrast   = { fg = e.fg, bg = e.bg_alt }, -- a help group for contrast fileypes
     ColorColumn      = { fg = m.none, bg = e.active },
     Conceal          = { fg = e.disabled },
@@ -297,8 +297,18 @@ M.main_highlights.editor = function()
     ErrorMsg         = { fg = l.error },
     Folded           = { fg = fit(e.fg_dark, e.bg_alt, T.TEXT_MIN), bg = e.bg_alt, italic = true },
     FoldColumn       = { fg = m.blue },
-    LineNr           = { fg = e.line_numbers },
-    CursorLineNr     = { fg = e.accent },
+    -- Active line number is the visible-priority anchor; inactive nudged
+    -- away from it so they're perceptually distinct.
+    CursorLineNr     = { fg = fit(e.accent, e.bg, T.UI_MIN) },
+    LineNr           = {
+        fg = contrast.nudge_apart(
+            fit(e.accent, e.bg, T.UI_MIN),
+            fit(e.line_numbers, e.bg, T.COMMENT_MIN),
+            e.bg,
+            T.MIN_ROLE_DISTANCE,
+            T.COMMENT_MIN
+        ),
+    },
     DiffAdd          = { bg = functions.darken(g.added, 0.2, b.bg_blend) },
     DiffChange       = { bg = functions.darken(g.modified, 0.2, b.bg_blend) },
     DiffDelete       = { bg = functions.darken(g.removed, 0.2, b.bg_blend )},
@@ -351,7 +361,7 @@ end
 M.async_highlights.editor = function()
   local editor_hls = {
     NormalNC      = { bg = b.non_current_windows },
-    FloatBorder   = { fg = e.border, bg = b.floating_windows },
+    FloatBorder   = { fg = e.border_strong, bg = e.panel_bg },
     SpellBad      = { fg = m.red, italic = true, undercurl = true },
     SpellCap      = { fg = m.blue, italic = true, undercurl = true },
     SpellLocal    = { fg = m.cyan, italic = true, undercurl = true },
@@ -361,7 +371,7 @@ M.async_highlights.editor = function()
     healthSuccess = { fg = m.green },
     healthWarning = { fg = m.yellow },
     -- Visual        = { fg = m.none, bg = e.selection },
-    Visual        = { fg = e.selection_fg, bg = e.selection },
+    Visual        = { fg = fit(e.selection_fg, e.selection, T.TEXT_MIN), bg = e.selection },
     VisualNOS     = { link = "Visual" }, -- Visual mode selection when vim is "Not Owning the Selection".
     Directory     = { fg = m.blue },
     MatchParen    = { fg = m.yellow, bold = true },
@@ -378,8 +388,8 @@ M.async_highlights.editor = function()
     PmenuSbar     = { bg = e.active },
     PmenuThumb    = { fg = e.fg },
     WildMenu      = { fg = m.orange, bold = true }, -- current match in 'wildmenu' completion
-    VertSplit     = { fg = e.vsplit },
-    WinSeparator  = { fg = e.vsplit },
+    VertSplit     = { fg = fit(e.vsplit, e.bg, T.UI_MIN) },
+    WinSeparator  = { fg = fit(e.vsplit, e.bg, T.UI_MIN) },
     diffAdded     = { fg = g.added },
     diffRemoved   = { fg = g.removed },
     -- ToolbarLine   = { fg = e.fg, bg = e.bg_alt },

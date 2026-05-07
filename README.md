@@ -88,6 +88,13 @@ The plugin automatically syncs your Ghostty theme with Neovim on startup. You ca
 - Ghostty terminal emulator
 - Ghostty must be accessible via CLI (`ghostty +show-config`)
 
+## Known limitations
+
+- **lazygit diff colors are not theme-synced.** lazygit runs in a separate
+  process with its own config; bridging the live palette requires a
+  config-file write + reload that's out of scope for this plugin. gitsigns
+  and the lualine diff tier do pick up the active palette.
+
 ## Plugin Structure
 
 ```

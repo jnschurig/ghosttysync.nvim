@@ -10,25 +10,42 @@ local SKIP = {
 	Cursor = true, CursorIM = true, TermCursor = true, lCursor = true,
 }
 
-local function classify(name, T)
-	if SKIP[name] then return nil end
+-- Heuristic suffixes/substrings (lowercased) that mark a name as a
+-- recessive/comment-class group. See COMMENT_PATTERNS in scripts/audit.lua
+-- for the canonical list.
+local COMMENT_PATTERNS = {
+	"comment$", "blockquote$", "dim$", "dimtext$", "fade$", "fadetext%d*$",
+	"indent$", "indentmarker$", "expander$", "message$", "duplicate",
+	"hidden$", "ignored$", "dotfile$", "tabseparator", "separator$",
+	"staged",
+}
+
+local function is_comment_class(name)
 	local lname = name:lower()
-	-- Recessive groups (intentionally low-contrast by design).
 	if lname == "comment" or lname:match("^@comment") or lname == "lspinlayhint"
 		or name == "SpecialComment" or name == "DiagnosticUnnecessary"
 		or name == "DiagnosticDeprecated" or name == "Conceal"
 		or name == "EndOfBuffer" or name == "NonText" or name == "Whitespace"
-		or name == "Ignore" or name == "@lsp.type.comment"
-		-- Plugin-recessive groups: dim file indicators, inactive separators, etc.
-		or name:match("^NeoTree.*Dim") or name:match("^NeoTree.*Fade")
-		or name:match("^NeoTree.*Ignored") or name:match("^NeoTree.*Hidden")
-		or name == "NeoTreeDotfile" or name == "NeoTreeExpander"
-		or name == "NeoTreeIndentMarker" or name == "NeoTreeMessage"
-		or name:match("^NeoTreeTabSeparator")
-		or name:match("^BufferLine.*Diagnostic") or name:match("^BufferLine.*Separator")
-		or name:match("^BufferLineDuplicate")
-		or name:match("^GitSignsStaged") then
+		or name == "Ignore" or name == "@lsp.type.comment" then
+		return true
+	end
+	for _, p in ipairs(COMMENT_PATTERNS) do
+		if lname:match(p) then return true end
+	end
+	return false
+end
+
+local function classify(name, T)
+	if SKIP[name] then return nil end
+	if is_comment_class(name) then
 		return { kind = "comment", threshold = T.COMMENT_MIN }
+	end
+	local lname = name:lower()
+	if name:match("^lualine_transitional_")
+		or name:match("^lualine_.*_diff_")
+		or name:match("^lualine_.*_diagnostics_")
+		or name:match("^lualine_.*_filetype_MiniIcons") then
+		return { kind = "ui", threshold = T.UI_MIN }
 	end
 	if name == "Normal" or name == "NormalFloat" or name == "NormalNC"
 		or name == "NormalContrast" or name == "Pmenu" or name == "PmenuSel"

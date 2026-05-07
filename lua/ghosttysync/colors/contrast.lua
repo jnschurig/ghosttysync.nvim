@@ -14,6 +14,8 @@ M.defaults = {
 	COMMENT_MIN       = 2.5, -- comments are intentionally recessive
 	MIN_FLOOR         = 2.5, -- hard floor; below this the harness errors
 	MIN_ROLE_DISTANCE = 0.10, -- OKLab Euclidean distance between adjacent roles
+	PANEL_BG_OFFSET = 0.03, -- min OKLab ΔE between a floating-panel bg and Normal bg
+	PALETTE_BGFG_DIVERGENCE = 0.08, -- min OKLab ΔE before palette[0]/[15] count as distinctive
 }
 
 ---Resolve thresholds with user overrides applied.

@@ -132,21 +132,60 @@ M.color_diff = function(color1, color2)
 end
 
 M.closest_color_match = function(spec_color, colors_table)
-	local diff_score = 300 -- biggest difference can only be 255
-	local closest_color = nil
-
-	for _, color in ipairs(colors_table) do
-		local new_diff = nil
-		if not color then
-			new_diff = 400
+	-- Hue-prioritized match for saturated specs (pure_red, pure_purple, ...).
+	-- Naïve OKLab Euclidean lets a near-gray with matching lightness beat a
+	-- clear in-hue palette color, because gray sits near zero in (a,b) and
+	-- the high-chroma spec sits far out — the lightness term dominates.
+	-- Instead: take min angular hue distance, then break ties by chroma
+	-- (prefer more-saturated palette entries) and lightness proximity.
+	local ok, oklch = pcall(require, "ghosttysync.colors.oklch")
+	if not ok then
+		local closest, best = nil, math.huge
+		for _, color in ipairs(colors_table) do
+			if color then
+				local d = hex_color_diff(spec_color, color)
+				if d < best then best, closest = d, color end
+			end
 		end
-		new_diff = hex_color_diff(spec_color, color)
-		if new_diff < diff_score then
-			diff_score = new_diff
-			closest_color = color
+		return closest
+	end
+
+	local spec = oklch.hex_to_oklch(spec_color)
+	if not spec then return colors_table[1] end
+	local spec_is_saturated = (spec.c or 0) > 0.05
+
+	local function hue_diff(a, b)
+		local d = math.abs((a or 0) - (b or 0)) % 360
+		if d > 180 then d = 360 - d end
+		return d
+	end
+
+	local closest, best_score = nil, math.huge
+	for _, color in ipairs(colors_table) do
+		if color then
+			local lch = oklch.hex_to_oklch(color)
+			if lch then
+				local score
+				if spec_is_saturated then
+					-- Hue distance dominates; chroma proximity is secondary;
+					-- lightness is a small tie-breaker. Penalise low-chroma
+					-- palette entries when the spec is saturated.
+					score = hue_diff(spec.h, lch.h)
+						+ math.abs((spec.c or 0) - (lch.c or 0)) * 50
+						+ math.abs((spec.L or 0) - (lch.L or 0)) * 30
+				else
+					-- Spec is near-gray — match by lightness primarily.
+					score = math.abs((spec.L or 0) - (lch.L or 0)) * 100
+						+ (lch.c or 0) * 10
+				end
+				if score < best_score then
+					best_score = score
+					closest = color
+				end
+			end
 		end
 	end
-	return closest_color
+	return closest or colors_table[1]
 end
 
 -- WCAG relative luminance (scalar).

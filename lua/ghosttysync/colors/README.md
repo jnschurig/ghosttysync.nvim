@@ -68,6 +68,23 @@ files:
  | `COMMENT_MIN`       | 2.5     | Comments and recessive groups                |
  | `MIN_FLOOR`         | 2.5     | Hard floor (audit fails below this)          |
  | `MIN_ROLE_DISTANCE` | 0.10    | Adjacent-role perceptual distance (OKLab)    |
+ | `PANEL_BG_OFFSET`   | 0.03    | Min ΔE between a floating-panel bg and Normal|
+ | `PALETTE_BGFG_DIVERGENCE` | 0.08 | Min ΔE before palette[0]/[15] count as distinctive |
+
+ ### Mode-bg picker
+ Lualine mode bgs are assigned distinct semantic palette colors at load time
+ (see `colors.lualine_mode_bgs`). Each mode has a small preference list of
+ hue families; the picker walks modes in priority order and picks the first
+ unused candidate that meets `TEXT_MIN` against the section's text fg.
+ Falls back to the unused color most distant from already-picked bgs. Runs
+ once at palette load — no per-render cost.
+
+ ### Floating panels
+ - `colors.editor.panel_bg` is `editor.bg` shifted by ~1.5×`PANEL_BG_OFFSET`
+   along OKLCH L (lighter on dark bgs, darker on light bgs).
+ - `colors.editor.border_strong` is contrast-ensured against `panel_bg` at
+   `UI_MIN`. `FloatBorder`, `WinSeparator`, `VertSplit`, and Noice/cmdline
+   border groups all source from this so panes always have visible chrome.
 
  Loose-to-start; tighten as needed. The goal is "stay true to the chosen theme"
  while ensuring each highlight is readable. If a palette is too constrained for

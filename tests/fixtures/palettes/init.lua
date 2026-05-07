@@ -8,4 +8,6 @@ return {
 	require("tests.fixtures.palettes.aardvark-blue"),
 	require("tests.fixtures.palettes.alabaster"),
 	require("tests.fixtures.palettes.apple-system-light"),
+	require("tests.fixtures.palettes.adventure-time"),
+	require("tests.fixtures.palettes.arcoiris"),
 }

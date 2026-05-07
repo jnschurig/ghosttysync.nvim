@@ -26,25 +26,45 @@ local SKIP = {
 	-- Sign columns are intentionally dim; checked indirectly via DiagnosticSign* fg.
 }
 
--- Classify a highlight name to its applicable threshold.
-local function classify(name)
-	if SKIP[name] then return nil end
+-- Heuristic: any name matching one of these substrings (case-insensitive) is
+-- treated as a recessive/comment-class group. Replaces an earlier explicit
+-- allowlist of plugin groups. The repo isn't actively maintained against
+-- every plugin's highlight catalogue, so a heuristic ages better than a list.
+local COMMENT_PATTERNS = {
+	"comment$", "blockquote$", "dim$", "dimtext$", "fade$", "fadetext%d*$",
+	"indent$", "indentmarker$", "expander$", "message$", "duplicate",
+	"hidden$", "ignored$", "dotfile$", "tabseparator", "separator$",
+	"staged",
+}
+
+local function is_comment_class(name)
 	local lname = name:lower()
-	-- Recessive groups: comments, conceal/whitespace/non-text, plugin dim indicators.
 	if lname == "comment" or lname:match("^@comment") or lname == "lspinlayhint"
 		or name == "SpecialComment" or name == "DiagnosticUnnecessary"
 		or name == "DiagnosticDeprecated" or name == "Conceal"
 		or name == "EndOfBuffer" or name == "NonText" or name == "Whitespace"
-		or name == "Ignore" or name == "@lsp.type.comment"
-		or name:match("^NeoTree.*Dim") or name:match("^NeoTree.*Fade")
-		or name:match("^NeoTree.*Ignored") or name:match("^NeoTree.*Hidden")
-		or name == "NeoTreeDotfile" or name == "NeoTreeExpander"
-		or name == "NeoTreeIndentMarker" or name == "NeoTreeMessage"
-		or name:match("^NeoTreeTabSeparator")
-		or name:match("^BufferLine.*Diagnostic") or name:match("^BufferLine.*Separator")
-		or name:match("^BufferLineDuplicate")
-		or name:match("^GitSignsStaged") then
+		or name == "Ignore" or name == "@lsp.type.comment" then
+		return true
+	end
+	for _, p in ipairs(COMMENT_PATTERNS) do
+		if lname:match(p) then return true end
+	end
+	return false
+end
+
+-- Classify a highlight name to its applicable threshold.
+local function classify(name)
+	if SKIP[name] then return nil end
+	if is_comment_class(name) then
 		return { kind = "comment", threshold = THRESH.COMMENT_MIN }
+	end
+	-- Lualine decorative groups (transitional separators, diff/diagnostic
+	-- icons rendered in section bgs) are UI tier, not body text.
+	if name:match("^lualine_transitional_")
+		or name:match("^lualine_.*_diff_")
+		or name:match("^lualine_.*_diagnostics_")
+		or name:match("^lualine_.*_filetype_MiniIcons") then
+		return { kind = "ui", threshold = THRESH.UI_MIN }
 	end
 	-- Text-like groups: editor body, lualine sections, popup body, statuslines.
 	if name == "Normal" or name == "NormalFloat" or name == "NormalNC"
@@ -70,7 +90,7 @@ end
 local function apply_fixture(fixture)
 	-- Reset package state so colors / highlights re-evaluate.
 	for k in pairs(package.loaded) do
-		if k:match("^ghosttysync") then
+		if k:match("^ghosttysync") or k:match("^lualine%.themes%.ghosttysync") then
 			package.loaded[k] = nil
 		end
 	end
@@ -170,10 +190,152 @@ local function audit_palette(fixture)
 		end
 	end
 
+	-- mode_bg_distinguishability: pairwise OKLCH distance over lualine mode-`a` bgs.
+	-- Read from the theme table directly — lualine's runtime highlights aren't
+	-- registered in headless mode.
+	local mode_bg_failures = {}
+	do
+		local modes = { "normal", "insert", "visual", "replace", "command", "terminal" }
+		local ok, theme = pcall(require, "lualine.themes.ghosttysync")
+		if ok and type(theme) == "table" then
+			local mode_bgs = {}
+			for _, m in ipairs(modes) do
+				if theme[m] and theme[m].a and theme[m].a.bg then
+					mode_bgs[m] = theme[m].a.bg
+				end
+			end
+			for i, a in ipairs(modes) do
+				for j = i + 1, #modes do
+					local b = modes[j]
+					if mode_bgs[a] and mode_bgs[b] then
+						local d = contrast.oklch_distance(mode_bgs[a], mode_bgs[b])
+						if d < THRESH.MIN_ROLE_DISTANCE then
+							table.insert(mode_bg_failures, {
+								a = a, a_color = mode_bgs[a], b = b, b_color = mode_bgs[b], distance = d,
+							})
+						end
+					end
+				end
+			end
+		end
+	end
+
+	-- floating_border_visibility: any group whose name ends in "Border" must
+	-- meet UI_MIN against Normal bg.
+	local border_failures = {}
+	for _, name in ipairs(names) do
+		if name:match("Border$") then
+			local fg, bg = resolve_hl(name, normal_bg)
+			if fg and bg and fg ~= bg then
+				local ratio = contrast.wcag_ratio(fg, bg)
+				if ratio < THRESH.UI_MIN then
+					table.insert(border_failures, {
+						name = name, fg = fg, bg = bg, ratio = ratio,
+					})
+				end
+			end
+		end
+	end
+
+	-- floating_panel_bg_distinct: any group whose name matches the panel-bg
+	-- heuristic must have ΔE >= PANEL_BG_OFFSET from Normal bg.
+	local panel_bg_failures = {}
+	local panel_re = "Float.*Bg$|Popup.*Bg$|Cmdline.*Bg|^NormalFloat$|^NoiceCmdlinePopup$|^TelescopePromptNormal$|^SnacksPicker.*Normal$"
+	for _, name in ipairs(names) do
+		-- Lua patterns lack alternation; check each subpattern.
+		local matched = name:match("Float.*Bg$") or name:match("Popup.*Bg$")
+			or name:match("Cmdline.*Bg") or name == "NormalFloat"
+			or name == "NoiceCmdlinePopup" or name == "TelescopePromptNormal"
+			or name:match("^SnacksPicker.*Normal$")
+		if matched then
+			local _, bg = resolve_hl(name, normal_bg)
+			if bg and normal_bg and bg ~= normal_bg then
+				local d = contrast.oklch_distance(bg, normal_bg)
+				if d < THRESH.PANEL_BG_OFFSET then
+					table.insert(panel_bg_failures, {
+						name = name, bg = bg, normal_bg = normal_bg, distance = d,
+					})
+				end
+			elseif bg == normal_bg then
+				table.insert(panel_bg_failures, {
+					name = name, bg = bg, normal_bg = normal_bg, distance = 0,
+				})
+			end
+		end
+	end
+	-- Silence the unused-local warning while keeping the regex documented above.
+	local _ = panel_re
+
+	-- palette_coverage: every palette index 1..14 must be referenced by at
+	-- least one applied highlight's fg or bg. Indices 0 and 15 are required
+	-- only when distinctive (ΔE >= PALETTE_BGFG_DIVERGENCE from resolved bg/fg).
+	local coverage_failures = {}
+	do
+		-- Build the set of distinct colors actually applied to highlights.
+		-- We match palette indices to applied colors *perceptually* (ΔE) rather
+		-- than by exact hex, because `ensure_contrast` shifts colors during
+		-- role assignment — the literal palette hex rarely appears verbatim.
+		local applied_list = {}
+		local applied_set = {}
+		for _, name in ipairs(names) do
+			local fg, bg = resolve_hl(name, normal_bg)
+			for _, c in ipairs({ fg, bg }) do
+				if c and not applied_set[c:lower()] then
+					applied_set[c:lower()] = true
+					table.insert(applied_list, c)
+				end
+			end
+		end
+		-- Match threshold: a palette index counts as "covered" if any applied
+		-- color is within this OKLab ΔE. ensure_contrast can shift saturated
+		-- palette colors substantially when the bg luminance is extreme;
+		-- bright (8..15) variants also tend to differ from their normal
+		-- counterparts by more than a small ΔE. 0.12 ≈ "same hue family,
+		-- different shade" which is what coverage really cares about.
+		local function applied_near(palette_color)
+			for _, c in ipairs(applied_list) do
+				if contrast.oklch_distance(palette_color, c) < 0.12 then
+					return true
+				end
+			end
+			return false
+		end
+		local palette = fixture.colors.palette or {}
+		local _, n_bg = resolve_hl("Normal", nil)
+		local n_fg = (function() local f, _ = resolve_hl("Normal", normal_bg); return f end)()
+		-- Dedupe by hex: many palettes have bright (8..15) duplicating normal (0..7).
+		-- Report the lowest-index occurrence; downstream only needs one
+		-- referencing highlight for that hue.
+		local seen = {}
+		for idx = 1, #palette do
+			local color = palette[idx]
+			if color then
+				local lc = color:lower()
+				local zero_idx = (idx - 1)
+				if not seen[lc] then
+					seen[lc] = true
+					local required = true
+					if zero_idx == 0 and n_bg then
+						required = contrast.oklch_distance(color, n_bg) >= THRESH.PALETTE_BGFG_DIVERGENCE
+					elseif zero_idx == 15 and n_fg then
+						required = contrast.oklch_distance(color, n_fg) >= THRESH.PALETTE_BGFG_DIVERGENCE
+					end
+					if required and not applied_near(color) then
+						table.insert(coverage_failures, { index = zero_idx, color = color })
+					end
+				end
+			end
+		end
+	end
+
 	return {
 		fixture = fixture,
 		failures = results,
 		pair_failures = pair_failures,
+		mode_bg_failures = mode_bg_failures,
+		border_failures = border_failures,
+		panel_bg_failures = panel_bg_failures,
+		coverage_failures = coverage_failures,
 		floor_violations = floor_violations,
 		normal_bg = normal_bg,
 	}
@@ -201,6 +363,49 @@ local function print_report(rep)
 		for _, p in ipairs(rep.pair_failures) do
 			print(string.format("    %s (%s) <-> %s (%s) dist=%.3f",
 				p.a, p.a_color, p.b, p.b_color, p.distance))
+		end
+	end
+
+	if #rep.mode_bg_failures == 0 then
+		print("  mode_bg_distinguishability: all-pass")
+	else
+		print(string.format("  mode_bg_distinguishability: %d collision(s) (min=%.2f)",
+			#rep.mode_bg_failures, THRESH.MIN_ROLE_DISTANCE))
+		for _, p in ipairs(rep.mode_bg_failures) do
+			print(string.format("    %s (%s) <-> %s (%s) dist=%.3f",
+				p.a, p.a_color, p.b, p.b_color, p.distance))
+		end
+	end
+
+	if #rep.border_failures == 0 then
+		print("  floating_border_visibility: all-pass")
+	else
+		print(string.format("  floating_border_visibility: %d failure(s) (min ratio=%.2f)",
+			#rep.border_failures, THRESH.UI_MIN))
+		for _, b in ipairs(rep.border_failures) do
+			print(string.format("    %-32s fg=%s bg=%s %.2f", b.name:sub(1, 32), b.fg, b.bg, b.ratio))
+		end
+	end
+
+	if #rep.panel_bg_failures == 0 then
+		print("  floating_panel_bg_distinct: all-pass")
+	else
+		print(string.format("  floating_panel_bg_distinct: %d failure(s) (min ΔE=%.2f)",
+			#rep.panel_bg_failures, THRESH.PANEL_BG_OFFSET))
+		for _, p in ipairs(rep.panel_bg_failures) do
+			print(string.format("    %-32s bg=%s normal=%s ΔE=%.3f",
+				p.name:sub(1, 32), p.bg, p.normal_bg, p.distance))
+		end
+	end
+
+	if #rep.coverage_failures == 0 then
+		print("  palette_coverage: all-pass")
+	else
+		print(string.format("  palette_coverage: %d unused index/indices",
+			#rep.coverage_failures))
+		for _, c in ipairs(rep.coverage_failures) do
+			print(string.format("    palette[%d] = %s  (no applied highlight references it)",
+				c.index, c.color))
 		end
 	end
 end

@@ -11,9 +11,9 @@ M.load = function()
         NoiceCmdlineIconLua           = { fg = m.blue },
         NoiceCmdlineIconSearch        = { fg = m.paleblue },
         NoiceCmdlinePopupTitle        = { fg = e.paleblue },
-        NoiceCmdlinePopupBorder       = { fg = e.border },
-        NoiceCmdlinePopupBorderSearch = { fg = e.border },
-        NoiceConfirmBorder            = { fg = e.border },
+        NoiceCmdlinePopupBorder       = { fg = e.border_strong },
+        NoiceCmdlinePopupBorderSearch = { fg = e.border_strong },
+        NoiceConfirmBorder            = { fg = e.border_strong },
     }
 
     return plugin_hls

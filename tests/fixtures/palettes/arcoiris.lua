@@ -1,0 +1,17 @@
+return {
+	name = "Arcoiris",
+	colors = {
+		palette = {
+			"#333333", "#da2700", "#12c258", "#ffc656",
+			"#518bfc", "#e37bd9", "#63fad5", "#bab2b2",
+			"#777777", "#ffb9b9", "#e3f6aa", "#ffddaa",
+			"#b3e8f3", "#cbbaf9", "#bcffc7", "#efefef",
+		},
+		background   = "#201f1e",
+		foreground   = "#eee4d9",
+		cursor_color = "#872929",
+		cursor_text  = "#fffbf2",
+		selection_bg = "#25524a",
+		selection_fg = "#f3fffd",
+	},
+}

@@ -19,29 +19,38 @@ end
 
 local M = {}
 
+-- Stealth keeps a single neutral mode bg; modes are distinguished via fg.
+-- Reuse the same distinct-color picker so fg's don't collide.
+local mb = colors.lualine_mode_bgs
+
 M.normal = {
-	a = { fg = e.accent, bg = e.highlight },
+	a = { fg = mb.normal, bg = e.highlight },
 	b = { fg = e.title, bg = e.bg_alt },
 	c = { fg = s.comments, bg = e.bg },
 }
 
 M.insert = {
-	a = { fg = m.green, bg = e.highlight },
+	a = { fg = mb.insert, bg = e.highlight },
 	b = { fg = e.title, bg = e.bg_alt },
 }
 
 M.visual = {
-	a = { fg = m.purple, bg = e.highlight },
+	a = { fg = mb.visual, bg = e.highlight },
 	b = { fg = e.title, bg = e.bg_alt },
 }
 
 M.replace = {
-	a = { fg = m.red, bg = e.highlight },
+	a = { fg = mb.replace, bg = e.highlight },
 	b = { fg = e.title, bg = e.bg_alt },
 }
 
 M.command = {
-	a = { fg = m.yellow, bg = e.highlight },
+	a = { fg = mb.command, bg = e.highlight },
+	b = { fg = e.title, bg = e.bg_alt },
+}
+
+M.terminal = {
+	a = { fg = mb.terminal, bg = e.highlight },
 	b = { fg = e.title, bg = e.bg_alt },
 }
 
