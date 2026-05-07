@@ -5,17 +5,26 @@ local M = {}
 
 ---Apply the configured lualine theme if lualine is loaded.
 ---Honors `settings.lualine_theme`: a string applies that theme; `false` skips.
+---Deferred to `VimEnter` (or `schedule`) so other plugins referenced by the
+---user's lualine config are loaded before lualine.setup re-evaluates them.
 M.apply_lualine_theme = function()
 	local theme = settings.lualine_theme
 	if not theme or theme == false then return end
-	local has_lualine, lualine = pcall(require, "lualine")
-	if not has_lualine then return end
-	-- Merge with whatever options lualine already has so we only override theme.
-	local ok, current = pcall(lualine.get_config)
-	local opts = (ok and current) or {}
-	opts.options = opts.options or {}
-	opts.options.theme = theme
-	lualine.setup(opts)
+	local apply = function()
+		local has_lualine, lualine = pcall(require, "lualine")
+		if not has_lualine then return end
+		local ok, current = pcall(lualine.get_config)
+		local opts = (ok and current) or {}
+		opts.options = opts.options or {}
+		if opts.options.theme == theme then return end
+		opts.options.theme = theme
+		pcall(lualine.setup, opts)
+	end
+	if vim.v.vim_did_enter == 1 then
+		vim.schedule(apply)
+	else
+		vim.api.nvim_create_autocmd("VimEnter", { once = true, callback = apply })
+	end
 end
 
 local set_lualine = M.apply_lualine_theme
