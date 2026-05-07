@@ -33,6 +33,7 @@ local function srgb_to_linear(c)
 end
 
 local function hex_to_lin(hex)
+	if not oklch.is_valid_hex(hex) then return nil end
 	hex = hex:gsub("#", "")
 	return srgb_to_linear(tonumber(hex:sub(1, 2), 16) / 255),
 		srgb_to_linear(tonumber(hex:sub(3, 4), 16) / 255),
@@ -41,6 +42,7 @@ end
 
 local function relative_luminance(hex)
 	local r, g, b = hex_to_lin(hex)
+	if not r then return 0 end
 	return 0.2126 * r + 0.7152 * g + 0.0722 * b
 end
 
@@ -61,6 +63,7 @@ end
 ---@return number
 function M.oklch_distance(a, b)
 	local A, B = oklch.hex_to_oklch(a), oklch.hex_to_oklch(b)
+	if not (A and B) then return 0 end
 	-- Convert chroma+hue to OKLab a/b for Euclidean distance.
 	local ah = A.h * math.pi / 180
 	local bh = B.h * math.pi / 180
@@ -79,6 +82,10 @@ end
 ---@return string new_fg
 ---@return boolean meets
 function M.ensure_contrast(fg, bg, threshold)
+	-- Pass through non-hex inputs unchanged (e.g. "NONE", nil).
+	if not (oklch.is_valid_hex(fg) and oklch.is_valid_hex(bg)) then
+		return fg, true
+	end
 	if M.wcag_ratio(fg, bg) >= threshold then
 		return fg, true
 	end
@@ -116,6 +123,9 @@ end
 ---@return string new_fg_b
 ---@return boolean meets
 function M.nudge_apart(fg_a, fg_b, bg, min_distance, contrast_threshold)
+	if not (oklch.is_valid_hex(fg_a) and oklch.is_valid_hex(fg_b) and oklch.is_valid_hex(bg)) then
+		return fg_b, true
+	end
 	if M.oklch_distance(fg_a, fg_b) >= min_distance then
 		return fg_b, true
 	end

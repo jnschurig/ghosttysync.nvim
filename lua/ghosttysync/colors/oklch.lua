@@ -25,11 +25,18 @@ end
 
 local function hex_to_rgb01(hex)
 	hex = hex:gsub("#", "")
-	local r = tonumber(hex:sub(1, 2), 16) / 255
-	local g = tonumber(hex:sub(3, 4), 16) / 255
-	local b = tonumber(hex:sub(5, 6), 16) / 255
-	return r, g, b
+	local r = tonumber(hex:sub(1, 2), 16)
+	local g = tonumber(hex:sub(3, 4), 16)
+	local b = tonumber(hex:sub(5, 6), 16)
+	if not (r and g and b) then return nil end
+	return r / 255, g / 255, b / 255
 end
+
+local function is_valid_hex(s)
+	return type(s) == "string" and s:match("^#?%x%x%x%x%x%x$") ~= nil
+end
+
+M.is_valid_hex = is_valid_hex
 
 local function rgb01_to_hex(r, g, b)
 	r = math.floor(clamp01(r) * 255 + 0.5)
@@ -116,7 +123,9 @@ end
 ---@param hex string
 ---@return table { L=number (0..1), c=number, h=number (0..360) }
 function M.hex_to_oklch(hex)
+	if not is_valid_hex(hex) then return nil end
 	local r, g, b = hex_to_rgb01(hex)
+	if not r then return nil end
 	local lr, lg, lb = srgb_to_linear(r), srgb_to_linear(g), srgb_to_linear(b)
 	local L, a, b2 = linear_rgb_to_oklab(lr, lg, lb)
 	local LL, C, h = lab_to_lch(L, a, b2)
@@ -147,6 +156,7 @@ end
 ---@return string
 function M.set_lightness(hex, L)
 	local lch = M.hex_to_oklch(hex)
+	if not lch then return hex end
 	lch.L = clamp01(L)
 	return M.oklch_to_hex(lch)
 end
@@ -157,6 +167,7 @@ end
 ---@return string
 function M.shift_lightness(hex, delta)
 	local lch = M.hex_to_oklch(hex)
+	if not lch then return hex end
 	lch.L = clamp01(lch.L + delta)
 	return M.oklch_to_hex(lch)
 end

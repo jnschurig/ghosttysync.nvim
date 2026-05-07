@@ -152,6 +152,7 @@ end
 M.adjust_luminance = function(color, factor)
 	if factor < 0 then return color end
 	local lch = oklch.hex_to_oklch(color)
+	if not lch then return color end
 	lch.L = math.min(math.max(lch.L * factor, 0), 1)
 	return oklch.oklch_to_hex(lch)
 end
