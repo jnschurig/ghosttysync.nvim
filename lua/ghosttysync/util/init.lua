@@ -1,6 +1,7 @@
 local highlights = require("ghosttysync.highlights")
 local colors = require("ghosttysync.colors")
 local settings = require("ghosttysync.util.config").settings
+require("ghosttysync.audit") -- registers :GhosttysyncAudit
 
 local M = {}
 
