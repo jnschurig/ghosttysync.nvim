@@ -1,6 +1,7 @@
 local highlights = require("ghosttysync.highlights")
 local colors = require("ghosttysync.colors")
 local settings = require("ghosttysync.util.config").settings
+local functions = require("ghosttysync.functions")
 require("ghosttysync.audit") -- registers :GhosttysyncAudit
 
 local M = {}
@@ -146,6 +147,9 @@ M.load = function()
 	else
 		load_async()
 	end
+
+	-- Apply configured lualine theme so our contrast-fitted theme is used by default.
+	functions.apply_lualine_theme()
 end
 
 return M

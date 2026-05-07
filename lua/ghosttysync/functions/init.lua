@@ -3,17 +3,22 @@ local oklch = require("ghosttysync.colors.oklch")
 
 local M = {}
 
----checks if the user uses lualine and then sets the lualine theme
-local set_lualine = function()
+---Apply the configured lualine theme if lualine is loaded.
+---Honors `settings.lualine_theme`: a string applies that theme; `false` skips.
+M.apply_lualine_theme = function()
+	local theme = settings.lualine_theme
+	if not theme or theme == false then return end
 	local has_lualine, lualine = pcall(require, "lualine")
-	if has_lualine then
-		lualine.setup({
-			options = {
-				theme = "auto",
-			},
-		})
-	end
+	if not has_lualine then return end
+	-- Merge with whatever options lualine already has so we only override theme.
+	local ok, current = pcall(lualine.get_config)
+	local opts = (ok and current) or {}
+	opts.options = opts.options or {}
+	opts.options.theme = theme
+	lualine.setup(opts)
 end
+
+local set_lualine = M.apply_lualine_theme
 
 ---switch to a given style @param style string name of the style to switch to
 M.change_style = function(style)

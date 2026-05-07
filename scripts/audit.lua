@@ -30,12 +30,20 @@ local SKIP = {
 local function classify(name)
 	if SKIP[name] then return nil end
 	local lname = name:lower()
-	-- Recessive groups: comments, conceal/whitespace/non-text, deprecated/unnecessary markers.
+	-- Recessive groups: comments, conceal/whitespace/non-text, plugin dim indicators.
 	if lname == "comment" or lname:match("^@comment") or lname == "lspinlayhint"
 		or name == "SpecialComment" or name == "DiagnosticUnnecessary"
 		or name == "DiagnosticDeprecated" or name == "Conceal"
 		or name == "EndOfBuffer" or name == "NonText" or name == "Whitespace"
-		or name == "Ignore" or name == "@lsp.type.comment" then
+		or name == "Ignore" or name == "@lsp.type.comment"
+		or name:match("^NeoTree.*Dim") or name:match("^NeoTree.*Fade")
+		or name:match("^NeoTree.*Ignored") or name:match("^NeoTree.*Hidden")
+		or name == "NeoTreeDotfile" or name == "NeoTreeExpander"
+		or name == "NeoTreeIndentMarker" or name == "NeoTreeMessage"
+		or name:match("^NeoTreeTabSeparator")
+		or name:match("^BufferLine.*Diagnostic") or name:match("^BufferLine.*Separator")
+		or name:match("^BufferLineDuplicate")
+		or name:match("^GitSignsStaged") then
 		return { kind = "comment", threshold = THRESH.COMMENT_MIN }
 	end
 	-- Text-like groups: editor body, lualine sections, popup body, statuslines.

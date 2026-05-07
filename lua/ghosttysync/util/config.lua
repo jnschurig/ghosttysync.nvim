@@ -30,6 +30,11 @@ local defaults = {
 		eob_lines = false,
 	},
 	lualine_style = "default",
+	-- Lualine theme to apply automatically when ghosttysync loads.
+	-- Default "ghosttysync" routes lualine through our contrast-fitted theme.
+	-- Set to false (or any other string like "auto") to keep your existing
+	-- lualine theme untouched.
+	lualine_theme = "ghosttysync",
 	plugins = {},
 	async_loading = true,
 	-- Contrast thresholds for the readability pipeline.

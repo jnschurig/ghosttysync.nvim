@@ -4,9 +4,30 @@
 
 local M = {}
 
+local SKIP = {
+	Black = true, Red = true, Green = true, Yellow = true, Blue = true,
+	Cyan = true, Purple = true, Orange = true, White = true,
+	Cursor = true, CursorIM = true, TermCursor = true, lCursor = true,
+}
+
 local function classify(name, T)
+	if SKIP[name] then return nil end
 	local lname = name:lower()
-	if lname == "comment" or lname:match("^@comment") or lname == "lspinlayhint" then
+	-- Recessive groups (intentionally low-contrast by design).
+	if lname == "comment" or lname:match("^@comment") or lname == "lspinlayhint"
+		or name == "SpecialComment" or name == "DiagnosticUnnecessary"
+		or name == "DiagnosticDeprecated" or name == "Conceal"
+		or name == "EndOfBuffer" or name == "NonText" or name == "Whitespace"
+		or name == "Ignore" or name == "@lsp.type.comment"
+		-- Plugin-recessive groups: dim file indicators, inactive separators, etc.
+		or name:match("^NeoTree.*Dim") or name:match("^NeoTree.*Fade")
+		or name:match("^NeoTree.*Ignored") or name:match("^NeoTree.*Hidden")
+		or name == "NeoTreeDotfile" or name == "NeoTreeExpander"
+		or name == "NeoTreeIndentMarker" or name == "NeoTreeMessage"
+		or name:match("^NeoTreeTabSeparator")
+		or name:match("^BufferLine.*Diagnostic") or name:match("^BufferLine.*Separator")
+		or name:match("^BufferLineDuplicate")
+		or name:match("^GitSignsStaged") then
 		return { kind = "comment", threshold = T.COMMENT_MIN }
 	end
 	if name == "Normal" or name == "NormalFloat" or name == "NormalNC"
