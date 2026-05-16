@@ -439,7 +439,7 @@ M.async_highlights.load_lsp = function()
     DiagnosticSignHint         = { link = "DiagnosticHint" },
     DiagnosticUnderlineHint    = { undercurl = true, sp = l.hint },
     DiagnosticUnderlineOk      = { undercurl = true, sp = m.green },
-    LspReferenceText           = { fg = fit(e.selection_fg, e.selection, T.TEXT_MIN), bg = e.selection }, -- used for highlighting "text" references
+    LspReferenceText           = { fg = fit(e.fg, e.active, T.TEXT_MIN), bg = e.active }, -- used for highlighting "text" references
     LspReferenceRead           = { link = "LspReferenceText" }, -- used for highlighting "read" references
     LspReferenceWrite          = { link = "LspReferenceText" }, -- used for highlighting "write" references
     LspCodeLens                = { italic = true, fg = l.hint, sp = l.hint },
