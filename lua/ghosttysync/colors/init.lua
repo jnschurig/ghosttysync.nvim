@@ -129,6 +129,21 @@ colors.editor.fg           = term_colors.colors.foreground
 colors.editor.fg_dark      = functions.adjust_color_value(colors.editor.fg, standard_adjustment)
 colors.editor.selection    = term_colors.colors.selection_bg
 colors.editor.selection_fg = term_colors.colors.selection_fg
+-- Ghostty themes commonly omit selection-foreground; without a fallback,
+-- Visual ends up with fg=nil and the underlying syntax color (e.g. String's
+-- green) bleeds through on top of the selection bg with no contrast. Pick
+-- whichever of bg/fg reads better on the selection bg as the fallback; the
+-- downstream fit() at the Visual highlight will adjust L for TEXT_MIN.
+if not oklch.is_valid_hex(colors.editor.selection_fg) then
+	local sel = colors.editor.selection
+	if oklch.is_valid_hex(sel) then
+		local fg_ratio = contrast.wcag_ratio(colors.editor.fg, sel)
+		local bg_ratio = contrast.wcag_ratio(colors.editor.bg, sel)
+		colors.editor.selection_fg = (bg_ratio >= fg_ratio) and colors.editor.bg or colors.editor.fg
+	else
+		colors.editor.selection_fg = colors.editor.fg
+	end
+end
 -- "active" = recessive variant of selection. Midpoint OKLCH lightness
 -- between selection and bg (the downstream ensure_contrast pass enforces
 -- UI_MIN if this lands too close to bg).
