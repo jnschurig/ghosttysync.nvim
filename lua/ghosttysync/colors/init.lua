@@ -214,9 +214,16 @@ end
 -- entry closest to the target OKLCH hue, with a chroma floor so near-gray
 -- entries (white/black) don't win on hue noise.
 local DIFF_CHROMA_MIN = 0.05
-local function closest_by_hue(target_h)
+-- `range_lo`/`range_hi` restrict the scan to a slice of `palette` (1-indexed).
+-- Used to find the bright-half (indices 9..16 = ANSI 8..15) hue match for the
+-- TUI terminal_color slots, distinct from the full-palette match used by
+-- git.added/removed/modified.
+local function closest_by_hue(target_h, range_lo, range_hi)
+	range_lo = range_lo or 1
+	range_hi = range_hi or #palette
 	local best, best_d = nil, math.huge
-	for _, hex in ipairs(palette) do
+	for idx = range_lo, range_hi do
+		local hex = palette[idx]
 		local lch = hex and oklch.hex_to_oklch(hex)
 		if lch and lch.h and (lch.c or 0) >= DIFF_CHROMA_MIN then
 			local d = math.abs(lch.h - target_h) % 360
@@ -227,9 +234,25 @@ local function closest_by_hue(target_h)
 	return best
 end
 -- Target hues (OKLCH degrees): red ~29, yellow ~110, green ~142.
+-- Scan the full palette for diff colors; lazygit etc. inside :term read
+-- terminal_color_* slots derived from these.
 colors.git.added    = contrast.ensure_contrast(closest_by_hue(142), colors.editor.bg, T.UI_MIN)
 colors.git.removed  = contrast.ensure_contrast(closest_by_hue(29),  colors.editor.bg, T.UI_MIN)
 colors.git.modified = contrast.ensure_contrast(closest_by_hue(110), colors.editor.bg, T.UI_MIN)
+
+-- TUI semantic colors for the embedded terminal. lazygit/htop/less/etc. ask
+-- for ANSI "red"/"green"/"yellow" and expect them to look red/green/yellow,
+-- not whatever the theme author put in slots 1..3. Perceptual hue match for
+-- the six semantic slots; the remaining slots keep their ANSI assignments.
+-- Bright variants scan only palette[9..16] (ANSI 8..15) for the same target.
+colors.term = {
+	red           = closest_by_hue(29)  or colors.main.red,
+	green         = closest_by_hue(142) or colors.main.green,
+	yellow        = closest_by_hue(110) or colors.main.yellow,
+	bright_red    = closest_by_hue(29,  9, 16) or colors.main.bright_red,
+	bright_green  = closest_by_hue(142, 9, 16) or colors.main.bright_green,
+	bright_yellow = closest_by_hue(110, 9, 16) or colors.main.bright_yellow,
+}
 
 ---contrasted backgrounds
 colors.backgrounds.sidebars            = colors.editor.bg

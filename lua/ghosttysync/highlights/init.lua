@@ -487,20 +487,25 @@ M.async_highlights.load_lsp = function()
   return lsp_hls
 end
 
----Map :term colors directly to the ANSI palette indices.
+---Map :term colors to the ANSI palette indices, with one exception: the six
+---semantic TUI slots (red/green/yellow + brights) use perceptual hue matches
+---from `colors.term` so lazygit/htop/etc. show conventional diff/status colors
+---even on palettes where the ANSI red/green/yellow slots aren't really
+---red/green/yellow. The other ten slots pass through unchanged.
 M.load_terminal = function()
+  local t = colors.term
   vim.g.terminal_color_0  = m.black
-  vim.g.terminal_color_1  = m.red
-  vim.g.terminal_color_2  = m.green
-  vim.g.terminal_color_3  = m.yellow
+  vim.g.terminal_color_1  = t.red
+  vim.g.terminal_color_2  = t.green
+  vim.g.terminal_color_3  = t.yellow
   vim.g.terminal_color_4  = m.blue
   vim.g.terminal_color_5  = m.purple
   vim.g.terminal_color_6  = m.cyan
   vim.g.terminal_color_7  = m.white
   vim.g.terminal_color_8  = m.bright_black
-  vim.g.terminal_color_9  = m.bright_red
-  vim.g.terminal_color_10 = m.bright_green
-  vim.g.terminal_color_11 = m.bright_yellow
+  vim.g.terminal_color_9  = t.bright_red
+  vim.g.terminal_color_10 = t.bright_green
+  vim.g.terminal_color_11 = t.bright_yellow
   vim.g.terminal_color_12 = m.bright_blue
   vim.g.terminal_color_13 = m.bright_purple
   vim.g.terminal_color_14 = m.bright_cyan
