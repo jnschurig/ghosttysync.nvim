@@ -124,7 +124,10 @@ M.blend = function(foreground, background, alpha)
 end
 
 M.darken = function(color, amount, bg)
-	return M.blend(color, bg or "#000000", amount)
+	-- Blending against "NONE" (transparent) is undefined; fall back to black
+	-- so the diff-row tint still has a reasonable color rather than crashing.
+	if bg == nil or bg == "NONE" then bg = "#000000" end
+	return M.blend(color, bg, amount)
 end
 
 M.check_colors = function(color_table)
