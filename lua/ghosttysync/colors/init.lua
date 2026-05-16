@@ -209,14 +209,16 @@ do
 end
 
 ---git colors
--- Diff semantics (added=green, removed=red) are universal — independent of
--- the theme's ANSI slot assignments. Scan the full palette for the entry
--- closest to true-red / true-green / true-yellow by OKLCH hue.
+-- Diff semantics (added=green, removed=red, modified=yellow) are universal —
+-- independent of the theme's ANSI slot assignments. Scan the palette for the
+-- entry closest to the target OKLCH hue, with a chroma floor so near-gray
+-- entries (white/black) don't win on hue noise.
+local DIFF_CHROMA_MIN = 0.05
 local function closest_by_hue(target_h)
 	local best, best_d = nil, math.huge
 	for _, hex in ipairs(palette) do
 		local lch = hex and oklch.hex_to_oklch(hex)
-		if lch and lch.h then
+		if lch and lch.h and (lch.c or 0) >= DIFF_CHROMA_MIN then
 			local d = math.abs(lch.h - target_h) % 360
 			if d > 180 then d = 360 - d end
 			if d < best_d then best, best_d = hex, d end
@@ -224,9 +226,10 @@ local function closest_by_hue(target_h)
 	end
 	return best
 end
-colors.git.added    = contrast.ensure_contrast(closest_by_hue(140), colors.editor.bg, T.UI_MIN)
-colors.git.removed  = contrast.ensure_contrast(closest_by_hue(25),  colors.editor.bg, T.UI_MIN)
-colors.git.modified = contrast.ensure_contrast(closest_by_hue(95),  colors.editor.bg, T.UI_MIN)
+-- Target hues (OKLCH degrees): red ~29, yellow ~110, green ~142.
+colors.git.added    = contrast.ensure_contrast(closest_by_hue(142), colors.editor.bg, T.UI_MIN)
+colors.git.removed  = contrast.ensure_contrast(closest_by_hue(29),  colors.editor.bg, T.UI_MIN)
+colors.git.modified = contrast.ensure_contrast(closest_by_hue(110), colors.editor.bg, T.UI_MIN)
 
 ---contrasted backgrounds
 colors.backgrounds.sidebars            = colors.editor.bg
