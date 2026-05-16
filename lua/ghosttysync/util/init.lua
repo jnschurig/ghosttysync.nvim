@@ -2,9 +2,22 @@ local highlights = require("ghosttysync.highlights")
 local colors = require("ghosttysync.colors")
 local settings = require("ghosttysync.util.config").settings
 local functions = require("ghosttysync.functions")
+local contrast = require("ghosttysync.colors.contrast")
+local oklch = require("ghosttysync.colors.oklch")
 require("ghosttysync.audit") -- registers :GhosttysyncAudit
 
 local M = {}
+
+---If both fg and bg resolve to hex colors, ensure the fg meets TEXT_MIN
+---against bg. ensure_contrast is a no-op when the pair already passes,
+---so call sites that already used fit() are unaffected.
+local function enforce_contrast(hl)
+	local fg, bg = hl.fg, hl.bg
+	if type(fg) ~= "string" or type(bg) ~= "string" then return end
+	if not (oklch.is_valid_hex(fg) and oklch.is_valid_hex(bg)) then return end
+	local T = contrast.thresholds()
+	hl.fg = contrast.ensure_contrast(fg, bg, T.TEXT_MIN)
+end
 
 ---apply highlights for a given table
 ---@param extra_highlights table highlight group names and their values
@@ -35,6 +48,7 @@ local apply_highlights = function(extra_highlights)
 				{ title = "ghosttysync.nvim" }
 			)
 		end
+		enforce_contrast(hl_val)
 		vim.api.nvim_set_hl(0, name, hl_val)
 	end
 end

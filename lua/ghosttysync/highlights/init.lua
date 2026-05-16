@@ -494,21 +494,28 @@ end
 ---red/green/yellow. The other ten slots pass through unchanged.
 M.load_terminal = function()
   local t = colors.term
+  -- TUIs like lazygit paint a selected line with an ANSI bg slot (e.g. blue
+  -- or cyan) and render the cell text using the terminal's default fg (e.fg).
+  -- On some source palettes those slots and e.fg are too close in luminance,
+  -- so default-fg text becomes unreadable on the highlighted line. Shift each
+  -- saturated slot's OKLCH L until e.fg meets TEXT_MIN against it. Hue is
+  -- preserved; the gray slots (0/7/8/15) pass through unchanged.
+  local function fit_bg(c) return contrast.ensure_contrast(c, e.fg, T.TEXT_MIN) end
   vim.g.terminal_color_0  = m.black
-  vim.g.terminal_color_1  = t.red
-  vim.g.terminal_color_2  = t.green
-  vim.g.terminal_color_3  = t.yellow
-  vim.g.terminal_color_4  = m.blue
-  vim.g.terminal_color_5  = m.purple
-  vim.g.terminal_color_6  = m.cyan
+  vim.g.terminal_color_1  = fit_bg(t.red)
+  vim.g.terminal_color_2  = fit_bg(t.green)
+  vim.g.terminal_color_3  = fit_bg(t.yellow)
+  vim.g.terminal_color_4  = fit_bg(m.blue)
+  vim.g.terminal_color_5  = fit_bg(m.purple)
+  vim.g.terminal_color_6  = fit_bg(m.cyan)
   vim.g.terminal_color_7  = m.white
   vim.g.terminal_color_8  = m.bright_black
-  vim.g.terminal_color_9  = t.bright_red
-  vim.g.terminal_color_10 = t.bright_green
-  vim.g.terminal_color_11 = t.bright_yellow
-  vim.g.terminal_color_12 = m.bright_blue
-  vim.g.terminal_color_13 = m.bright_purple
-  vim.g.terminal_color_14 = m.bright_cyan
+  vim.g.terminal_color_9  = fit_bg(t.bright_red)
+  vim.g.terminal_color_10 = fit_bg(t.bright_green)
+  vim.g.terminal_color_11 = fit_bg(t.bright_yellow)
+  vim.g.terminal_color_12 = fit_bg(m.bright_blue)
+  vim.g.terminal_color_13 = fit_bg(m.bright_purple)
+  vim.g.terminal_color_14 = fit_bg(m.bright_cyan)
   vim.g.terminal_color_15 = m.bright_white
 end
 
