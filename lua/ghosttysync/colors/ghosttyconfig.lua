@@ -91,7 +91,11 @@ function M.parse_config_output(output)
 			local color_str = color_parts[2]
 
 			if color_str ~= nil and color_idx ~= nil then
-				palette_entries[color_idx] = color_str
+				-- Ghostty's palette indices are 0-based (ANSI 0..15). Store at
+				-- color_idx + 1 so the result is a contiguous Lua 1..16 array
+				-- that ipairs traverses correctly. Without the offset, index 0
+				-- is orphaned and every downstream slot is shifted by one.
+				palette_entries[color_idx + 1] = color_str
 			end
 		else
 			if key ~= nil and value ~= nil then
@@ -142,7 +146,7 @@ function M.extract_theme_info(config)
 	-- Process palette entries from the special palette_entries array
 	if config.palette_entries then
 		for idx, color in ipairs(config.palette_entries) do
-			if idx < 16 and color ~= nil then
+			if idx <= 16 and color ~= nil then
 				theme_info.colors.palette[idx] = color
 			end
 		end
