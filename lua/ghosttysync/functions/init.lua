@@ -1,18 +1,33 @@
 local settings = require("ghosttysync.util.config").settings
+local oklch = require("ghosttysync.colors.oklch")
 
 local M = {}
 
----checks if the user uses lualine and then sets the lualine theme
-local set_lualine = function()
-	local has_lualine, lualine = pcall(require, "lualine")
-	if has_lualine then
-		lualine.setup({
-			options = {
-				theme = "auto",
-			},
-		})
+---Apply the configured lualine theme if lualine is loaded.
+---Honors `settings.lualine_theme`: a string applies that theme; `false` skips.
+---Deferred to `VimEnter` (or `schedule`) so other plugins referenced by the
+---user's lualine config are loaded before lualine.setup re-evaluates them.
+M.apply_lualine_theme = function()
+	local theme = settings.lualine_theme
+	if not theme or theme == false then return end
+	local apply = function()
+		local has_lualine, lualine = pcall(require, "lualine")
+		if not has_lualine then return end
+		local ok, current = pcall(lualine.get_config)
+		local opts = (ok and current) or {}
+		opts.options = opts.options or {}
+		if opts.options.theme == theme then return end
+		opts.options.theme = theme
+		pcall(lualine.setup, opts)
+	end
+	if vim.v.vim_did_enter == 1 then
+		vim.schedule(apply)
+	else
+		vim.api.nvim_create_autocmd("VimEnter", { once = true, callback = apply })
 	end
 end
+
+local set_lualine = M.apply_lualine_theme
 
 ---switch to a given style @param style string name of the style to switch to
 M.change_style = function(style)
@@ -59,56 +74,8 @@ local function hex_to_rgb(hex)
 	}
 end
 
-local function hex_color_diff(color1, color2)
-	local rgb1 = hex_to_rgb(color1)
-	local color1_r = rgb1[1]
-	local color1_g = rgb1[2]
-	local color1_b = rgb1[3]
-
-	local rgb2 = hex_to_rgb(color2)
-	local color2_r = rgb2[1]
-	local color2_g = rgb2[2]
-	local color2_b = rgb2[3]
-
-	local r_diff = color1_r - color2_r
-	local g_diff = color1_g - color2_g
-	local b_diff = color1_b - color2_b
-
-	local diff_score = math.floor((math.abs(r_diff) + math.abs(g_diff) + math.abs(b_diff)) / 3)
-
-	return diff_score
-end
-
-local function linearize_rgb(floating_point_value)
-	-- Standard liniarization formula.
-	-- See: https://www.w3.org/WAI/GL/wiki/Relative_luminance
-	if floating_point_value <= 0.04045 then
-		return floating_point_value * 12.92
-	end
-	return ((floating_point_value + 0.055) / 1.055) ^ 2.4
-end
-
-local function delinearize_rgb(linear_value)
-	-- The undo of the linearize_rgb function
-	if linear_value <= 0.0031308 then
-		return linear_value * 12.92
-	end
-	return 1.055 * (linear_value ^ (1 / 2.4)) - 0.055
-end
-
 local function invert_hue(rgb_number)
 	return (1 - (rgb_number / 255)) * 255
-end
-
-local function rgb_luminance(color)
-	-- Standard luminance calculation.
-	-- See: https://www.w3.org/WAI/GL/wiki/Relative_luminance
-	local rgb_max = 255
-	local rgb = hex_to_rgb(color)
-	local r = linearize_rgb(rgb[1] / rgb_max) * 0.2126
-	local g = linearize_rgb(rgb[2] / rgb_max) * 0.7152
-	local b = linearize_rgb(rgb[3] / rgb_max) * 0.0722
-	return { r, g, b }
 end
 
 M.invert_color = function(color)
@@ -120,129 +87,18 @@ M.invert_color = function(color)
 	return rgb_to_hex(r, g, b)
 end
 
-M.color_diff = function(color1, color2)
-	return hex_color_diff(color1, color2)
+-- Scale OKLCH lightness by `factor` (preserves hue and chroma).
+-- Negative factor returns the input unchanged (legacy guard).
+M.adjust_luminance = function(color, factor)
+	if factor < 0 then return color end
+	local lch = oklch.hex_to_oklch(color)
+	if not lch then return color end
+	lch.L = math.min(math.max(lch.L * factor, 0), 1)
+	return oklch.oklch_to_hex(lch)
 end
 
-M.closest_color_match = function(spec_color, colors_table)
-	local diff_score = 300 -- biggest difference can only be 255
-	local closest_color = nil
-
-	for _, color in ipairs(colors_table) do
-		local new_diff = nil
-		if not color then
-			new_diff = 400
-		end
-		new_diff = hex_color_diff(spec_color, color)
-		if new_diff < diff_score then
-			diff_score = new_diff
-			closest_color = color
-		end
-	end
-	return closest_color
-end
-
-M.relative_luminance = function(color)
-	local rgb = rgb_luminance(color)
-	local r = rgb[1]
-	local g = rgb[2]
-	local b = rgb[3]
-
-	return r + g + b
-end
-
-M.adjust_luminance = function(color, adjustment_factor)
-	local rgb = rgb_luminance(color)
-	local r_lum = rgb[1] * adjustment_factor
-	local g_lum = rgb[2] * adjustment_factor
-	local b_lum = rgb[3] * adjustment_factor
-
-	local rgb_max = 255
-	local r = delinearize_rgb(r_lum / 0.2126) * rgb_max
-	local g = delinearize_rgb(g_lum / 0.7152) * rgb_max
-	local b = delinearize_rgb(b_lum / 0.0722) * rgb_max
-
-	return rgb_to_hex(r, g, b)
-end
-
-M.contrast_ratio = function(color1, color2)
-	local c1_luminance = M.relative_luminance(color1)
-	local c2_luminance = M.relative_luminance(color2)
-
-	return (math.max(c1_luminance, c2_luminance) + 0.05) / (math.min(c1_luminance, c2_luminance) + 0.05)
-end
-
-M.adjust_color_value = function(starting_color, adjustment_factor)
-	if adjustment_factor < 0 then
-		return starting_color
-	end
-	local rgb = hex_to_rgb(starting_color)
-	local r = math.min(math.floor(rgb[1] * adjustment_factor), 255)
-	local g = math.min(math.floor(rgb[2] * adjustment_factor), 255)
-	local b = math.min(math.floor(rgb[3] * adjustment_factor), 255)
-	return rgb_to_hex(r, g, b)
-end
-
-M.lower_contrast = function(color, reference_color, contrast_threshold)
-	if contrast_threshold == nil then
-		contrast_threshold = 4
-	end
-
-	local contrast_ratio = M.contrast_ratio(color, reference_color)
-	if contrast_ratio == 1 then
-		contrast_ratio = 1.0001
-	end
-	local reference_is_dark = true
-	if M.closest_color_match(reference_color, { "#404040", "#ffffff" }) == "#ffffff" then
-		reference_is_dark = false
-	end
-
-	local adjustment_factor = nil
-	if contrast_ratio > contrast_threshold then
-		if reference_is_dark then
-			adjustment_factor = 1 / contrast_ratio
-		else
-			adjustment_factor = contrast_ratio
-		end
-
-		return M.adjust_luminance(color, adjustment_factor)
-	end
-
-	return color
-end
-
-M.raise_contrast = function(color, reference_color, contrast_threshold)
-	if contrast_threshold == nil then
-		contrast_threshold = 4
-	end
-
-	local contrast_ratio = M.contrast_ratio(color, reference_color)
-	if contrast_ratio == 1 then
-		contrast_ratio = 1.0001
-	end
-	local reference_is_dark = true
-	if M.closest_color_match(reference_color, { "#404040", "#ffffff" }) == "#ffffff" then
-		reference_is_dark = false
-	end
-
-	local adjustment_factor = nil
-	if contrast_ratio < contrast_threshold then
-		if reference_is_dark then
-			adjustment_factor = contrast_ratio
-		else
-			adjustment_factor = 1 / contrast_ratio
-		end
-		-- this is recursive now...
-		local new_color = M.adjust_luminance(color, adjustment_factor)
-		if M.contrast_ratio(color, new_color) < contrast_threshold then
-			new_color = M.raise_contrast(new_color, reference_color, contrast_threshold)
-		end
-		-- return M.adjust_luminance(color, adjustment_factor)
-		return new_color
-	end
-
-	return color
-end
+-- Hue-preserving lighten/darken. Alias of adjust_luminance — kept for call-site clarity.
+M.adjust_color_value = M.adjust_luminance
 
 M.round = function(val)
 	return math.floor(val + 0.5)
@@ -268,7 +124,10 @@ M.blend = function(foreground, background, alpha)
 end
 
 M.darken = function(color, amount, bg)
-	return M.blend(color, bg or "#000000", amount)
+	-- Blending against "NONE" (transparent) is undefined; fall back to black
+	-- so the diff-row tint still has a reasonable color rather than crashing.
+	if bg == nil or bg == "NONE" then bg = "#000000" end
+	return M.blend(color, bg, amount)
 end
 
 M.check_colors = function(color_table)
@@ -296,10 +155,10 @@ end
 M.print_colors = function(color_table)
 	for key, value in pairs(color_table) do
 		if type(value) ~= "table" then
-			print(key .. ": " .. value .. " | lum: " .. M.relative_luminance(value))
+			print(key .. ": " .. value)
 		else
 			for idx, member in ipairs(value) do
-				print(key .. ": " .. idx .. ": " .. member .. " | lum: " .. M.relative_luminance(member))
+				print(key .. ": " .. idx .. ": " .. member)
 			end
 		end
 	end

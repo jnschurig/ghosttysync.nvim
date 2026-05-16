@@ -77,14 +77,6 @@ This is an example of the setup function with the default values:
 
     require('ghosttysync').setup({
         contrast = {
-            terminal = false,
-            sidebars = false,
-            cursor_line = false,
-            floating_windows = false,
-            lsp_virtual_text = false,
-            non_current_windows = false,
-            filetypes = {}
-        },
         styles = {
             comments = {},
             strings = {},
@@ -96,40 +88,21 @@ This is an example of the setup function with the default values:
         },
         plugins = {},
         disable = {
-            colored_cursor = false,
-            borders = false,
             background = false,
-            term_colors = false,
-            eob_lines = false
+            eob_lines = true,
         },
         lualine_style = "default",
         async_loading = true,
     })
 
-    + contrast {table}
-          Make sidebars (like nvim-tree or troubl.nvim), floating windows,
-          terminal, cursor line, non current windows
-          or specific filetypes have a different background.
-          Varable names are: - sidebars
-                             - floating_windows
-                             - cursor_line
-                             - lsp_virtual_text
-                             - non_current_windows
-                             - filetype
-        These can be set to true or false
-
-    + style  {table}
-          Apply styles to syntax objects: -comments
-                                          -strings
-                                          -keywords
-                                          -functions
-                                          -variables
-         Set the desired value to true to make it italic
+    + styles  {table}
+          Typographic attributes applied to syntax roles. Empty tables mean
+          "default appearance". Any vim.api.nvim_set_hl attribute works:
+          { italic = true }, { bold = true }, { underline = true }, etc.
 
     + disable  {table}
-          This table allows you to disable the theme from setting
-          the cursor color, borders, background, terminal colors and
-          end-of-buffer lines
+          - background: set true for a transparent terminal (NONE bg)
+          - eob_lines:  hide end-of-buffer ~ tildes (default true)
 
     + lualine_style {string}
           Choose between two styles for lualine. can be "default" or "stealth"
@@ -182,17 +155,6 @@ Example config in Lua:
 
     -- Colorscheme settings
     require('ghosttysync').setup({
-        contrast = {
-            sidebars = true,
-            floating_windows = false,
-            cursor_line = true,
-            popup_menu = false,
-            filetypes = {
-                "qf",
-                "packer",
-                "dapui_breakpoints",
-            }
-        },
         plugins = {
            "dap",
            "gitsigns",
@@ -204,15 +166,9 @@ Example config in Lua:
            "telescope",
            "which-key",
         },
-        styles = {
-            comments = { italic = true },
-            functions = { italic = true },
-        },
         disable = {
-            borders = true,
             background = false,
-            term_colors = false,
-            eob_lines = false
+            eob_lines = true,
         },
         lualine_style = 'stealth'
     })

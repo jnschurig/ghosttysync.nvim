@@ -1,9 +1,10 @@
 local colors = require "ghosttysync.colors"
 local settings = require "ghosttysync.util.config".settings
+local contrast = require "ghosttysync.colors.contrast"
+local T = contrast.thresholds()
 
--- remove the variables that you won't be needing
--- to see what colors are available, check colors/init.lua
 local e = colors.editor
+local s = colors.syntax
 local g = colors.git
 local b = colors.backgrounds
 
@@ -23,13 +24,26 @@ M.load = function()
         NeoTreeGitModified  = { fg = g.modified },
         NeoTreeGitUnstaged  = { fg = g.added },
         NeoTreeGitUntracked = { fg = g.added },
+
+        -- Override neo-tree's hardcoded near-black defaults so they meet
+        -- COMMENT_MIN against the palette-derived bgs.
+        NeoTreeTabSeparatorActive   = {
+            fg = contrast.ensure_contrast(s.comments, e.bg, T.COMMENT_MIN),
+            bg = e.bg,
+        },
+        NeoTreeTabSeparatorInactive = {
+            fg = contrast.ensure_contrast(s.comments, e.bg_alt, T.COMMENT_MIN),
+            bg = e.bg_alt,
+        },
+        NeoTreeFadeText1            = {
+            fg = contrast.ensure_contrast(s.comments, e.bg, T.COMMENT_MIN),
+        },
+        NeoTreeFadeText2            = {
+            fg = contrast.ensure_contrast(s.comments, e.bg, T.COMMENT_MIN),
+        },
     }
 
-    if settings.contrast.sidebars then
-        plugin_hls.NeoTreeCursorLine = { bg = e.active }
-    else
-        plugin_hls.NeoTreeCursorLine = { bg = b.cursor_line }
-    end
+    plugin_hls.NeoTreeCursorLine = { bg = b.cursor_line }
 
     return plugin_hls
 end

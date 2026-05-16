@@ -14,6 +14,10 @@ the following design philosophies:
 1. If possible, colors should move straight across from the terminal theme.
 2. Minimal configuration and customization.
 3. If additional colors are needed, they should be adapted from original colors.
+4. Highlights are checked for WCAG contrast against their background and adjusted
+   along OKLCH lightness when needed — hue is preserved so the theme's character
+   stays intact. See `lua/ghosttysync/colors/README.md` for the readability
+   pipeline and `:GhosttysyncAudit` for live inspection.
 
 This is why so much customization has been removed from the source theme, and why there will
 be even more options removed in the future.
@@ -54,16 +58,21 @@ return {
   config = function()
     require("ghosttysync").setup({
       disable = {
-        background = false,
+        background = false,  -- set true for a transparent terminal
+        eob_lines = true,    -- hide end-of-buffer ~ tildes
       },
       plugins = {
         -- "neo-tree",
       },
       styles = {
-        comments = {},
+        comments = { italic = true },
         functions = { bold = true },
-        strings = { italic = true },
+        -- keywords, strings, variables, operators, types, ...
       },
+      -- lualine_theme = "ghosttysync",  -- or false to keep your existing theme
+      -- lualine_style = "default",       -- or "stealth"
+      -- async_loading = false,
+      -- contrast_thresholds = {},        -- override readability thresholds
     })
     vim.cmd.colorscheme("ghosttysync")
   end,
@@ -83,6 +92,13 @@ The plugin automatically syncs your Ghostty theme with Neovim on startup. You ca
 - Neovim 0.7+
 - Ghostty terminal emulator
 - Ghostty must be accessible via CLI (`ghostty +show-config`)
+
+## Known limitations
+
+- **lazygit diff colors are not theme-synced.** lazygit runs in a separate
+  process with its own config; bridging the live palette requires a
+  config-file write + reload that's out of scope for this plugin. gitsigns
+  and the lualine diff tier do pick up the active palette.
 
 ## Plugin Structure
 

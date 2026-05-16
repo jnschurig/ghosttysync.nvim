@@ -13,19 +13,19 @@ M.load = function()
         --- Border
         NotifyERRORBorder = { fg = m.red, bg = b.floating_windows },
         NotifyWARNBorder = { fg = m.yellow, bg = b.floating_windows },
-        NotifyINFOBorder = { fg = m.paleblue, bg = b.floating_windows },
+        NotifyINFOBorder = { fg = m.bright_blue, bg = b.floating_windows },
         NotifyDEBUGBorder = { fg = s.comments, bg = b.floating_windows },
         NotifyTRACEBorder = { fg = m.purple, bg = b.floating_windows },
         --- Icons
         NotifyERRORIcon = { fg = m.red },
         NotifyWARNIcon = { fg = m.yellow },
-        NotifyINFOIcon = { fg = m.paleblue },
+        NotifyINFOIcon = { fg = m.bright_blue },
         NotifyDEBUGIcon = { fg = s.comments },
         NotifyTRACEIcon = { fg = m.purple },
         --- Title
         NotifyERRORTitle = { fg = m.red },
         NotifyWARNTitle = { fg = m.yellow },
-        NotifyINFOTitle = { fg = m.paleblue },
+        NotifyINFOTitle = { fg = m.bright_blue },
         NotifyDEBUGTitle = { fg = s.comments },
         NotifyTRACETitle = { fg = m.purple },
         --- Body

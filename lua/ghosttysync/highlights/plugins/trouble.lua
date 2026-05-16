@@ -14,7 +14,7 @@ M.load = function()
         TroubleNormal          = { fg = e.fg, bg = b.sidebars },
         TroubleSignError       = { fg = l.error, bg = b.sidebars },
         TroubleSignWarning     = { fg = m.yellow, bg = b.sidebars },
-        TroubleSignInformation = { fg = m.paleblue, bg = b.sidebars },
+        TroubleSignInformation = { fg = m.bright_blue, bg = b.sidebars },
         TroubleSignHint        = { fg = m.purple, bg = b.sidebars },
         TroubleFoldIcon        = { fg = e.accent, bg = b.sidebars },
         TroubleIndent          = { fg = e.border, bg = b.sidebars },

@@ -10,9 +10,9 @@ M.load = function()
     local plugin_hls = {
         -- nvim-dap
         DapBreakpoint = { fg = m.red },
-        DapBreakpointCondition = { fg = m.orange },
+        DapBreakpointCondition = { fg = m.yellow },
         DapStopped    = { fg = m.yellow },
-        DapLogPoint = { fg = m.paleblue },
+        DapLogPoint = { fg = m.bright_blue },
 
         -- nvim-dap-ui
         DapUIFloatBorder = { fg = e.border, bg = e.bg },

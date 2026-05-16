@@ -2,19 +2,16 @@ local colors = require("ghosttysync.colors")
 local settings = require("ghosttysync.util.config").settings
 local disabled = settings.disable
 
--- disable borders
-if disabled.borders then
-	colors.editor.vsplit = colors.editor.bg
-else
-	colors.editor.vsplit = colors.editor.border
-end
+colors.editor.vsplit = colors.editor.border
 
 -- disable the background
 if disabled.background then
 	colors.editor.bg = "NONE"
 	colors.editor.bg_alt = "NONE"
 
-	for k, _ in pairs(settings.contrast) do
+	-- bg_blend is a blend *reference* (used by functions.darken to compute diff
+	-- row tints), not a bg that should be transparent. Leave it alone.
+	for _, k in ipairs({ "sidebars", "floating_windows", "non_current_windows", "cursor_line" }) do
 		colors.backgrounds[k] = "NONE"
 	end
 end

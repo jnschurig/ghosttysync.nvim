@@ -2,7 +2,14 @@ local colors    = require "ghosttysync.colors"
 local settings  = require "ghosttysync.util.config".settings
 local plugins   = require "ghosttysync.highlights.plugins"
 local functions = require "ghosttysync.functions"
+local contrast  = require "ghosttysync.colors.contrast"
+local T         = contrast.thresholds()
 local styles    = settings.styles
+
+-- Shorthand for ensure_contrast: returns the fg adjusted for readability against `bg`.
+local function fit(fg, bg, threshold)
+	return contrast.ensure_contrast(fg, bg, threshold)
+end
 
 -- apply conditional colors
 colors = require "ghosttysync.colors.conditionals"
@@ -39,7 +46,7 @@ M.main_highlights.syntax = function()
     Constant       = { fg = m.yellow },
     Number         = { fg = s.value },
     Character      = { link = "Number" },
-    Boolean        = { link = "Number" },
+    Boolean        = { fg = m.green },
     Float          = { link = "Number" },
     Statement      = { fg = m.cyan },
     Label          = { fg = s.keyword }, -- case, default, etc.
@@ -62,7 +69,7 @@ M.main_highlights.syntax = function()
     -- htmlH3         = { fg = m.green, bold = true },
   }
 
-  -- apply the user set styles for these groups
+  -- apply the user-set styles for these groups
   syntax_hls.Comment      = vim.tbl_extend("keep", syntax_hls.Comment, styles.comments)
   syntax_hls.Conditional  = vim.tbl_extend("keep", syntax_hls.Conditional, styles.keywords)
   syntax_hls.Function     = vim.tbl_extend("keep", syntax_hls.Function, styles.functions)
@@ -87,10 +94,10 @@ M.main_highlights.treesitter = function()
 
       ["@comment"]          = { link = "Comment" },
       ["@comment.todo"]     = { link = "Comment" },
-      ["@comment.error"]    = { fg = s.comments, bg = l.error },
-      ["@comment.warning"]  = { fg = s.comments, bg = l.warning },
-      ["@comment.hint"]     = { fg = s.comments, bg = l.hint },
-      ["@comment.note"]     = { fg = s.comments, bg = l.info },
+      ["@comment.error"]    = { fg = e.bg, bg = l.error },
+      ["@comment.warning"]  = { fg = e.bg, bg = l.warning },
+      ["@comment.hint"]     = { fg = e.bg, bg = l.hint },
+      ["@comment.note"]     = { fg = e.bg, bg = l.info },
 
       ["@type"]             = { fg = s.type },
       ["@type.builtin"]     = { fg = s.type },
@@ -128,7 +135,7 @@ M.main_highlights.treesitter = function()
       ["@keyword.exception"]         = { link = "Exception" },
 
       ["@constant"]         = { fg = m.yellow },
-      ["@constant.builtin"] = { fg = m.yellow },
+      ["@constant.builtin"] = { fg = m.green },
       ["@constant.macro"]   = { fg = m.cyan },
 
       ["@keyword.directive"] = { fg = m.cyan },
@@ -136,9 +143,9 @@ M.main_highlights.treesitter = function()
       ["@module"] = { fg = m.yellow },
 
       ["@string"]         = { link = "String" },
-      ["@string.escape"]  = { fg = e.fg_dark },
+      ["@string.escape"]  = { fg = m.bright_green },
       ["@string.regexp"]   = { fg = m.yellow },
-      ["@string.special"] = { fg = e.fg_dark },
+      ["@string.special"] = { fg = m.bright_green },
 
       ["@character"] = { link = "Character" },
       ["@character.special"] = { link = "SpecialChar" },
@@ -180,7 +187,7 @@ M.main_highlights.treesitter = function()
       ["@keyword.directive.define"] = { link = "@keyword.directive" },
       ["@operator"]                  = { link = "Operator" },
       TreesitterContext              = { bg = e.contrast },
-      TreesitterContextLineNumber    = { fg = e.line_numbers, bg = e.contrast },
+      TreesitterContextLineNumber    = { fg = fit(e.line_numbers, e.contrast, T.UI_MIN), bg = e.contrast },
 
       ["@boolean"]                = { link = "Boolean" },
       ["@number"]                 = { link = "Number" },
@@ -232,8 +239,8 @@ M.main_highlights.treesitter = function()
     treesitter_hls["@include"] = treesitter_hls["@keyword.import"]
     treesitter_hls["@repeat"] = treesitter_hls["@keyword.repeat"]
 
-    treesitter_hls["@keyword"]  = vim.tbl_extend("keep", treesitter_hls["@keyword"], styles.keywords)
-    treesitter_hls["@keyword.directive"]  = vim.tbl_extend("keep", treesitter_hls["@keyword.directive"], styles.keywords)
+    treesitter_hls["@keyword"]           = vim.tbl_extend("keep", treesitter_hls["@keyword"], styles.keywords)
+    treesitter_hls["@keyword.directive"] = vim.tbl_extend("keep", treesitter_hls["@keyword.directive"], styles.keywords)
 
     return treesitter_hls
   else
@@ -280,7 +287,7 @@ end
 M.main_highlights.editor = function()
   local editor_hls = {
     Normal           = { fg = e.fg, bg = e.bg },
-    NormalFloat      = { fg = e.fg, bg = b.floating_windows },
+    NormalFloat      = { fg = e.fg, bg = e.panel_bg },
     NormalContrast   = { fg = e.fg, bg = e.bg_alt }, -- a help group for contrast fileypes
     ColorColumn      = { fg = m.none, bg = e.active },
     Conceal          = { fg = e.disabled },
@@ -288,10 +295,20 @@ M.main_highlights.editor = function()
     TermCursor       = { link = "Cursor" }, -- cursor for the terminal
     CursorIM         = { link = "Cursor" }, -- like Cursor, but used when in IME mode
     ErrorMsg         = { fg = l.error },
-    Folded           = { fg = e.disabled, bg = e.bg_alt, italic = true },
+    Folded           = { fg = fit(e.fg_dark, e.bg_alt, T.TEXT_MIN), bg = e.bg_alt, italic = true },
     FoldColumn       = { fg = m.blue },
-    LineNr           = { fg = e.line_numbers },
-    CursorLineNr     = { fg = e.accent },
+    -- Active line number is the visible-priority anchor; inactive nudged
+    -- away from it so they're perceptually distinct.
+    CursorLineNr     = { fg = fit(e.accent, e.bg, T.UI_MIN) },
+    LineNr           = {
+        fg = contrast.nudge_apart(
+            fit(e.accent, e.bg, T.UI_MIN),
+            fit(e.line_numbers, e.bg, T.COMMENT_MIN),
+            e.bg,
+            T.MIN_ROLE_DISTANCE,
+            T.COMMENT_MIN
+        ),
+    },
     DiffAdd          = { bg = functions.darken(g.added, 0.2, b.bg_blend) },
     DiffChange       = { bg = functions.darken(g.modified, 0.2, b.bg_blend) },
     DiffDelete       = { bg = functions.darken(g.removed, 0.2, b.bg_blend )},
@@ -300,14 +317,16 @@ M.main_highlights.editor = function()
     NonText          = { fg = e.disabled },
     SignColumn       = { fg = e.fg },
     SpecialKey       = { fg = m.purple },
-    StatusLine       = { fg = e.fg, bg = e.active },
-    StatusLineNC     = { fg = e.disabled, bg = e.bg },
-    StatusLineTerm   = { fg = e.fg, bg = e.active },
-    StatusLineTermNC = { fg = e.disabled, bg = e.bg },
+    StatusLine       = { fg = fit(e.fg, e.active, T.TEXT_MIN), bg = e.active },
+    StatusLineNC     = { fg = fit(e.fg_dark, e.bg, T.TEXT_MIN), bg = e.bg },
+    StatusLineTerm   = { fg = fit(e.fg, e.active, T.TEXT_MIN), bg = e.active },
+    StatusLineTermNC = { fg = fit(e.fg_dark, e.bg, T.UI_MIN), bg = e.bg },
     TabLineFill      = { fg = e.fg },
-    TabLineSel       = { fg = e.bg, bg = e.accent },
+    TabLineSel       = { fg = fit(e.bg, e.accent, T.TEXT_MIN), bg = e.accent },
     TabLine          = { fg = e.fg },
-    Title            = { fg = m.cyan, bold = true },
+    Title            = { fg = fit(m.cyan, e.bg, T.TEXT_MIN), bold = true },
+    FloatTitle       = { fg = fit(m.cyan, e.bg, T.TEXT_MIN), bg = e.bg, bold = true },
+    FloatFooter      = { fg = fit(m.cyan, e.bg, T.TEXT_MIN), bg = e.bg },
     WarningMsg       = { fg = m.yellow },
     Whitespace       = { fg = e.disabled },
     CursorLine       = { bg = b.cursor_line },
@@ -332,7 +351,7 @@ M.main_highlights.editor = function()
     Blue   = { fg = m.blue },
     Cyan   = { fg = m.cyan },
     Purple = { fg = m.purple },
-    Orange = { fg = m.orange },
+    Orange = { fg = m.yellow },
   }
 
   return editor_hls
@@ -342,7 +361,7 @@ end
 M.async_highlights.editor = function()
   local editor_hls = {
     NormalNC      = { bg = b.non_current_windows },
-    FloatBorder   = { fg = e.border, bg = b.floating_windows },
+    FloatBorder   = { fg = e.border_strong, bg = e.panel_bg },
     SpellBad      = { fg = m.red, italic = true, undercurl = true },
     SpellCap      = { fg = m.blue, italic = true, undercurl = true },
     SpellLocal    = { fg = m.cyan, italic = true, undercurl = true },
@@ -352,25 +371,25 @@ M.async_highlights.editor = function()
     healthSuccess = { fg = m.green },
     healthWarning = { fg = m.yellow },
     -- Visual        = { fg = m.none, bg = e.selection },
-    Visual        = { fg = e.selection_fg, bg = e.selection },
+    Visual        = { fg = fit(e.selection_fg, e.selection, T.TEXT_MIN), bg = e.selection },
     VisualNOS     = { link = "Visual" }, -- Visual mode selection when vim is "Not Owning the Selection".
     Directory     = { fg = m.blue },
     MatchParen    = { fg = m.yellow, bold = true },
     Question      = { fg = m.yellow }, -- |hit-enter| prompt and yes/no questions
-    QuickFixLine  = { fg = e.highlight, bg = e.title, reverse = true },
+    QuickFixLine  = { fg = fit(e.fg, e.selection, T.TEXT_MIN), bg = e.selection },
     -- Search        = { fg = e.title, bg = e.selection, bold = true },
     -- IncSearch     = { fg = e.title, bg = e.selection, underline = true },
-    Search        = { fg = e.bg, bg = e.title },
-    IncSearch     = { fg = e.bg, bg = e.title, bold = true },
-    CurSearch     = { fg = e.bg, bg = m.yellow, bold = true },
+    Search        = { fg = fit(e.bg, e.title, T.TEXT_MIN), bg = e.title },
+    IncSearch     = { fg = fit(e.bg, e.title, T.TEXT_MIN), bg = e.title, bold = true },
+    CurSearch     = { fg = fit(e.bg, m.yellow, T.TEXT_MIN), bg = m.yellow, bold = true },
     MoreMsg       = { fg = e.accent },
-    Pmenu         = { fg = e.selection_fg, bg = e.selection }, -- popup menu
-    PmenuSel      = { fg = e.contrast, bg = e.accent }, -- Popup menu: selected item.
+    Pmenu         = { fg = fit(e.selection_fg, e.selection, T.TEXT_MIN), bg = e.selection }, -- popup menu
+    PmenuSel      = { fg = fit(e.bg, e.accent, T.TEXT_MIN), bg = e.accent }, -- Popup menu: selected item.
     PmenuSbar     = { bg = e.active },
     PmenuThumb    = { fg = e.fg },
-    WildMenu      = { fg = m.orange, bold = true }, -- current match in 'wildmenu' completion
-    VertSplit     = { fg = e.vsplit },
-    WinSeparator  = { fg = e.vsplit },
+    WildMenu      = { fg = m.yellow, bold = true }, -- current match in 'wildmenu' completion
+    VertSplit     = { fg = fit(e.vsplit, e.bg, T.UI_MIN) },
+    WinSeparator  = { fg = fit(e.vsplit, e.bg, T.UI_MIN) },
     diffAdded     = { fg = g.added },
     diffRemoved   = { fg = g.removed },
     -- ToolbarLine   = { fg = e.fg, bg = e.bg_alt },
@@ -382,11 +401,7 @@ M.async_highlights.editor = function()
     -- CommandMode      = { link = "NormalMode" },
   }
 
-  if settings.disable.eob_lines then
-      editor_hls.EndOfBuffer = { fg = e.bg }
-  else
-      editor_hls.EndOfBuffer = { fg = e.disabled }
-  end
+  editor_hls.EndOfBuffer = { fg = e.bg }
 
   return editor_hls
 end
@@ -464,40 +479,37 @@ M.async_highlights.load_lsp = function()
 
   }
 
-  if settings.contrast.lsp_virtual_text then
-    lsp_hls.DiagnosticVirtualTextError = { fg = l.error, bg = functions.darken(l.error, 0.1, b.bg_blend) }
-    lsp_hls.DiagnosticVirtualTextWarn  = { fg = l.warning, bg = functions.darken(l.warning, 0.1, b.bg_blend) }
-    lsp_hls.DiagnosticVirtualTextInfo  = { fg = l.info, bg = functions.darken(l.info, 0.1, b.bg_blend) }
-    lsp_hls.DiagnosticVirtualTextHint  = { fg = l.hint, bg = functions.darken(l.hint, 0.1, b.bg_blend) }
-  else
-    lsp_hls.DiagnosticVirtualTextError = { link = "DiagnosticError" }
-    lsp_hls.DiagnosticVirtualTextWarn  = { link = "DiagnosticWarn" }
-    lsp_hls.DiagnosticVirtualTextInfo  = { link = "DiagnosticInfo" }
-    lsp_hls.DiagnosticVirtualTextHint  = { link = "DiagnosticHint" }
-  end
+  lsp_hls.DiagnosticVirtualTextError = { link = "DiagnosticError" }
+  lsp_hls.DiagnosticVirtualTextWarn  = { link = "DiagnosticWarn" }
+  lsp_hls.DiagnosticVirtualTextInfo  = { link = "DiagnosticInfo" }
+  lsp_hls.DiagnosticVirtualTextHint  = { link = "DiagnosticHint" }
 
   return lsp_hls
 end
 
----function for setting the terminal colors
--- TODO: Set index colors in the colors table and use those here. It's ridiculous that we are coming up with these again...
+---Map :term colors to the ANSI palette indices, with one exception: the six
+---semantic TUI slots (red/green/yellow + brights) use perceptual hue matches
+---from `colors.term` so lazygit/htop/etc. show conventional diff/status colors
+---even on palettes where the ANSI red/green/yellow slots aren't really
+---red/green/yellow. The other ten slots pass through unchanged.
 M.load_terminal = function()
-  vim.g.terminal_color_0 = m.black
-  vim.g.terminal_color_1 = m.darkred
-  vim.g.terminal_color_2 = m.darkgreen
-  vim.g.terminal_color_3 = m.darkyellow
-  vim.g.terminal_color_4 = m.darkblue
-  vim.g.terminal_color_5 = m.darkpurple
-  vim.g.terminal_color_6 = m.darkcyan
-  vim.g.terminal_color_7 = m.white
-  vim.g.terminal_color_8 = e.disabled
-  vim.g.terminal_color_9 = m.red
-  vim.g.terminal_color_10 = m.green
-  vim.g.terminal_color_11 = m.yellow
-  vim.g.terminal_color_12 = m.blue
-  vim.g.terminal_color_13 = m.purple
-  vim.g.terminal_color_14 = m.cyan
-  vim.g.terminal_color_15 = m.white
+  local t = colors.term
+  vim.g.terminal_color_0  = m.black
+  vim.g.terminal_color_1  = t.red
+  vim.g.terminal_color_2  = t.green
+  vim.g.terminal_color_3  = t.yellow
+  vim.g.terminal_color_4  = m.blue
+  vim.g.terminal_color_5  = m.purple
+  vim.g.terminal_color_6  = m.cyan
+  vim.g.terminal_color_7  = m.white
+  vim.g.terminal_color_8  = m.bright_black
+  vim.g.terminal_color_9  = t.bright_red
+  vim.g.terminal_color_10 = t.bright_green
+  vim.g.terminal_color_11 = t.bright_yellow
+  vim.g.terminal_color_12 = m.bright_blue
+  vim.g.terminal_color_13 = m.bright_purple
+  vim.g.terminal_color_14 = m.bright_cyan
+  vim.g.terminal_color_15 = m.bright_white
 end
 
 -- apply plugin highlights
