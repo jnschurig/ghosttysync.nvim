@@ -58,16 +58,21 @@ return {
   config = function()
     require("ghosttysync").setup({
       disable = {
-        background = false,
+        background = false,  -- set true for a transparent terminal
+        eob_lines = true,    -- hide end-of-buffer ~ tildes
       },
       plugins = {
         -- "neo-tree",
       },
       styles = {
-        comments = {},
+        comments = { italic = true },
         functions = { bold = true },
-        strings = { italic = true },
+        -- keywords, strings, variables, operators, types, ...
       },
+      -- lualine_theme = "ghosttysync",  -- or false to keep your existing theme
+      -- lualine_style = "default",       -- or "stealth"
+      -- async_loading = false,
+      -- contrast_thresholds = {},        -- override readability thresholds
     })
     vim.cmd.colorscheme("ghosttysync")
   end,

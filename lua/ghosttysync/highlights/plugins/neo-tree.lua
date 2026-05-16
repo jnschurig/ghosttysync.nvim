@@ -43,11 +43,7 @@ M.load = function()
         },
     }
 
-    if settings.contrast.sidebars then
-        plugin_hls.NeoTreeCursorLine = { bg = e.active }
-    else
-        plugin_hls.NeoTreeCursorLine = { bg = b.cursor_line }
-    end
+    plugin_hls.NeoTreeCursorLine = { bg = b.cursor_line }
 
     return plugin_hls
 end

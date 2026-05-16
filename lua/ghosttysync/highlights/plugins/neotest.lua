@@ -7,7 +7,7 @@ local M = {}
 
 M.load = function()
     local plugin_hls = {
-        NeotestAdapterName = { fg = m.darkred },
+        NeotestAdapterName = { fg = m.bright_red },
         NeotestBorder = { fg = e.border },
         NeotestDir = { fg = m.blue },
         NeotestExpandMarker = { link = "NeotestIndent" }, -- shown immediately after indent
@@ -15,7 +15,7 @@ M.load = function()
         NeotestFile = { fg = m.blue },
         NeotestFocused = { bold = true, underline = true },
         NeotestIndent = { fg = e.line_numbers }, -- aka tree symbols
-        NeotestMarked = { fg = m.darkyellow, bold = true },
+        NeotestMarked = { fg = m.bright_yellow, bold = true },
         NeotestNamespace = { fg = m.purple },
         NeotestPassed = { fg = m.green },
         NeotestRunning = { fg = m.yellow },

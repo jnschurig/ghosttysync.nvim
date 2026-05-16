@@ -19,7 +19,7 @@ M.load = function()
         ["@neorg.headings.5.title"]  = { fg = m.cyan },
         ["@neorg.headings.6.prefix"] = { fg = m.blue },
         ["@neorg.headings.6.title"]  = { fg = m.blue },
-        ["@neorg.lists.ordered.prefix"]  = { fg = m.orange },
+        ["@neorg.lists.ordered.prefix"]  = { fg = m.yellow },
         ["@neorg.quotes.1.prefix"]  = { fg = m.blue },
         ["@neorg.quotes.2.prefix"]  = { fg = m.yellow },
         ["@neorg.quotes.3.prefix"]  = { fg = m.cyan },

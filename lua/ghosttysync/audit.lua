@@ -2,62 +2,11 @@
 -- palette and prints the report into a scratch buffer. For headless / CI
 -- runs against fixtures, see scripts/audit.lua.
 
+local cls = require("ghosttysync.audit_classify")
+
 local M = {}
 
-local SKIP = {
-	Black = true, Red = true, Green = true, Yellow = true, Blue = true,
-	Cyan = true, Purple = true, Orange = true, White = true,
-	Cursor = true, CursorIM = true, TermCursor = true, lCursor = true,
-}
-
--- Heuristic suffixes/substrings (lowercased) that mark a name as a
--- recessive/comment-class group. See COMMENT_PATTERNS in scripts/audit.lua
--- for the canonical list.
-local COMMENT_PATTERNS = {
-	"comment$", "blockquote$", "dim$", "dimtext$", "fade$", "fadetext%d*$",
-	"indent$", "indentmarker$", "expander$", "message$", "duplicate",
-	"hidden$", "ignored$", "dotfile$", "tabseparator", "separator$",
-	"staged",
-}
-
-local function is_comment_class(name)
-	local lname = name:lower()
-	if lname == "comment" or lname:match("^@comment") or lname == "lspinlayhint"
-		or name == "SpecialComment" or name == "DiagnosticUnnecessary"
-		or name == "DiagnosticDeprecated" or name == "Conceal"
-		or name == "EndOfBuffer" or name == "NonText" or name == "Whitespace"
-		or name == "Ignore" or name == "@lsp.type.comment" then
-		return true
-	end
-	for _, p in ipairs(COMMENT_PATTERNS) do
-		if lname:match(p) then return true end
-	end
-	return false
-end
-
-local function classify(name, T)
-	if SKIP[name] then return nil end
-	if is_comment_class(name) then
-		return { kind = "comment", threshold = T.COMMENT_MIN }
-	end
-	local lname = name:lower()
-	if name:match("^lualine_transitional_")
-		or name:match("^lualine_.*_diff_")
-		or name:match("^lualine_.*_diagnostics_")
-		or name:match("^lualine_.*_filetype_MiniIcons") then
-		return { kind = "ui", threshold = T.UI_MIN }
-	end
-	if name == "Normal" or name == "NormalFloat" or name == "NormalNC"
-		or name == "NormalContrast" or name == "Pmenu" or name == "PmenuSel"
-		or name == "StatusLine" or name == "StatusLineNC"
-		or name == "TabLine" or name == "TabLineSel"
-		or name == "Folded" or name == "Visual" or name == "Search"
-		or name == "IncSearch" or name == "CurSearch"
-		or name:match("^lualine_") then
-		return { kind = "text", threshold = T.TEXT_MIN }
-	end
-	return { kind = "ui", threshold = T.UI_MIN }
-end
+local classify = function(name, T) return cls.classify(name, T) end
 
 local function int_to_hex(n)
 	if not n then return nil end

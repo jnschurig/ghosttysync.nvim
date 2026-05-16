@@ -1,32 +1,33 @@
 local termcolor = require("ghosttysync.colors.ghosttyconfig")
 local functions = require("ghosttysync.functions")
 local contrast  = require("ghosttysync.colors.contrast")
+local oklch     = require("ghosttysync.colors.oklch")
 local T         = contrast.thresholds()
 
-local pure_red    = "#ff0000"
-local pure_green  = "#00ff00"
-local pure_blue   = "#0000ff"
-local pure_cyan   = "#00ffff"
-local pure_yellow = "#ffff00"
-local pure_purple = "#8000ff"
-local pure_orange = "#ff8000"
--- local pure_pink   = "#ff00ff"
-local pure_white  = "#ffffff"
-local pure_black  = "#000000"
-local pure_gray   = "#808080"
+local pure_white = "#ffffff"
+local pure_black = "#000000"
+local pure_gray  = "#808080"
 
 local default_term_colors = {
 	name = "pure_dark",
 	colors = {
 		palette = {
-			pure_black,
-			pure_red,
-			pure_green,
-			pure_yellow,
-			pure_blue,
-			pure_purple,
-			pure_cyan,
-			pure_white,
+			pure_black,         -- 0 black
+			"#ff0000",          -- 1 red
+			"#00ff00",          -- 2 green
+			"#ffff00",          -- 3 yellow
+			"#0000ff",          -- 4 blue
+			"#8000ff",          -- 5 purple
+			"#00ffff",          -- 6 cyan
+			pure_white,         -- 7 white
+			pure_gray,          -- 8 bright_black
+			"#ff4040",          -- 9 bright_red
+			"#40ff40",          -- 10 bright_green
+			"#ffff80",          -- 11 bright_yellow
+			"#4080ff",          -- 12 bright_blue
+			"#a040ff",          -- 13 bright_purple
+			"#40ffff",          -- 14 bright_cyan
+			pure_white,         -- 15 bright_white
 		},
 		background   = pure_black,
 		foreground   = pure_white,
@@ -51,33 +52,38 @@ end
 term_colors = vim.tbl_deep_extend("keep", term_colors or {}, default_term_colors)
 local palette = term_colors.colors.palette
 
-local background_match = functions.closest_color_match(term_colors.colors.background, { pure_black, pure_white })
-local color_mod_direction = -1
-
-if background_match == pure_white then
-	color_mod_direction = 1
-	vim.opt.background = "light"
-else
-	vim.opt.background = "dark"
-end
+-- Bg dark/light detection via OKLCH lightness.
+local _bg_lch = oklch.hex_to_oklch(term_colors.colors.background)
+local color_mod_direction = (_bg_lch and _bg_lch.L < 0.5) and -1 or 1
+vim.opt.background = (color_mod_direction == 1) and "light" or "dark"
 
 local value_adjustment_scale = 0.25
 local standard_adjustment = 1 + (value_adjustment_scale * color_mod_direction)
 local standard_invert_adjustment = 1 + (value_adjustment_scale * color_mod_direction * -1)
 
----colors table
+---colors table — direct ANSI 16-color index mapping (palette[1..16] = ANSI 0..15).
+---Honors the philosophy "colors should move straight across from the terminal theme".
 local colors = {
-	---main colors
 	main = {
-		red    = functions.closest_color_match(pure_red   , palette),
-		green  = functions.closest_color_match(pure_green , palette),
-		yellow = functions.closest_color_match(pure_yellow, palette),
-		blue   = functions.closest_color_match(pure_blue  , palette),
-		purple = functions.closest_color_match(pure_purple, palette),
-		cyan   = functions.closest_color_match(pure_cyan  , palette),
-		orange = functions.closest_color_match(pure_orange, palette),
+		black         = palette[1],
+		red           = palette[2],
+		green         = palette[3],
+		yellow        = palette[4],
+		blue          = palette[5],
+		purple        = palette[6],
+		cyan          = palette[7],
+		white         = palette[8],
+		bright_black  = palette[9],
+		bright_red    = palette[10],
+		bright_green  = palette[11],
+		bright_yellow = palette[12],
+		bright_blue   = palette[13],
+		bright_purple = palette[14],
+		bright_cyan   = palette[15],
+		bright_white  = palette[16],
 	},
 }
+colors.main.gray = colors.main.bright_black  -- semantic alias
 
 -- Ensure each main color has minimum contrast against the editor background.
 -- Hue is preserved (OKLCH); only lightness is adjusted.
@@ -86,28 +92,15 @@ for color_name, color in pairs(colors.main) do
 	colors.main[color_name] = contrast.ensure_contrast(color, _editor_bg, T.UI_MIN)
 end
 
--- darker colors
-colors.main.darkred    = functions.adjust_color_value(colors.main.red   , standard_adjustment)
-colors.main.darkgreen  = functions.adjust_color_value(colors.main.green , standard_adjustment)
-colors.main.darkyellow = functions.adjust_color_value(colors.main.yellow, standard_adjustment)
-colors.main.darkblue   = functions.adjust_color_value(colors.main.blue  , standard_adjustment)
-colors.main.darkcyan   = functions.adjust_color_value(colors.main.cyan  , standard_adjustment)
-colors.main.darkpurple = functions.adjust_color_value(colors.main.purple, standard_adjustment)
-colors.main.darkorange = functions.adjust_color_value(colors.main.orange, standard_adjustment)
-
--- lighter colors
-colors.main.paleblue   = functions.adjust_color_value(colors.main.blue  , standard_invert_adjustment)
-
-palette[16] = term_colors.colors.foreground
-palette[17] = term_colors.colors.background
-palette[18] = term_colors.colors.cursor_color
-palette[19] = term_colors.colors.cursor_text
-palette[20] = term_colors.colors.selection_bg
-palette[21] = term_colors.colors.selection_fg
-
-colors.main.gray  = functions.closest_color_match(pure_gray , palette)
-colors.main.white = functions.closest_color_match(pure_white, palette)
-colors.main.black = functions.closest_color_match(pure_black, palette)
+-- Stash special colors at indices 17..22 (after the ANSI 16). Indices 0..15
+-- are reserved for the terminal palette; the audit's palette_coverage check
+-- iterates the whole table.
+palette[17] = term_colors.colors.foreground
+palette[18] = term_colors.colors.background
+palette[19] = term_colors.colors.cursor_color
+palette[20] = term_colors.colors.cursor_text
+palette[21] = term_colors.colors.selection_bg
+palette[22] = term_colors.colors.selection_fg
 
 ---colors applied to the editor
 colors.editor = {
@@ -121,7 +114,7 @@ colors.editor = {
 colors.lsp = {
 	error   = colors.main.red,
 	warning = colors.main.yellow,
-	info    = colors.main.paleblue,
+	info    = colors.main.bright_blue,
 	hint    = colors.main.purple,
 }
 
@@ -136,13 +129,24 @@ colors.editor.fg           = term_colors.colors.foreground
 colors.editor.fg_dark      = functions.adjust_color_value(colors.editor.fg, standard_adjustment)
 colors.editor.selection    = term_colors.colors.selection_bg
 colors.editor.selection_fg = term_colors.colors.selection_fg
-colors.editor.active       = functions.lower_contrast(colors.editor.selection, colors.editor.bg, 5) -- similar to selection
+-- "active" = recessive variant of selection. Midpoint OKLCH lightness
+-- between selection and bg (the downstream ensure_contrast pass enforces
+-- UI_MIN if this lands too close to bg).
+do
+	local s_lch = oklch.hex_to_oklch(colors.editor.selection)
+	local b_lch = oklch.hex_to_oklch(colors.editor.bg)
+	if s_lch and b_lch then
+		colors.editor.active = oklch.set_lightness(colors.editor.selection, (s_lch.L + b_lch.L) * 0.5)
+	else
+		colors.editor.active = colors.editor.selection
+	end
+end
 colors.editor.border       = functions.adjust_color_value(colors.editor.selection, 0.75)
-colors.editor.line_numbers = colors.editor.border -- about the same as border
+colors.editor.line_numbers = colors.editor.border
 colors.editor.highlight    = colors.editor.selection
-colors.editor.disabled     = functions.adjust_color_value(colors.editor.highlight, standard_invert_adjustment) -- lighter than highlight
+colors.editor.disabled     = functions.adjust_color_value(colors.editor.highlight, standard_invert_adjustment)
 colors.editor.accent       = colors.main.purple
-colors.editor.contrast     = functions.raise_contrast(functions.adjust_color_value(colors.editor.accent, standard_adjustment), colors.main.accent, 10)
+colors.editor.contrast     = functions.adjust_color_value(colors.editor.accent, standard_adjustment)
 colors.editor.none         = "NONE"
 
 -- Panel bg role: shifted from editor.bg by 1.5x PANEL_BG_OFFSET in the
@@ -179,10 +183,10 @@ colors.syntax.comments  = contrast.ensure_contrast(colors.main.gray, colors.edit
 colors.syntax.variable  = colors.editor.fg
 colors.syntax.field     = colors.editor.fg_dark
 colors.syntax.keyword   = colors.main.purple
-colors.syntax.value     = colors.main.orange
+colors.syntax.value     = colors.main.yellow
 colors.syntax.operator  = colors.main.cyan
 colors.syntax.fn        = colors.main.blue
-colors.syntax.parameter = colors.main.paleblue
+colors.syntax.parameter = colors.main.bright_blue
 colors.syntax.string    = colors.main.green
 colors.syntax.type      = colors.main.purple
 
@@ -216,70 +220,64 @@ colors.backgrounds.non_current_windows = colors.editor.bg
 colors.backgrounds.bg_blend            = colors.editor.bg
 colors.backgrounds.cursor_line         = functions.adjust_color_value(colors.editor.bg, standard_adjustment)
 
--- Lualine mode-bg distinct selection (F4).
--- Each mode prefers a short list of semantic palette colors. We walk modes in
--- priority order, picking the first preference that (a) is not yet taken and
--- (b) yields TEXT_MIN against the mode's text fg. Falls back to the unused
--- semantic with greatest perceptual distance from already-picked bgs.
+-- Lualine mode-bg selection (F4). One mode = one ANSI hue. If the primary
+-- choice collides with an already-picked mode (perceptually identical, ΔE <
+-- MIN_ROLE_DISTANCE) or fails TEXT_MIN against the section's text fg, escalate
+-- to its bright_* variant. If that also fails, fall back to the unused entry
+-- from the fallback pool with greatest ΔE from already-picked bgs.
 do
 	local m = colors.main
 	local text_fg = colors.editor.bg -- mode `a` sections use bg-tinted text
-	local prefs = {
-		normal   = { m.blue,   m.cyan   },
-		insert   = { m.green,  m.cyan   },
-		visual   = { m.purple, m.yellow },
-		replace  = { m.red,    m.purple },
-		command  = { m.yellow, m.green  },
-		terminal = { m.cyan,   m.blue   },
+	local primary = {
+		normal   = { m.blue,   m.bright_blue   },
+		insert   = { m.green,  m.bright_green  },
+		visual   = { m.purple, m.bright_purple },
+		replace  = { m.red,    m.bright_red    },
+		command  = { m.yellow, m.bright_yellow },
+		terminal = { m.cyan,   m.bright_cyan   },
 	}
 	local order = { "normal", "insert", "visual", "replace", "command", "terminal" }
-	local all_semantics = { m.red, m.green, m.yellow, m.blue, m.purple, m.cyan, m.orange }
+	local fallback_pool = {
+		m.blue, m.green, m.purple, m.red, m.yellow, m.cyan,
+		m.bright_blue, m.bright_green, m.bright_purple,
+		m.bright_red, m.bright_yellow, m.bright_cyan,
+	}
 
-	local picked = {}
 	local taken = {}
-	for _, mode in ipairs(order) do
-		local chosen
-		for _, cand in ipairs(prefs[mode] or {}) do
-			if cand and not taken[cand]
-				and contrast.wcag_ratio(text_fg, cand) >= T.TEXT_MIN then
-				chosen = cand
-				break
+	local function collides(c)
+		if not c then return true end
+		if contrast.wcag_ratio(text_fg, c) < T.TEXT_MIN then return true end
+		for prev, _ in pairs(taken) do
+			if contrast.oklch_distance(c, prev) < T.MIN_ROLE_DISTANCE then
+				return true
 			end
 		end
-		if not chosen then
-			-- Fallback: pick the candidate (from semantics) with greatest
-			-- distance from already-picked bgs. Prefer unused; if all are
-			-- already taken (e.g. palette has fewer distinct hue families
-			-- than modes), accept reuse but pick the farthest. Text fg may
-			-- need ensure_contrast downstream.
-			local best, best_dist = nil, -1
-			local function score(cand)
+		return false
+	end
+	local function farthest_unused()
+		local best, best_d = nil, -1
+		for _, c in ipairs(fallback_pool) do
+			if c and not taken[c] then
 				local min_d = math.huge
-				for c, _ in pairs(taken) do
-					local d = contrast.oklch_distance(cand, c)
+				for prev, _ in pairs(taken) do
+					local d = contrast.oklch_distance(c, prev)
 					if d < min_d then min_d = d end
 				end
-				return min_d
+				if min_d > best_d then best, best_d = c, min_d end
 			end
-			for _, cand in ipairs(all_semantics) do
-				if cand and not taken[cand] then
-					local d = score(cand)
-					if d > best_dist then best, best_dist = cand, d end
-				end
-			end
-			if not best then
-				best_dist = -1
-				for _, cand in ipairs(all_semantics) do
-					if cand then
-						local d = score(cand)
-						if d > best_dist then best, best_dist = cand, d end
-					end
-				end
-			end
-			chosen = best or prefs[mode][1]
 		end
+		return best
+	end
+
+	local picked = {}
+	for _, mode in ipairs(order) do
+		local chosen
+		for _, cand in ipairs(primary[mode]) do
+			if not collides(cand) then chosen = cand; break end
+		end
+		chosen = chosen or farthest_unused() or primary[mode][1]
 		picked[mode] = chosen
-		if chosen then taken[chosen] = true end
+		taken[chosen] = true
 	end
 	colors.lualine_mode_bgs = picked
 end

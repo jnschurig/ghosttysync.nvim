@@ -14,72 +14,11 @@ vim.opt.termguicolors = true
 
 local contrast = require("ghosttysync.colors.contrast")
 local fixtures = require("tests.fixtures.palettes")
+local cls = require("ghosttysync.audit_classify")
 
 local THRESH = contrast.thresholds()
 
--- Decorative groups that exist as palette swatches or block-cursor pairs;
--- contrast against Normal bg is not a meaningful constraint.
-local SKIP = {
-	Black = true, Red = true, Green = true, Yellow = true, Blue = true,
-	Cyan = true, Purple = true, Orange = true, White = true,
-	Cursor = true, CursorIM = true, TermCursor = true, lCursor = true,
-	-- Sign columns are intentionally dim; checked indirectly via DiagnosticSign* fg.
-}
-
--- Heuristic: any name matching one of these substrings (case-insensitive) is
--- treated as a recessive/comment-class group. Replaces an earlier explicit
--- allowlist of plugin groups. The repo isn't actively maintained against
--- every plugin's highlight catalogue, so a heuristic ages better than a list.
-local COMMENT_PATTERNS = {
-	"comment$", "blockquote$", "dim$", "dimtext$", "fade$", "fadetext%d*$",
-	"indent$", "indentmarker$", "expander$", "message$", "duplicate",
-	"hidden$", "ignored$", "dotfile$", "tabseparator", "separator$",
-	"staged",
-}
-
-local function is_comment_class(name)
-	local lname = name:lower()
-	if lname == "comment" or lname:match("^@comment") or lname == "lspinlayhint"
-		or name == "SpecialComment" or name == "DiagnosticUnnecessary"
-		or name == "DiagnosticDeprecated" or name == "Conceal"
-		or name == "EndOfBuffer" or name == "NonText" or name == "Whitespace"
-		or name == "Ignore" or name == "@lsp.type.comment" then
-		return true
-	end
-	for _, p in ipairs(COMMENT_PATTERNS) do
-		if lname:match(p) then return true end
-	end
-	return false
-end
-
--- Classify a highlight name to its applicable threshold.
-local function classify(name)
-	if SKIP[name] then return nil end
-	if is_comment_class(name) then
-		return { kind = "comment", threshold = THRESH.COMMENT_MIN }
-	end
-	-- Lualine decorative groups (transitional separators, diff/diagnostic
-	-- icons rendered in section bgs) are UI tier, not body text.
-	if name:match("^lualine_transitional_")
-		or name:match("^lualine_.*_diff_")
-		or name:match("^lualine_.*_diagnostics_")
-		or name:match("^lualine_.*_filetype_MiniIcons") then
-		return { kind = "ui", threshold = THRESH.UI_MIN }
-	end
-	-- Text-like groups: editor body, lualine sections, popup body, statuslines.
-	if name == "Normal" or name == "NormalFloat" or name == "NormalNC"
-		or name == "NormalContrast" or name == "Pmenu" or name == "PmenuSel"
-		or name == "StatusLine" or name == "StatusLineNC"
-		or name == "TabLine" or name == "TabLineSel"
-		or name == "Folded" or name == "FloatTitle" or name == "FloatFooter"
-		or name == "Visual" or name == "VisualNOS" or name == "Search"
-		or name == "IncSearch" or name == "CurSearch"
-		or name == "WinBar" or name == "WinBarNC"
-		or name:match("^lualine_") or name:match("^Telescope.*Title") then
-		return { kind = "text", threshold = THRESH.TEXT_MIN }
-	end
-	return { kind = "ui", threshold = THRESH.UI_MIN }
-end
+local function classify(name) return cls.classify(name, THRESH) end
 
 local function int_to_hex(n)
 	if not n then return nil end

@@ -2,16 +2,9 @@ local M = {}
 
 ---theme settings
 local defaults = {
-	contrast = {
-		terminal = false,
-		sidebars = false,
-		cursor_line = false,
-		floating_windows = false,
-		lsp_virtual_text = false,
-		non_current_windows = false,
-		filetypes = {},
-	},
-	-- TODO: Deprecate styles.
+	-- Typographic styles per syntax role. Opt-in only: an empty table means
+	-- "no style override" (default appearance). Values are passed through to
+	-- nvim_set_hl, so any valid attribute works (italic, bold, underline, ...).
 	styles = {
 		comments = {},
 		strings = {},
@@ -21,13 +14,9 @@ local defaults = {
 		operators = {},
 		types = {},
 	},
-	-- TODO: remove disable settings that don't make sense or don't align with the mission
 	disable = {
-		colored_cursor = false,
-		borders = false,
 		background = false,
-		term_colors = false,
-		eob_lines = false,
+		eob_lines = true,
 	},
 	lualine_style = "default",
 	-- Lualine theme to apply automatically when ghosttysync loads.

@@ -9,7 +9,7 @@ M.load = function()
         RainbowDelimiterRed = { fg = m.red },
         RainbowDelimiterYellow = { fg = m.yellow },
         RainbowDelimiterBlue = { fg = m.blue },
-        RainbowDelimiterOrange = { fg = m.orange },
+        RainbowDelimiterOrange = { fg = m.yellow },
         RainbowDelimiterGreen = { fg = m.green },
         RainbowDelimiterViolet = { fg = m.purple },
         RainbowDelimiterCyan = { fg = m.cyan },

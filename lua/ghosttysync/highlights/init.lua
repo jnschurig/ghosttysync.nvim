@@ -69,7 +69,7 @@ M.main_highlights.syntax = function()
     -- htmlH3         = { fg = m.green, bold = true },
   }
 
-  -- apply the user set styles for these groups
+  -- apply the user-set styles for these groups
   syntax_hls.Comment      = vim.tbl_extend("keep", syntax_hls.Comment, styles.comments)
   syntax_hls.Conditional  = vim.tbl_extend("keep", syntax_hls.Conditional, styles.keywords)
   syntax_hls.Function     = vim.tbl_extend("keep", syntax_hls.Function, styles.functions)
@@ -239,8 +239,8 @@ M.main_highlights.treesitter = function()
     treesitter_hls["@include"] = treesitter_hls["@keyword.import"]
     treesitter_hls["@repeat"] = treesitter_hls["@keyword.repeat"]
 
-    treesitter_hls["@keyword"]  = vim.tbl_extend("keep", treesitter_hls["@keyword"], styles.keywords)
-    treesitter_hls["@keyword.directive"]  = vim.tbl_extend("keep", treesitter_hls["@keyword.directive"], styles.keywords)
+    treesitter_hls["@keyword"]           = vim.tbl_extend("keep", treesitter_hls["@keyword"], styles.keywords)
+    treesitter_hls["@keyword.directive"] = vim.tbl_extend("keep", treesitter_hls["@keyword.directive"], styles.keywords)
 
     return treesitter_hls
   else
@@ -351,7 +351,7 @@ M.main_highlights.editor = function()
     Blue   = { fg = m.blue },
     Cyan   = { fg = m.cyan },
     Purple = { fg = m.purple },
-    Orange = { fg = m.orange },
+    Orange = { fg = m.yellow },
   }
 
   return editor_hls
@@ -387,7 +387,7 @@ M.async_highlights.editor = function()
     PmenuSel      = { fg = fit(e.bg, e.accent, T.TEXT_MIN), bg = e.accent }, -- Popup menu: selected item.
     PmenuSbar     = { bg = e.active },
     PmenuThumb    = { fg = e.fg },
-    WildMenu      = { fg = m.orange, bold = true }, -- current match in 'wildmenu' completion
+    WildMenu      = { fg = m.yellow, bold = true }, -- current match in 'wildmenu' completion
     VertSplit     = { fg = fit(e.vsplit, e.bg, T.UI_MIN) },
     WinSeparator  = { fg = fit(e.vsplit, e.bg, T.UI_MIN) },
     diffAdded     = { fg = g.added },
@@ -401,11 +401,7 @@ M.async_highlights.editor = function()
     -- CommandMode      = { link = "NormalMode" },
   }
 
-  if settings.disable.eob_lines then
-      editor_hls.EndOfBuffer = { fg = e.bg }
-  else
-      editor_hls.EndOfBuffer = { fg = e.disabled }
-  end
+  editor_hls.EndOfBuffer = { fg = e.bg }
 
   return editor_hls
 end
@@ -483,40 +479,32 @@ M.async_highlights.load_lsp = function()
 
   }
 
-  if settings.contrast.lsp_virtual_text then
-    lsp_hls.DiagnosticVirtualTextError = { fg = l.error, bg = functions.darken(l.error, 0.1, b.bg_blend) }
-    lsp_hls.DiagnosticVirtualTextWarn  = { fg = l.warning, bg = functions.darken(l.warning, 0.1, b.bg_blend) }
-    lsp_hls.DiagnosticVirtualTextInfo  = { fg = l.info, bg = functions.darken(l.info, 0.1, b.bg_blend) }
-    lsp_hls.DiagnosticVirtualTextHint  = { fg = l.hint, bg = functions.darken(l.hint, 0.1, b.bg_blend) }
-  else
-    lsp_hls.DiagnosticVirtualTextError = { link = "DiagnosticError" }
-    lsp_hls.DiagnosticVirtualTextWarn  = { link = "DiagnosticWarn" }
-    lsp_hls.DiagnosticVirtualTextInfo  = { link = "DiagnosticInfo" }
-    lsp_hls.DiagnosticVirtualTextHint  = { link = "DiagnosticHint" }
-  end
+  lsp_hls.DiagnosticVirtualTextError = { link = "DiagnosticError" }
+  lsp_hls.DiagnosticVirtualTextWarn  = { link = "DiagnosticWarn" }
+  lsp_hls.DiagnosticVirtualTextInfo  = { link = "DiagnosticInfo" }
+  lsp_hls.DiagnosticVirtualTextHint  = { link = "DiagnosticHint" }
 
   return lsp_hls
 end
 
----function for setting the terminal colors
--- TODO: Set index colors in the colors table and use those here. It's ridiculous that we are coming up with these again...
+---Map :term colors directly to the ANSI palette indices.
 M.load_terminal = function()
-  vim.g.terminal_color_0 = m.black
-  vim.g.terminal_color_1 = m.darkred
-  vim.g.terminal_color_2 = m.darkgreen
-  vim.g.terminal_color_3 = m.darkyellow
-  vim.g.terminal_color_4 = m.darkblue
-  vim.g.terminal_color_5 = m.darkpurple
-  vim.g.terminal_color_6 = m.darkcyan
-  vim.g.terminal_color_7 = m.white
-  vim.g.terminal_color_8 = e.disabled
-  vim.g.terminal_color_9 = m.red
-  vim.g.terminal_color_10 = m.green
-  vim.g.terminal_color_11 = m.yellow
-  vim.g.terminal_color_12 = m.blue
-  vim.g.terminal_color_13 = m.purple
-  vim.g.terminal_color_14 = m.cyan
-  vim.g.terminal_color_15 = m.white
+  vim.g.terminal_color_0  = m.black
+  vim.g.terminal_color_1  = m.red
+  vim.g.terminal_color_2  = m.green
+  vim.g.terminal_color_3  = m.yellow
+  vim.g.terminal_color_4  = m.blue
+  vim.g.terminal_color_5  = m.purple
+  vim.g.terminal_color_6  = m.cyan
+  vim.g.terminal_color_7  = m.white
+  vim.g.terminal_color_8  = m.bright_black
+  vim.g.terminal_color_9  = m.bright_red
+  vim.g.terminal_color_10 = m.bright_green
+  vim.g.terminal_color_11 = m.bright_yellow
+  vim.g.terminal_color_12 = m.bright_blue
+  vim.g.terminal_color_13 = m.bright_purple
+  vim.g.terminal_color_14 = m.bright_cyan
+  vim.g.terminal_color_15 = m.bright_white
 end
 
 -- apply plugin highlights

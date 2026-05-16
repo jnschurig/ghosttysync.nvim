@@ -31,11 +31,11 @@ M.load = function()
         DevIconVim      = { fg = m.green },
         DevIconVue      = { fg = m.green },
         DevIconTerminal = { fg = m.green },
-        DevIconDiff     = { fg = m.orange },
-        DevIconConf     = { fg = m.orange },
-        DevIconToml     = { fg = m.orange },
-        DevIconKotlin   = { fg = m.orange },
-        DevIconSwift    = { fg = m.orange },
+        DevIconDiff     = { fg = m.yellow },
+        DevIconConf     = { fg = m.yellow },
+        DevIconToml     = { fg = m.yellow },
+        DevIconKotlin   = { fg = m.yellow },
+        DevIconSwift    = { fg = m.yellow },
     }
 
     return plugin_hls
