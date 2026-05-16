@@ -209,9 +209,24 @@ do
 end
 
 ---git colors
-colors.git.added    = colors.main.green
-colors.git.removed  = colors.main.red
-colors.git.modified = colors.main.yellow
+-- Diff semantics (added=green, removed=red) are universal — independent of
+-- the theme's ANSI slot assignments. Scan the full palette for the entry
+-- closest to true-red / true-green / true-yellow by OKLCH hue.
+local function closest_by_hue(target_h)
+	local best, best_d = nil, math.huge
+	for _, hex in ipairs(palette) do
+		local lch = hex and oklch.hex_to_oklch(hex)
+		if lch and lch.h then
+			local d = math.abs(lch.h - target_h) % 360
+			if d > 180 then d = 360 - d end
+			if d < best_d then best, best_d = hex, d end
+		end
+	end
+	return best
+end
+colors.git.added    = contrast.ensure_contrast(closest_by_hue(140), colors.editor.bg, T.UI_MIN)
+colors.git.removed  = contrast.ensure_contrast(closest_by_hue(25),  colors.editor.bg, T.UI_MIN)
+colors.git.modified = contrast.ensure_contrast(closest_by_hue(95),  colors.editor.bg, T.UI_MIN)
 
 ---contrasted backgrounds
 colors.backgrounds.sidebars            = colors.editor.bg
