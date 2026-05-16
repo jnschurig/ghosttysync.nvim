@@ -1,14 +1,17 @@
 local colors = require "ghosttysync.colors"
+local contrast = require "ghosttysync.colors.contrast"
+local T = contrast.thresholds()
 
 local e = colors.editor
+local fg = contrast.ensure_contrast(e.selection_fg, e.highlight, T.TEXT_MIN)
 
 local M = {}
 
 M.load = function()
     local plugin_hls = {
-        IlluminatedWordText = { bg = e.highlight },
-        IlluminatedWordRead = { bg = e.highlight },
-        IlluminatedWordWrite = { bg = e.highlight, standout = true },
+        IlluminatedWordText = { fg = fg, bg = e.highlight },
+        IlluminatedWordRead = { fg = fg, bg = e.highlight },
+        IlluminatedWordWrite = { fg = fg, bg = e.highlight, standout = true },
 
     }
 
