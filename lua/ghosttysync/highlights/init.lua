@@ -46,7 +46,7 @@ M.main_highlights.syntax = function()
     Constant       = { fg = m.yellow },
     Number         = { fg = s.value },
     Character      = { link = "Number" },
-    Boolean        = { link = "Number" },
+    Boolean        = { fg = m.green },
     Float          = { link = "Number" },
     Statement      = { fg = m.cyan },
     Label          = { fg = s.keyword }, -- case, default, etc.
@@ -135,7 +135,7 @@ M.main_highlights.treesitter = function()
       ["@keyword.exception"]         = { link = "Exception" },
 
       ["@constant"]         = { fg = m.yellow },
-      ["@constant.builtin"] = { fg = m.yellow },
+      ["@constant.builtin"] = { fg = m.green },
       ["@constant.macro"]   = { fg = m.cyan },
 
       ["@keyword.directive"] = { fg = m.cyan },
@@ -143,9 +143,9 @@ M.main_highlights.treesitter = function()
       ["@module"] = { fg = m.yellow },
 
       ["@string"]         = { link = "String" },
-      ["@string.escape"]  = { fg = e.fg_dark },
+      ["@string.escape"]  = { fg = m.bright_green },
       ["@string.regexp"]   = { fg = m.yellow },
-      ["@string.special"] = { fg = e.fg_dark },
+      ["@string.special"] = { fg = m.bright_green },
 
       ["@character"] = { link = "Character" },
       ["@character.special"] = { link = "SpecialChar" },
