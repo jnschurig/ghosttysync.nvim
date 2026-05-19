@@ -200,7 +200,7 @@ colors.syntax.field     = colors.editor.fg_dark
 colors.syntax.keyword   = colors.main.purple
 colors.syntax.value     = colors.main.yellow
 colors.syntax.operator  = colors.main.cyan
-colors.syntax.fn        = colors.main.blue
+colors.syntax.fn        = colors.main.green
 colors.syntax.parameter = colors.main.bright_blue
 colors.syntax.string    = colors.main.green
 colors.syntax.type      = colors.main.purple
@@ -210,6 +210,7 @@ do
 	local pairs_to_check = {
 		{ "keyword",   "type" },
 		{ "fn",        "parameter" },
+		{ "string",    "fn" },
 		{ "string",    "value" },
 		{ "operator",  "fn" },
 		{ "variable",  "field" },
