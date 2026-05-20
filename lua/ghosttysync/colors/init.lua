@@ -283,7 +283,7 @@ local function synth_diff(hue_deg, bright)
 	-- always lands in a high-contrast band regardless of bg lightness. The
 	-- `bright` variant nudges L further from bg for ANSI slots 9..11.
 	local offset = bright and 0.08 or 0
-	local L = (bg_lch.L < 0.5) and (0.78 + offset) or (0.42 - offset)
+	local L = (bg_lch.L < 0.5) and (0.72 + offset) or (0.55 - offset)
 	local hex = oklch.oklch_to_hex({ L = L, c = c, h = hue_deg })
 	return contrast.ensure_contrast(hex, colors.editor.bg, T.UI_MIN)
 end
