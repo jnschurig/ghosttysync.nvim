@@ -13,7 +13,7 @@ M.load = function()
         NavicIconsPackage       = { link = "NavicIconsFile" },
         NavicIconsClass         = { link = "NavicIconsModule" },
         NavicIconsMethod        = { fg = m.blue, bg = e.selection },
-        NavicIconsProperty      = { fg = m.purple, bg = e.selection },
+        NavicIconsProperty      = { fg = m.magenta, bg = e.selection },
         NavicIconsField         = { fg = m.cyan, bg = e.selection },
         NavicIconsConstructor   = { link = "NavicIconsProperty"},
         NavicIconsEnum          = { link = "NavicIconsNamespace" },

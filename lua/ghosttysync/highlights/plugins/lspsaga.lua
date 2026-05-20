@@ -24,7 +24,7 @@ M.load = function()
         LspSagaRenamePromptPrefix     = { fg = m.yellow },
         LspSagaDefPreviewBorder       = { link = "FloatBorder" },
         LspSagaCodeActionTitle        = { fg = m.bright_blue },
-        LspSagaCodeActionContent      = { fg = m.purple },
+        LspSagaCodeActionContent      = { fg = m.magenta },
         LspSagaCodeActionBorder       = { link = "FloatBorder" },
         LspSagaCodeActionTruncateLine = { link = "FloatBorder" },
         LspSagaSignatureHelpBorder    = { link = "FloatBorder" },

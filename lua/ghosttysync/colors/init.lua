@@ -17,7 +17,7 @@ local default_term_colors = {
 			"#00ff00",          -- 2 green
 			"#ffff00",          -- 3 yellow
 			"#0000ff",          -- 4 blue
-			"#8000ff",          -- 5 purple
+			"#8000ff",          -- 5 magenta
 			"#00ffff",          -- 6 cyan
 			pure_white,         -- 7 white
 			pure_gray,          -- 8 bright_black
@@ -25,7 +25,7 @@ local default_term_colors = {
 			"#40ff40",          -- 10 bright_green
 			"#ffff80",          -- 11 bright_yellow
 			"#4080ff",          -- 12 bright_blue
-			"#a040ff",          -- 13 bright_purple
+			"#a040ff",          -- 13 bright_magenta
 			"#40ffff",          -- 14 bright_cyan
 			pure_white,         -- 15 bright_white
 		},
@@ -70,7 +70,7 @@ local colors = {
 		green         = palette[3],
 		yellow        = palette[4],
 		blue          = palette[5],
-		purple        = palette[6],
+		magenta        = palette[6],
 		cyan          = palette[7],
 		white         = palette[8],
 		bright_black  = palette[9],
@@ -78,7 +78,7 @@ local colors = {
 		bright_green  = palette[11],
 		bright_yellow = palette[12],
 		bright_blue   = palette[13],
-		bright_purple = palette[14],
+		bright_magenta = palette[14],
 		bright_cyan   = palette[15],
 		bright_white  = palette[16],
 	},
@@ -115,7 +115,7 @@ colors.lsp = {
 	error   = colors.main.red,
 	warning = colors.main.yellow,
 	info    = colors.main.bright_blue,
-	hint    = colors.main.purple,
+	hint    = colors.main.magenta,
 }
 
 colors.syntax      = {}
@@ -160,7 +160,7 @@ colors.editor.border       = functions.adjust_color_value(colors.editor.selectio
 colors.editor.line_numbers = colors.editor.border
 colors.editor.highlight    = colors.editor.selection
 colors.editor.disabled     = functions.adjust_color_value(colors.editor.highlight, standard_invert_adjustment)
-colors.editor.accent       = colors.main.purple
+colors.editor.accent       = colors.main.magenta
 colors.editor.contrast     = functions.adjust_color_value(colors.editor.accent, standard_adjustment)
 colors.editor.none         = "NONE"
 
@@ -197,13 +197,13 @@ colors.editor.title        = colors.editor.fg
 colors.syntax.comments  = contrast.ensure_contrast(colors.main.gray, colors.editor.bg, T.COMMENT_MIN)
 colors.syntax.variable  = colors.editor.fg
 colors.syntax.field     = colors.editor.fg_dark
-colors.syntax.keyword   = colors.main.purple
+colors.syntax.keyword   = colors.main.magenta
 colors.syntax.value     = colors.main.yellow
 colors.syntax.operator  = colors.main.cyan
 colors.syntax.fn        = colors.main.green
 colors.syntax.parameter = colors.main.bright_blue
 colors.syntax.string    = colors.main.green
-colors.syntax.type      = colors.main.purple
+colors.syntax.type      = colors.main.magenta
 
 -- Adjacent-role distinguishability: nudge the second member of each pair.
 do
@@ -288,15 +288,15 @@ do
 	local primary = {
 		normal   = { m.blue,   m.bright_blue   },
 		insert   = { m.green,  m.bright_green  },
-		visual   = { m.purple, m.bright_purple },
+		visual   = { m.magenta, m.bright_magenta },
 		replace  = { m.red,    m.bright_red    },
 		command  = { m.yellow, m.bright_yellow },
 		terminal = { m.cyan,   m.bright_cyan   },
 	}
 	local order = { "normal", "insert", "visual", "replace", "command", "terminal" }
 	local fallback_pool = {
-		m.blue, m.green, m.purple, m.red, m.yellow, m.cyan,
-		m.bright_blue, m.bright_green, m.bright_purple,
+		m.blue, m.green, m.magenta, m.red, m.yellow, m.cyan,
+		m.bright_blue, m.bright_green, m.bright_magenta,
 		m.bright_red, m.bright_yellow, m.bright_cyan,
 	}
 

@@ -173,7 +173,7 @@ M.main_highlights.treesitter = function()
       ["@markup.link"]              = { link = "Tag" }, -- text references, footnotes, citations, etc.
       ["@markup.link.url"]          = { fg = e.link }, -- urls, links and emails
       ["@markup.math"]              = { fg = m.blue }, -- e.g. LaTeX math
-      ["@markup.raw"]               = { fg = m.purple }, -- e.g. inline `code` in Markdown
+      ["@markup.raw"]               = { fg = m.magenta }, -- e.g. inline `code` in Markdown
       ["@markup.list"]              = { link = "Special" },
       ["@markup.list.checked"]      = { fg = m.green }, -- checkboxes
       ["@markup.list.unchecked"]    = { fg = s.text },
@@ -183,7 +183,7 @@ M.main_highlights.treesitter = function()
       ["@markup.danger"]            = { fg = l.error },
       ["@tag"]                       = { fg = m.red },
       ["@tag.delimiter"]             = { fg = m.cyan },
-      ["@tag.attribute"]             = { fg = m.purple },
+      ["@tag.attribute"]             = { fg = m.magenta },
       ["@keyword.directive.define"] = { link = "@keyword.directive" },
       ["@operator"]                  = { link = "Operator" },
       TreesitterContext              = { bg = e.contrast },
@@ -275,7 +275,7 @@ M.main_highlights.treesitter = function()
       TSURI            = { fg = e.link },
       TSTag            = { fg = m.red },
       TSTagDelimiter   = { fg = m.cyan },
-      TSTagAttribute   = { fg = m.purple },
+      TSTagAttribute   = { fg = m.magenta },
       TSTodo           = { fg = colors.yellow },
     }
 
@@ -316,7 +316,7 @@ M.main_highlights.editor = function()
     ModeMsg          = { fg = e.accent }, -- 'showmode' message (e.g., "-- INSERT -- ")
     NonText          = { fg = e.disabled },
     SignColumn       = { fg = e.fg },
-    SpecialKey       = { fg = m.purple },
+    SpecialKey       = { fg = m.magenta },
     StatusLine       = { fg = fit(e.fg, e.active, T.TEXT_MIN), bg = e.active },
     StatusLineNC     = { fg = fit(e.fg_dark, e.bg, T.TEXT_MIN), bg = e.bg },
     StatusLineTerm   = { fg = fit(e.fg, e.active, T.TEXT_MIN), bg = e.active },
@@ -350,7 +350,7 @@ M.main_highlights.editor = function()
     Yellow = { fg = m.yellow },
     Blue   = { fg = m.blue },
     Cyan   = { fg = m.cyan },
-    Purple = { fg = m.purple },
+    Magenta = { fg = m.magenta },
     Orange = { fg = m.yellow },
   }
 
@@ -365,7 +365,7 @@ M.async_highlights.editor = function()
     SpellBad      = { fg = m.red, italic = true, undercurl = true },
     SpellCap      = { fg = m.blue, italic = true, undercurl = true },
     SpellLocal    = { fg = m.cyan, italic = true, undercurl = true },
-    SpellRare     = { fg = m.purple, italic = true, undercurl = true },
+    SpellRare     = { fg = m.magenta, italic = true, undercurl = true },
     Warnings      = { fg = m.yellow },
     healthError   = { fg = l.error },
     healthSuccess = { fg = m.green },
@@ -506,7 +506,7 @@ M.load_terminal = function()
   vim.g.terminal_color_2  = fit_bg(t.green)
   vim.g.terminal_color_3  = fit_bg(t.yellow)
   vim.g.terminal_color_4  = fit_bg(m.blue)
-  vim.g.terminal_color_5  = fit_bg(m.purple)
+  vim.g.terminal_color_5  = fit_bg(m.magenta)
   vim.g.terminal_color_6  = fit_bg(m.cyan)
   vim.g.terminal_color_7  = m.white
   vim.g.terminal_color_8  = m.bright_black
@@ -514,7 +514,7 @@ M.load_terminal = function()
   vim.g.terminal_color_10 = fit_bg(t.bright_green)
   vim.g.terminal_color_11 = fit_bg(t.bright_yellow)
   vim.g.terminal_color_12 = fit_bg(m.bright_blue)
-  vim.g.terminal_color_13 = fit_bg(m.bright_purple)
+  vim.g.terminal_color_13 = fit_bg(m.bright_magenta)
   vim.g.terminal_color_14 = fit_bg(m.bright_cyan)
   vim.g.terminal_color_15 = m.bright_white
 end

@@ -10,7 +10,7 @@ local M = {}
 -- contrast against Normal bg is not a meaningful constraint.
 M.SKIP = {
 	Black = true, Red = true, Green = true, Yellow = true, Blue = true,
-	Cyan = true, Purple = true, Orange = true, White = true,
+	Cyan = true, Magenta = true, Orange = true, White = true,
 	Cursor = true, CursorIM = true, TermCursor = true, lCursor = true,
 }
 

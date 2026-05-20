@@ -16,7 +16,7 @@ M.load = function()
         NeotestFocused = { bold = true, underline = true },
         NeotestIndent = { fg = e.line_numbers }, -- aka tree symbols
         NeotestMarked = { fg = m.bright_yellow, bold = true },
-        NeotestNamespace = { fg = m.purple },
+        NeotestNamespace = { fg = m.magenta },
         NeotestPassed = { fg = m.green },
         NeotestRunning = { fg = m.yellow },
         NeotestSkipped = { link = "DiagnosticHint" },

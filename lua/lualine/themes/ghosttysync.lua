@@ -34,7 +34,7 @@ if style == "stealth" then
 	}
 
 	M.visual = {
-		a = { fg = m.purple, bg = e.highlight },
+		a = { fg = m.magenta, bg = e.highlight },
 		b = { fg = e.title, bg = e.bg_alt },
 	}
 

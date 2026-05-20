@@ -7,8 +7,8 @@ local M = {}
 
 M.load = function()
     local plugin_hls = {
-        ["@neorg.headings.1.prefix"] = { fg = m.purple },
-        ["@neorg.headings.1.title"]  = { fg = m.purple },
+        ["@neorg.headings.1.prefix"] = { fg = m.magenta },
+        ["@neorg.headings.1.title"]  = { fg = m.magenta },
         ["@neorg.headings.2.prefix"] = { fg = m.green },
         ["@neorg.headings.2.title"]  = { fg = m.green },
         ["@neorg.headings.3.prefix"] = { fg = m.yellow },

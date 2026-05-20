@@ -8,7 +8,7 @@ local M = {}
 M.load = function()
     local plugin_hls = {
         NeogitBranch               = { fg = m.bright_blue },
-        NeogitRemote               = { fg = m.purple },
+        NeogitRemote               = { fg = m.magenta },
 
         NeogitHunkHeader           = { fg = e.fg, bg = e.highlight },
         NeogitHunkHeaderHighlight  = { fg = m.blue, bg = e.contrast },

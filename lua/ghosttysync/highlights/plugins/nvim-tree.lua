@@ -24,7 +24,7 @@ M.load = function()
         NvimTreeImageFile        = { fg = m.yellow },
         NvimTreeMarkdownFile     = { fg = m.pink },
         NvimTreeExecFile         = { link = "NvimTreeGitNew" },
-        NvimTreeSpecialFile      = { fg = m.purple },
+        NvimTreeSpecialFile      = { fg = m.magenta },
         NvimTreeWinSeparator     = { link = "WinSeparator" },
     }
 
