@@ -309,12 +309,9 @@ M.main_highlights.editor = function()
             T.COMMENT_MIN
         ),
     },
-    -- Diff row tints: blend toward bg for subtlety, then guarantee a minimum
-    -- OKLab ΔE from e.bg so they remain distinguishable in low-chroma palettes
-    -- (e.g. Batman) where the source hues are already close to bg lightness.
-    DiffAdd          = { bg = contrast.ensure_bg_distance(functions.darken(g.added,    0.2, b.bg_blend), e.bg, T.PANEL_BG_OFFSET) },
-    DiffChange       = { bg = contrast.ensure_bg_distance(functions.darken(g.modified, 0.2, b.bg_blend), e.bg, T.PANEL_BG_OFFSET) },
-    DiffDelete       = { bg = contrast.ensure_bg_distance(functions.darken(g.removed,  0.2, b.bg_blend), e.bg, T.PANEL_BG_OFFSET) },
+    DiffAdd          = { bg = functions.darken(g.added, 0.2, b.bg_blend) },
+    DiffChange       = { bg = functions.darken(g.modified, 0.2, b.bg_blend) },
+    DiffDelete       = { bg = functions.darken(g.removed, 0.2, b.bg_blend )},
     DiffText         = { fg = g.modified, reverse = true },
     ModeMsg          = { fg = e.accent }, -- 'showmode' message (e.g., "-- INSERT -- ")
     NonText          = { fg = e.disabled },
