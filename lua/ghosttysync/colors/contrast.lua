@@ -124,6 +124,18 @@ function M.ensure_contrast(fg, bg, threshold)
   return best, false
 end
 
+---Pick a high-contrast neutral fg for `bg` (near-black on light bg, near-white
+---on dark bg). Used when a hue-preserving fg ends up perceptually muddy against
+---bg despite meeting WCAG — e.g. brown text on similarly brown background.
+---@param bg string
+---@return string
+function M.neutral_fg_for(bg)
+  if not oklch.is_valid_hex(bg) then
+    return bg
+  end
+  return relative_luminance(bg) >= 0.18 and "#111111" or "#eeeeee"
+end
+
 ---If `fg_a` and `fg_b` are perceptually too close, shift `fg_b`'s OKLCH L
 ---until the distance is met, while keeping `fg_b`'s contrast against `bg`
 ---above `contrast_threshold`. `fg_b` is the mutable side.

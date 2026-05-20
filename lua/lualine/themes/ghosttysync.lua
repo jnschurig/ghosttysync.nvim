@@ -56,33 +56,33 @@ if style == "stealth" then
 else
   local mb = colors.lualine_mode_bgs
   M.normal = {
-    a = { fg = e.bg, bg = mb.normal, gui = "bold" },
+    a = { fg = contrast.neutral_fg_for(mb.normal), bg = mb.normal, gui = "bold" },
     b = { fg = e.title, bg = e.bg_alt },
     c = { fg = e.fg, bg = e.active },
   }
 
   M.insert = {
-    a = { fg = e.bg, bg = mb.insert, gui = "bold" },
+    a = { fg = contrast.neutral_fg_for(mb.insert), bg = mb.insert, gui = "bold" },
     b = { fg = e.title, bg = e.bg_alt },
   }
 
   M.visual = {
-    a = { fg = e.bg, bg = mb.visual, gui = "bold" },
+    a = { fg = contrast.neutral_fg_for(mb.visual), bg = mb.visual, gui = "bold" },
     b = { fg = e.title, bg = e.bg_alt },
   }
 
   M.replace = {
-    a = { fg = e.bg, bg = mb.replace, gui = "bold" },
+    a = { fg = contrast.neutral_fg_for(mb.replace), bg = mb.replace, gui = "bold" },
     b = { fg = e.title, bg = e.bg_alt },
   }
 
   M.command = {
-    a = { fg = e.bg, bg = mb.command, gui = "bold" },
+    a = { fg = contrast.neutral_fg_for(mb.command), bg = mb.command, gui = "bold" },
     b = { fg = e.title, bg = e.bg_alt },
   }
 
   M.terminal = {
-    a = { fg = e.bg, bg = mb.terminal, gui = "bold" },
+    a = { fg = contrast.neutral_fg_for(mb.terminal), bg = mb.terminal, gui = "bold" },
     b = { fg = e.title, bg = e.bg_alt },
   }
 
