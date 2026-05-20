@@ -124,6 +124,32 @@ function M.ensure_contrast(fg, bg, threshold)
   return best, false
 end
 
+---Pick a high-contrast neutral fg for `bg` (near-black on light bg, near-white
+---on dark bg). Used when a hue-preserving fg ends up perceptually muddy against
+---bg despite meeting WCAG — e.g. brown text on similarly brown background.
+---@param bg string
+---@return string
+function M.neutral_fg_for(bg)
+  if not oklch.is_valid_hex(bg) then
+    return bg
+  end
+  -- Prefer white when it meets TEXT_MIN: dark-on-colored-dark (e.g. black on
+  -- mid blue) can satisfy WCAG by a hair but still reads as dark-on-dark.
+  -- Fall back to black when white can't meet threshold; if neither does
+  -- (rare, only with extreme mid-tones), pick whichever achieves more.
+  local dark, light = "#000000", "#ffffff"
+  local TEXT_MIN = M.thresholds().TEXT_MIN
+  local lr = M.wcag_ratio(light, bg)
+  if lr >= TEXT_MIN then
+    return light
+  end
+  local dr = M.wcag_ratio(dark, bg)
+  if dr >= TEXT_MIN then
+    return dark
+  end
+  return dr >= lr and dark or light
+end
+
 ---If `fg_a` and `fg_b` are perceptually too close, shift `fg_b`'s OKLCH L
 ---until the distance is met, while keeping `fg_b`'s contrast against `bg`
 ---above `contrast_threshold`. `fg_b` is the mutable side.

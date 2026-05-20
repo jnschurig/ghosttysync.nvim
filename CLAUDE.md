@@ -39,5 +39,4 @@ The audit harness checks six properties per fixture: per-group contrast against 
 
 ## Known limitations
 
-- lazygit diff colors are not synced (separate process, would require config-file write).
 - `disable.*` and `styles.*` options in `util/config.lua` are partly deprecated; the project is moving toward minimal configuration.

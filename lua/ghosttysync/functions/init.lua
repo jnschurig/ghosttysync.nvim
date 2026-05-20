@@ -20,9 +20,10 @@ M.apply_lualine_theme = function()
     local ok, current = pcall(lualine.get_config)
     local opts = (ok and current) or {}
     opts.options = opts.options or {}
-    if opts.options.theme == theme then
-      return
-    end
+    -- Don't short-circuit when the theme name matches: the underlying module
+    -- may have been reloaded with fresh colors (e.g. after :colorscheme
+    -- ghosttysync re-derives the palette), and lualine caches the resolved
+    -- theme table until setup() is called again.
     opts.options.theme = theme
     pcall(lualine.setup, opts)
   end

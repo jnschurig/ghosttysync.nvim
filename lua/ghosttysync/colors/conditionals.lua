@@ -11,7 +11,10 @@ if disabled.background then
 
   -- bg_blend is a blend *reference* (used by functions.darken to compute diff
   -- row tints), not a bg that should be transparent. Leave it alone.
-  for _, k in ipairs({ "sidebars", "floating_windows", "non_current_windows", "cursor_line" }) do
+  -- cursor_line is also kept: even on a transparent background the user still
+  -- wants the active line to be visibly highlighted (and it differs from the
+  -- Visual selection highlight).
+  for _, k in ipairs({ "sidebars", "floating_windows", "non_current_windows" }) do
     colors.backgrounds[k] = "NONE"
   end
 end

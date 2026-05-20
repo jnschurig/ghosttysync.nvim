@@ -10,4 +10,6 @@ return {
   require("tests.fixtures.palettes.apple-system-light"),
   require("tests.fixtures.palettes.adventure-time"),
   require("tests.fixtures.palettes.arcoiris"),
+  require("tests.fixtures.palettes.3024-day"),
+  require("tests.fixtures.palettes.dawnfox"),
 }
