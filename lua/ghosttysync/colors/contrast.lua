@@ -114,6 +114,34 @@ function M.ensure_contrast(fg, bg, threshold)
 	return best, false
 end
 
+---Ensure a background tint maintains a minimum OKLab ΔE from a reference
+---background. Used for diff-row bg tints (DiffAdd/Delete/Change) which
+---blend toward Normal bg and risk vanishing in low-chroma palettes. Walks
+---OKLCH L *away from* `ref_bg` until the distance is met; hue preserved.
+---@param tint string candidate bg
+---@param ref_bg string the editor bg to stand apart from
+---@param min_distance number minimum OKLab ΔE
+---@return string adjusted_tint
+function M.ensure_bg_distance(tint, ref_bg, min_distance)
+	if not (oklch.is_valid_hex(tint) and oklch.is_valid_hex(ref_bg)) then
+		return tint
+	end
+	if M.oklch_distance(tint, ref_bg) >= min_distance then
+		return tint
+	end
+	local lch = oklch.hex_to_oklch(tint)
+	local ref = oklch.hex_to_oklch(ref_bg)
+	local dir = (lch.L >= ref.L) and 1 or -1
+	for _ = 1, 60 do
+		lch.L = math.max(0, math.min(1, lch.L + dir * 0.02))
+		local cand = oklch.oklch_to_hex(lch)
+		if M.oklch_distance(cand, ref_bg) >= min_distance then
+			return cand
+		end
+	end
+	return tint
+end
+
 ---If `fg_a` and `fg_b` are perceptually too close, shift `fg_b`'s OKLCH L
 ---until the distance is met, while keeping `fg_b`'s contrast against `bg`
 ---above `contrast_threshold`. `fg_b` is the mutable side.
