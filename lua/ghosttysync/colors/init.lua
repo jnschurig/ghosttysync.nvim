@@ -296,6 +296,18 @@ colors.git.added_bright    = synth_diff(142, true)
 colors.git.removed_bright  = synth_diff(29,  true)
 colors.git.modified_bright = synth_diff(100, true)
 
+-- Synthesized magenta + cyan for ANSI slots 5/6 (and brights 13/14). lazygit
+-- uses these as fg for diff metadata (e.g. magenta for hunk headers like
+-- "@@ -1,5 +1,5 @@", cyan for file paths). Same readability rationale as
+-- the diff colors: fit_bg darkens them too aggressively when they're used
+-- as fg. Canonical hues: magenta ~330°, cyan ~210°.
+colors.term_synth = {
+	magenta        = synth_diff(330),
+	cyan           = synth_diff(210),
+	bright_magenta = synth_diff(330, true),
+	bright_cyan    = synth_diff(210, true),
+}
+
 -- TUI semantic colors for the embedded terminal. lazygit/htop/less/etc. ask
 -- for ANSI "red"/"green"/"yellow" and expect them to look red/green/yellow,
 -- not whatever the theme author put in slots 1..3. Perceptual hue match for

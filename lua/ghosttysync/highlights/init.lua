@@ -517,16 +517,16 @@ M.load_terminal = function()
   vim.g.terminal_color_2  = g.added
   vim.g.terminal_color_3  = g.modified
   vim.g.terminal_color_4  = fit_bg(m.blue)
-  vim.g.terminal_color_5  = fit_bg(m.magenta)
-  vim.g.terminal_color_6  = fit_bg(m.cyan)
+  vim.g.terminal_color_5  = colors.term_synth.magenta
+  vim.g.terminal_color_6  = colors.term_synth.cyan
   vim.g.terminal_color_7  = m.white
   vim.g.terminal_color_8  = m.bright_black
   vim.g.terminal_color_9  = g.removed_bright
   vim.g.terminal_color_10 = g.added_bright
   vim.g.terminal_color_11 = g.modified_bright
   vim.g.terminal_color_12 = fit_bg(m.bright_blue)
-  vim.g.terminal_color_13 = fit_bg(m.bright_magenta)
-  vim.g.terminal_color_14 = fit_bg(m.bright_cyan)
+  vim.g.terminal_color_13 = colors.term_synth.bright_magenta
+  vim.g.terminal_color_14 = colors.term_synth.bright_cyan
   vim.g.terminal_color_15 = m.bright_white
 end
 
