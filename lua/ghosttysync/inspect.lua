@@ -59,7 +59,7 @@ function M.show(opts)
 
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 	for _, h in ipairs(highlights) do
-		vim.api.nvim_buf_add_highlight(buf, 0, h[1], h[2], h[3], h[4])
+		vim.api.nvim_buf_add_highlight(buf, 0, h[2], h[1], h[3], h[4])
 	end
 	vim.bo[buf].buftype = "nofile"
 	vim.bo[buf].bufhidden = "wipe"
