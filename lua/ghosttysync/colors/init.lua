@@ -409,6 +409,11 @@ do
       end
     end
     chosen = chosen or farthest_unused() or primary[mode][1]
+    -- Final guarantee: even fallback picks must clear TEXT_MIN against text_fg
+    -- (farthest_unused optimizes for distance only). Without this, a borderline
+    -- bg like dawnfox terminal (#2d81a3) survives at wcag~4.0, and the only
+    -- readable fg becomes a dark color that looks dark-on-dark.
+    chosen = contrast.ensure_contrast(chosen, text_fg, T.TEXT_MIN)
     picked[mode] = chosen
     taken[chosen] = true
   end
