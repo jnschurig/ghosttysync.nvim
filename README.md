@@ -93,20 +93,25 @@ The plugin automatically syncs your Ghostty theme with Neovim on startup. You ca
 - Ghostty terminal emulator
 - Ghostty must be accessible via CLI (`ghostty +show-config`)
 
-## Known limitations
-
-- **lazygit diff colors are not theme-synced.** lazygit runs in a separate
-  process with its own config; bridging the live palette requires a
-  config-file write + reload that's out of scope for this plugin. gitsigns
-  and the lualine diff tier do pick up the active palette.
-
 ## Plugin Structure
 
 ```
 lua/ghosttysync/
-├── init.lua           # Main controller and plugin entry point
-├── ghostty_config.lua # Ghostty CLI execution and config parsing
-├── theme_parser.lua   # Theme parsing and color extraction
-├── color_mapper.lua   # Color mapping to Neovim highlight groups
-└── nvim_applier.lua   # Neovim highlight group application
+├── init.lua              # Exposes setup()
+├── audit.lua             # :GhosttysyncAudit live contrast audit
+├── audit_classify.lua    # Heuristics for classifying highlight groups
+├── colors/
+│   ├── ghosttyconfig.lua # Runs `ghostty +show-config` and parses the palette
+│   ├── init.lua          # Builds the main/editor/syntax/backgrounds tables
+│   ├── conditionals.lua  # Applies contrast options and binds role colors
+│   ├── contrast.lua      # WCAG/OKLCH contrast enforcement
+│   └── oklch.lua         # sRGB↔OKLCH conversion (gamut-clamped)
+├── highlights/           # nvim_set_hl definitions (core + plugin integrations)
+├── functions/            # User commands (incl. :GhosttysyncAudit)
+└── util/                 # config defaults, deep-merge, theme loader
 ```
+
+The full readability pipeline and audit harness are documented in
+`lua/ghosttysync/colors/README.md`. `scripts/audit.lua` runs the audit
+against every fixture in `tests/fixtures/palettes/` and exits non-zero on
+contrast regressions.
