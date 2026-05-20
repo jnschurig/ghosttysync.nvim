@@ -110,7 +110,7 @@ This is an example of the setup function with the default values:
     + async_loading  {bool}
           Load parts of the theme asyncronously for faster startup
           (turned on by default)
-    
+
     + plugins  {table}
           To apply the theme to a plugin, set it in this table
           Available plugins:
@@ -232,7 +232,7 @@ Material.nvim has built in functions that you can call or bind to a key
 
     + Toggle the end of buffer lines
           Call this function if you want to toggle the visibility of the lines at the end of
-          the buffer: 
+          the buffer:
           :lua require('ghosttysync.functions').toggle_eob()~
 
 ================================================================================

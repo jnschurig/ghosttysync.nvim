@@ -1,4 +1,4 @@
-local colors = require "ghosttysync.colors"
+local colors = require("ghosttysync.colors")
 
 local m = colors.main
 local e = colors.editor
@@ -7,23 +7,23 @@ local s = colors.syntax
 local M = {}
 
 M.load = function()
-    local plugin_hls = {
-        -- nvim-dap
-        DapBreakpoint = { fg = m.red },
-        DapBreakpointCondition = { fg = m.yellow },
-        DapStopped    = { fg = m.yellow },
-        DapLogPoint = { fg = m.bright_blue },
+  local plugin_hls = {
+    -- nvim-dap
+    DapBreakpoint = { fg = m.red },
+    DapBreakpointCondition = { fg = m.yellow },
+    DapStopped = { fg = m.yellow },
+    DapLogPoint = { fg = m.bright_blue },
 
-        -- nvim-dap-ui
-        DapUIFloatBorder = { fg = e.border, bg = e.bg },
-        DapUIDecoration  = { fg = m.blue },
-        DAPUIType = { fg = s.type },
-        -- DapUIVariable    = { fg = e.fg },
+    -- nvim-dap-ui
+    DapUIFloatBorder = { fg = e.border, bg = e.bg },
+    DapUIDecoration = { fg = m.blue },
+    DAPUIType = { fg = s.type },
+    -- DapUIVariable    = { fg = e.fg },
 
-        DapUIWatchesError = { link = 'DiagnosticError' },
-    }
+    DapUIWatchesError = { link = "DiagnosticError" },
+  }
 
-    return plugin_hls
+  return plugin_hls
 end
 
 M.async = true

@@ -1,16 +1,16 @@
-local colors = require "ghosttysync.colors"
+local colors = require("ghosttysync.colors")
 
 local e = colors.editor
 
 local M = {}
 
 M.load = function()
-    local plugin_hls = {
-        FidgetTitle = { fg = e.accent },
-        FidgetTask = { bg = e.none, fg = e.fg },
-    }
+  local plugin_hls = {
+    FidgetTitle = { fg = e.accent },
+    FidgetTask = { bg = e.none, fg = e.fg },
+  }
 
-    return plugin_hls
+  return plugin_hls
 end
 
 M.async = true
