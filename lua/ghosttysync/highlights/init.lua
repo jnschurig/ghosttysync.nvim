@@ -507,18 +507,23 @@ M.load_terminal = function()
   -- saturated slot's OKLCH L until e.fg meets TEXT_MIN against it. Hue is
   -- preserved; the gray slots (0/7/8/15) pass through unchanged.
   local function fit_bg(c) return contrast.ensure_contrast(c, e.fg, T.TEXT_MIN) end
+  -- Slots 1/2/3 (and brights 9/10/11) use the synthesized diff colors so that
+  -- lazygit/htop/etc.'s "red"/"green"/"yellow" match the in-nvim git diff
+  -- colors exactly. These are primarily used as fg by TUIs; the other
+  -- saturated slots stay on the fit_bg path because they're commonly used as
+  -- selection backgrounds (e.g. lazygit's selectedLineBgColor: blue).
   vim.g.terminal_color_0  = m.black
-  vim.g.terminal_color_1  = fit_bg(t.red)
-  vim.g.terminal_color_2  = fit_bg(t.green)
-  vim.g.terminal_color_3  = fit_bg(t.yellow)
+  vim.g.terminal_color_1  = g.removed
+  vim.g.terminal_color_2  = g.added
+  vim.g.terminal_color_3  = g.modified
   vim.g.terminal_color_4  = fit_bg(m.blue)
   vim.g.terminal_color_5  = fit_bg(m.magenta)
   vim.g.terminal_color_6  = fit_bg(m.cyan)
   vim.g.terminal_color_7  = m.white
   vim.g.terminal_color_8  = m.bright_black
-  vim.g.terminal_color_9  = fit_bg(t.bright_red)
-  vim.g.terminal_color_10 = fit_bg(t.bright_green)
-  vim.g.terminal_color_11 = fit_bg(t.bright_yellow)
+  vim.g.terminal_color_9  = g.removed_bright
+  vim.g.terminal_color_10 = g.added_bright
+  vim.g.terminal_color_11 = g.modified_bright
   vim.g.terminal_color_12 = fit_bg(m.bright_blue)
   vim.g.terminal_color_13 = fit_bg(m.bright_magenta)
   vim.g.terminal_color_14 = fit_bg(m.bright_cyan)

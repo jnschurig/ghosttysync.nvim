@@ -275,13 +275,15 @@ local function theme_chroma()
 	return math.max(0.12, math.min(0.22, median))
 end
 
-local function synth_diff(hue_deg)
+local function synth_diff(hue_deg, bright)
 	local bg_lch = oklch.hex_to_oklch(colors.editor.bg) or { L = 0.2 }
 	local c = theme_chroma()
 	-- Fixed lightness targets that read clearly against typical bg. Direction
 	-- only depends on dark/light bg; the magnitude is fixed so the diff color
-	-- always lands in a high-contrast band regardless of bg lightness.
-	local L = (bg_lch.L < 0.5) and 0.78 or 0.42
+	-- always lands in a high-contrast band regardless of bg lightness. The
+	-- `bright` variant nudges L further from bg for ANSI slots 9..11.
+	local offset = bright and 0.08 or 0
+	local L = (bg_lch.L < 0.5) and (0.78 + offset) or (0.42 - offset)
 	local hex = oklch.oklch_to_hex({ L = L, c = c, h = hue_deg })
 	return contrast.ensure_contrast(hex, colors.editor.bg, T.UI_MIN)
 end
@@ -290,6 +292,9 @@ end
 colors.git.added    = synth_diff(142)
 colors.git.removed  = synth_diff(29)
 colors.git.modified = synth_diff(100)
+colors.git.added_bright    = synth_diff(142, true)
+colors.git.removed_bright  = synth_diff(29,  true)
+colors.git.modified_bright = synth_diff(100, true)
 
 -- TUI semantic colors for the embedded terminal. lazygit/htop/less/etc. ask
 -- for ANSI "red"/"green"/"yellow" and expect them to look red/green/yellow,
