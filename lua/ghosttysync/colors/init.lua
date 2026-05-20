@@ -198,22 +198,19 @@ colors.syntax.comments  = contrast.ensure_contrast(colors.main.gray, colors.edit
 colors.syntax.variable  = colors.editor.fg
 colors.syntax.field     = colors.editor.fg_dark
 colors.syntax.keyword   = colors.main.magenta
-colors.syntax.value     = colors.main.yellow
+colors.syntax.value     = colors.main.bright_yellow
 colors.syntax.operator  = colors.main.cyan
-colors.syntax.fn        = colors.main.green
+colors.syntax.fn        = colors.main.blue
 colors.syntax.parameter = colors.main.bright_blue
 colors.syntax.string    = colors.main.green
-colors.syntax.type      = colors.main.magenta
+colors.syntax.type      = colors.main.yellow
 
 -- Adjacent-role distinguishability: nudge the second member of each pair.
 do
 	local pairs_to_check = {
-		{ "keyword",   "type" },
-		{ "fn",        "parameter" },
-		{ "string",    "fn" },
-		{ "string",    "value" },
-		{ "operator",  "fn" },
-		{ "variable",  "field" },
+		{ "fn",       "parameter" },
+		{ "type",     "value"     },
+		{ "variable", "field"     },
 	}
 	for _, p in ipairs(pairs_to_check) do
 		local a, b = colors.syntax[p[1]], colors.syntax[p[2]]
