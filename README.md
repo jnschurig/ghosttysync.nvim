@@ -2,10 +2,8 @@
 
 A Neovim plugin that automatically synchronizes Ghostty terminal themes with Neovim colorschemes.
 
-Adapted from the [material.nvim](https://github.com/marko-cerovac/material.nvim) color theme.
-
-Many thanks to Marko Cerovac who is the original author of material.nvim and whose code
-is the foundation of this work.
+Adapted from material.nvim by Marko Cerovac, whose work is the foundation of this
+plugin.
 
 This colorscheme plugin is designed to be an out-of-the-box solution which adapts your existing
 theme from the Ghostty terminal emulator and applies it to nvim. As such, this project adopts
