@@ -257,27 +257,31 @@ end
 -- >= DIFF_CHROMA_MIN), floored so monochrome themes still get a visible tint.
 -- Lightness: offset from bg.L in the direction that increases contrast
 -- (lighter on dark bg, darker on light bg).
+-- Median chroma of the *ANSI 16* palette (excludes stashed fg/bg/cursor at
+-- palette[17..22], which would drag the median toward zero in any theme).
+-- Only entries with meaningful chroma are counted; pure grays don't speak
+-- to the theme's saturation character.
 local function theme_chroma()
 	local chromas = {}
-	for idx = 1, #palette do
+	for idx = 1, math.min(16, #palette) do
 		local lch = palette[idx] and oklch.hex_to_oklch(palette[idx])
 		if lch and (lch.c or 0) >= DIFF_CHROMA_MIN then
 			chromas[#chromas + 1] = lch.c
 		end
 	end
-	if #chromas == 0 then return 0.12 end -- monochrome floor
+	if #chromas == 0 then return 0.14 end -- monochrome floor
 	table.sort(chromas)
 	local median = chromas[math.ceil(#chromas / 2)]
-	return math.max(0.10, math.min(0.22, median))
+	return math.max(0.12, math.min(0.22, median))
 end
 
 local function synth_diff(hue_deg)
 	local bg_lch = oklch.hex_to_oklch(colors.editor.bg) or { L = 0.2 }
 	local c = theme_chroma()
-	-- Place L 0.35 away from bg in the brighter direction. Dark bg → light
-	-- diff color; light bg → dark diff color. Clamped to a readable band.
-	local L = (bg_lch.L < 0.5) and math.min(0.85, bg_lch.L + 0.35)
-	                              or math.max(0.25, bg_lch.L - 0.35)
+	-- Fixed lightness targets that read clearly against typical bg. Direction
+	-- only depends on dark/light bg; the magnitude is fixed so the diff color
+	-- always lands in a high-contrast band regardless of bg lightness.
+	local L = (bg_lch.L < 0.5) and 0.78 or 0.42
 	local hex = oklch.oklch_to_hex({ L = L, c = c, h = hue_deg })
 	return contrast.ensure_contrast(hex, colors.editor.bg, T.UI_MIN)
 end
