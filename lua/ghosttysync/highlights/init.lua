@@ -371,7 +371,15 @@ M.async_highlights.editor = function()
     healthSuccess = { fg = m.green },
     healthWarning = { fg = m.yellow },
     -- Visual        = { fg = m.none, bg = e.selection },
-    Visual        = { fg = fit(e.selection_fg, e.selection, T.TEXT_MIN), bg = e.selection },
+    -- When Visual is used as a row overlay (e.g. lazygit-in-nvim, plugin
+    -- selection highlights), the underlying terminal cells keep their own
+    -- ANSI fg. Ghostty's selection_bg can be near-white, which leaves
+    -- light-fg text unreadable on top of it. Fit bg against e.fg so any
+    -- typical light text remains legible.
+    Visual        = (function()
+      local vbg = contrast.ensure_contrast(e.selection, e.fg, T.TEXT_MIN)
+      return { fg = fit(e.selection_fg, vbg, T.TEXT_MIN), bg = vbg }
+    end)(),
     VisualNOS     = { link = "Visual" }, -- Visual mode selection when vim is "Not Owning the Selection".
     Directory     = { fg = m.blue },
     MatchParen    = { fg = m.yellow, bold = true },
