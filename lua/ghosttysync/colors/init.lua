@@ -246,12 +246,46 @@ local function closest_by_hue(target_h, range_lo, range_hi)
 	end
 	return best
 end
--- Target hues (OKLCH degrees): red ~29, yellow ~110, green ~142.
--- Scan the full palette for diff colors; lazygit etc. inside :term read
--- terminal_color_* slots derived from these.
-colors.git.added    = contrast.ensure_contrast(closest_by_hue(142), colors.editor.bg, T.UI_MIN)
-colors.git.removed  = contrast.ensure_contrast(closest_by_hue(29),  colors.editor.bg, T.UI_MIN)
-colors.git.modified = contrast.ensure_contrast(closest_by_hue(110), colors.editor.bg, T.UI_MIN)
+-- Synthesized diff colors. Diff semantics (added=green, removed=red,
+-- modified=yellow) are universal — but in low-chroma palettes (e.g. Batman)
+-- the closest hue match lands on a wrong color (yellowish-green for red).
+-- Instead, synthesize colors at canonical hues, with chroma derived from the
+-- theme's own saturation and lightness offset from bg so they're readable
+-- without standing out beyond the theme's overall vibrancy.
+--
+-- Chroma source: median chroma of the palette's saturated entries (chroma
+-- >= DIFF_CHROMA_MIN), floored so monochrome themes still get a visible tint.
+-- Lightness: offset from bg.L in the direction that increases contrast
+-- (lighter on dark bg, darker on light bg).
+local function theme_chroma()
+	local chromas = {}
+	for idx = 1, #palette do
+		local lch = palette[idx] and oklch.hex_to_oklch(palette[idx])
+		if lch and (lch.c or 0) >= DIFF_CHROMA_MIN then
+			chromas[#chromas + 1] = lch.c
+		end
+	end
+	if #chromas == 0 then return 0.12 end -- monochrome floor
+	table.sort(chromas)
+	local median = chromas[math.ceil(#chromas / 2)]
+	return math.max(0.10, math.min(0.22, median))
+end
+
+local function synth_diff(hue_deg)
+	local bg_lch = oklch.hex_to_oklch(colors.editor.bg) or { L = 0.2 }
+	local c = theme_chroma()
+	-- Place L 0.35 away from bg in the brighter direction. Dark bg → light
+	-- diff color; light bg → dark diff color. Clamped to a readable band.
+	local L = (bg_lch.L < 0.5) and math.min(0.85, bg_lch.L + 0.35)
+	                              or math.max(0.25, bg_lch.L - 0.35)
+	local hex = oklch.oklch_to_hex({ L = L, c = c, h = hue_deg })
+	return contrast.ensure_contrast(hex, colors.editor.bg, T.UI_MIN)
+end
+
+-- Target hues (OKLCH degrees): red ~29, yellow ~100, green ~142.
+colors.git.added    = synth_diff(142)
+colors.git.removed  = synth_diff(29)
+colors.git.modified = synth_diff(100)
 
 -- TUI semantic colors for the embedded terminal. lazygit/htop/less/etc. ask
 -- for ANSI "red"/"green"/"yellow" and expect them to look red/green/yellow,
