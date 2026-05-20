@@ -1,44 +1,44 @@
-local colors = require "ghosttysync.colors"
+local colors = require("ghosttysync.colors")
 
 local m = colors.main
 
 local M = {}
 
 M.load = function()
-    local plugin_hls = {
-        DevIconC        = { fg = m.cyan },
-        DevIconCpp      = { fg = m.cyan },
-        DevIconGo       = { fg = m.cyan },
-        DevIconTs       = { fg = m.cyan },
-        DevIconLua      = { fg = m.blue },
-        DevIconDart     = { fg = m.blue },
-        DevIconJs       = { fg = m.yellow },
-        DevIconPy       = { fg = m.yellow },
-        DevIconCss      = { fg = m.yellow },
-        DevIconJson     = { fg = m.yellow },
-        DevIconJava     = { fg = m.red },
-        DevIconRb       = { fg = m.red },
-        DevIconRs       = { fg = m.red },
-        DevIconMd       = { fg = m.red },
-        DevIconHtml     = { fg = m.red },
-        DevIconMakefile = { fg = m.red },
-        DevIconRed      = { fg = m.red },
-        DevIconHs       = { fg = m.magenta },
-        DevIconPhp      = { fg = m.magenta },
-        DevIconH        = { fg = m.magenta },
-        DevIconSh       = { fg = m.green },
-        DevIconBash     = { fg = m.green },
-        DevIconVim      = { fg = m.green },
-        DevIconVue      = { fg = m.green },
-        DevIconTerminal = { fg = m.green },
-        DevIconDiff     = { fg = m.yellow },
-        DevIconConf     = { fg = m.yellow },
-        DevIconToml     = { fg = m.yellow },
-        DevIconKotlin   = { fg = m.yellow },
-        DevIconSwift    = { fg = m.yellow },
-    }
+  local plugin_hls = {
+    DevIconC = { fg = m.cyan },
+    DevIconCpp = { fg = m.cyan },
+    DevIconGo = { fg = m.cyan },
+    DevIconTs = { fg = m.cyan },
+    DevIconLua = { fg = m.blue },
+    DevIconDart = { fg = m.blue },
+    DevIconJs = { fg = m.yellow },
+    DevIconPy = { fg = m.yellow },
+    DevIconCss = { fg = m.yellow },
+    DevIconJson = { fg = m.yellow },
+    DevIconJava = { fg = m.red },
+    DevIconRb = { fg = m.red },
+    DevIconRs = { fg = m.red },
+    DevIconMd = { fg = m.red },
+    DevIconHtml = { fg = m.red },
+    DevIconMakefile = { fg = m.red },
+    DevIconRed = { fg = m.red },
+    DevIconHs = { fg = m.magenta },
+    DevIconPhp = { fg = m.magenta },
+    DevIconH = { fg = m.magenta },
+    DevIconSh = { fg = m.green },
+    DevIconBash = { fg = m.green },
+    DevIconVim = { fg = m.green },
+    DevIconVue = { fg = m.green },
+    DevIconTerminal = { fg = m.green },
+    DevIconDiff = { fg = m.yellow },
+    DevIconConf = { fg = m.yellow },
+    DevIconToml = { fg = m.yellow },
+    DevIconKotlin = { fg = m.yellow },
+    DevIconSwift = { fg = m.yellow },
+  }
 
-    return plugin_hls
+  return plugin_hls
 end
 
 M.async = true

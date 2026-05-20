@@ -1,0 +1,23 @@
+# See https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+default: true
+
+# Allow long lines (prose / code blocks)
+MD013: false
+
+# Allow inline HTML (common in READMEs)
+MD033: false
+
+# Allow duplicate headings in different sections
+MD024:
+  siblings_only: true
+
+# Bare URLs are fine
+MD034: false
+
+# First line doesn't have to be a top-level heading
+MD041: false
+
+# Trailing whitespace
+MD009:
+  br_spaces: 0
+  strict: true

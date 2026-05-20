@@ -1,4 +1,4 @@
-local colors = require "ghosttysync.colors"
+local colors = require("ghosttysync.colors")
 
 local m = colors.main
 local e = colors.editor
@@ -6,28 +6,28 @@ local e = colors.editor
 local M = {}
 
 M.load = function()
-    local plugin_hls = {
-        NeotestAdapterName = { fg = m.bright_red },
-        NeotestBorder = { fg = e.border },
-        NeotestDir = { fg = m.blue },
-        NeotestExpandMarker = { link = "NeotestIndent" }, -- shown immediately after indent
-        NeotestFailed = { link = "DiagnosticError" },
-        NeotestFile = { fg = m.blue },
-        NeotestFocused = { bold = true, underline = true },
-        NeotestIndent = { fg = e.line_numbers }, -- aka tree symbols
-        NeotestMarked = { fg = m.bright_yellow, bold = true },
-        NeotestNamespace = { fg = m.magenta },
-        NeotestPassed = { fg = m.green },
-        NeotestRunning = { fg = m.yellow },
-        NeotestSkipped = { link = "DiagnosticHint" },
-        NeotestTarget = { fg = m.red },
-        NeotestTest = { fg = e.fg },
-        NeotestUnknown = { fg = e.fg },
-        NeotestWatching = { link = "DiagnosticInfo" },
-        NeotestWinSelect = { fg = m.blue, bold = true },
-    }
+  local plugin_hls = {
+    NeotestAdapterName = { fg = m.bright_red },
+    NeotestBorder = { fg = e.border },
+    NeotestDir = { fg = m.blue },
+    NeotestExpandMarker = { link = "NeotestIndent" }, -- shown immediately after indent
+    NeotestFailed = { link = "DiagnosticError" },
+    NeotestFile = { fg = m.blue },
+    NeotestFocused = { bold = true, underline = true },
+    NeotestIndent = { fg = e.line_numbers }, -- aka tree symbols
+    NeotestMarked = { fg = m.bright_yellow, bold = true },
+    NeotestNamespace = { fg = m.magenta },
+    NeotestPassed = { fg = m.green },
+    NeotestRunning = { fg = m.yellow },
+    NeotestSkipped = { link = "DiagnosticHint" },
+    NeotestTarget = { fg = m.red },
+    NeotestTest = { fg = e.fg },
+    NeotestUnknown = { fg = e.fg },
+    NeotestWatching = { link = "DiagnosticInfo" },
+    NeotestWinSelect = { fg = m.blue, bold = true },
+  }
 
-    return plugin_hls
+  return plugin_hls
 end
 
 M.async = true
