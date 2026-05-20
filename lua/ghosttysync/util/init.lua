@@ -5,6 +5,7 @@ local functions = require("ghosttysync.functions")
 local contrast = require("ghosttysync.colors.contrast")
 local oklch = require("ghosttysync.colors.oklch")
 require("ghosttysync.audit") -- registers :GhosttysyncAudit
+require("ghosttysync.inspect") -- registers :GhosttysyncColors
 
 local M = {}
 
